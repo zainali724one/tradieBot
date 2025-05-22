@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+*::-webkit-scrollbar {
+  display: none; /* Hides the scrollbar */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
