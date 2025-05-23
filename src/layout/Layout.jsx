@@ -43,6 +43,13 @@ const AppLayout = () => {
         {/* </Content> */}
         {location?.pathname === "/" ||
         location?.pathname === "/signin" ||
+        location?.pathname === "/editname" ||
+        location?.pathname === "/editemail" ||
+        location?.pathname === "/editphonenumber" ||
+        location?.pathname === "/changepassword" ||
+        location?.pathname === "/termsandcondition" ||
+        location?.pathname === "/formscreen" ||
+        location?.pathname === "/questions" ||
         location?.pathname === "/forgetpassword" ? null : (
           <Footer
             style={{
