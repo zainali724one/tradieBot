@@ -29,6 +29,7 @@ function QuoteForm() {
     console.log("Form data submitted:", formData);
     // Here you would typically send the data to a backend or handle it further
     alert("Quote Submitted (check console for data)");
+    
   };
 
   return (

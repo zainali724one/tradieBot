@@ -64,7 +64,6 @@ export const router = createBrowserRouter([
         path: "/termsandcondition",
         element: <LazyComponent path="/termsandcondition" />,
       },
-    
       {
         path  : "/chase",
         element: <LazyComponent path="/chase" />,
@@ -76,6 +75,10 @@ export const router = createBrowserRouter([
       {
         path: "/history",
         element: <LazyComponent path="/history" />,
+      },
+      {
+        path: "/profile",
+        element: <LazyComponent path="/profile" />,
       },
     ],
   },

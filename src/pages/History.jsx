@@ -55,7 +55,7 @@ const jobs = [
 
 const History = () => {
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-12 px-5 font-sans">
+    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-12 px-5">
       <UserProfileHeader
         image="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
         name="Mr. Thomas John"
