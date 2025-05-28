@@ -13,15 +13,11 @@ const componentMap = {
   "/editphonenumber": lazy(() => import("../pages/EditPhoneNumberScreen")),
   "/changepassword": lazy(() => import("../pages/ChangePasswordScreen")),
   "/termsandcondition": lazy(() => import("../pages/TermsAndConditionsScreen")),
-  
-
-
-
-  
 
   "/chase": lazy(() => import("../pages/Chase")),
   "/chases": lazy(() => import("../pages/Chases")),
   "/history": lazy(() => import("../pages/History")),
+  "/profile": lazy(() => import("../pages/Profile")),
   // "/thehive": lazy(() => import("../pages/TheHive")),
   // "/you": lazy(() => import("../pages/You")),
 };
