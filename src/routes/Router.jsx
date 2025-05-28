@@ -65,6 +65,18 @@ export const router = createBrowserRouter([
         element: <LazyComponent path="/termsandcondition" />,
       },
     
+      {
+        path: "/chase",
+        element: <LazyComponent path="/chase" />,
+      },
+      {
+        path: "/chases/:id",
+        element: <LazyComponent path="/chases" />,
+      },
+      {
+        path: "/history",
+        element: <LazyComponent path="/history" />,
+      },
     ],
   },
   // auth route

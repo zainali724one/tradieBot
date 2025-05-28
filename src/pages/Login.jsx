@@ -45,7 +45,11 @@ const Login = () => {
         </div>
 
         <div className="mt-3.5 w-[100%]">
-          <PrimaryButton children="Login" color="blue" />
+          <PrimaryButton
+            children="Login"
+            color="blue"
+            onClick={() => navigate("/quoteform")}
+          />
         </div>
       </div>
     </div>
