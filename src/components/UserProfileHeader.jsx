@@ -16,5 +16,4 @@ const UserProfileHeader = ({ image, name, subtitle }) => {
   );
 };
 
-
 export default UserProfileHeader;
