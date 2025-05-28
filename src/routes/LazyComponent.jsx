@@ -18,6 +18,7 @@ const componentMap = {
   "/chases": lazy(() => import("../pages/Chases")),
   "/history": lazy(() => import("../pages/History")),
   "/profile": lazy(() => import("../pages/Profile")),
+  "/editProfile": lazy(() => import("../pages/EditProfile")),
   // "/thehive": lazy(() => import("../pages/TheHive")),
   // "/you": lazy(() => import("../pages/You")),
 };

@@ -33,8 +33,9 @@ const AppLayout = () => {
             height:
               location?.pathname === "/" ||
               location?.pathname === "/signin" ||
-              location?.pathname === "/forgetpassword" || 
-              location?.pathname === "/profile" 
+              location?.pathname === "/forgetpassword" ||
+              location?.pathname === "/profile" ||
+              location?.pathname === "/editProfile"
                 ? "100%"
                 : "88%",
           }}
@@ -52,6 +53,7 @@ const AppLayout = () => {
         location?.pathname === "/formscreen" ||
         location?.pathname === "/questions" ||
         location?.pathname === "/profile" ||
+        location?.pathname === "/editProfile" ||
         location?.pathname === "/forgetpassword" ? null : (
           <Footer
             style={{

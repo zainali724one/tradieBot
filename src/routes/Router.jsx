@@ -81,6 +81,10 @@ export const router = createBrowserRouter([
         path: "/profile",
         element: <LazyComponent path="/profile" />,
       },
+      {
+        path: "/editProfile",
+        element: <LazyComponent path="/editProfile" />,
+      },
     ],
   },
   // auth route
