@@ -66,7 +66,7 @@ export const router = createBrowserRouter([
       },
     
       {
-        path: "/chase",
+        path  : "/chase",
         element: <LazyComponent path="/chase" />,
       },
       {
