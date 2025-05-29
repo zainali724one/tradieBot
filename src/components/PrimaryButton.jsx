@@ -22,7 +22,7 @@ const PrimaryButton = ({
         className={
           `${
             color === "red" ? "bg-[#E81E1E]" : "bg-[#5290C1]"
-          } font-[700] rounded-[10px] text-[16px] w-[100%] text-white h-[50px]  ` +
+          } font-[700] rounded-[10px] text-[16px] w-[100%] text-white h-[50px]  cursor-pointer ` +
           className
         }
         style={style}

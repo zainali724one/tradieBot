@@ -1,27 +1,25 @@
-import React from "react";
-
+import { useNavigate } from "react-router-dom";
 import i1 from "../assets/icons/i1.png";
 import i5 from "../assets/icons/i5.png";
 import trash from "../assets/icons/trash.png";
 import powerbutton from "../assets/icons/power-alt.png";
 import clipboardtext from "../assets/icons/clipboard-text.png";
-
-import SettingTab from "../components/SettingTab"; // Make sure it's the reusable version
-import PrimaryButton from "../components/PrimaryButton"; // Assuming you have this component
+import SettingTab from "../components/SettingTab";
+import PrimaryButton from "../components/PrimaryButton";
 import BackButton from "../components/ui/BackButton";
-import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="p-4 h-[100dvh] relative bg-[#D3DCE5]  pt-12 px-5  max-w-[430px]">
-      <div className="flex items-center gap-2 mb-4">
-        <BackButton onClick={() => {}} />
-      </div>
+      <header className="flex items-center">
+        <BackButton />
+        <h1 className="flex-grow text-center text-xl font-semibold text-gray-800">
+          Profile
+        </h1>
+      </header>
 
-      <div className="flex flex-col items-center gap-4 mb-6 -mt-9">
-        <h1 className="text-lg font-semibold ">Profile</h1>
-
+      <div className="flex flex-col items-center gap-4  mt-4 mb-6">
         <img
           src="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
           alt="Profile"
@@ -31,7 +29,7 @@ const Profile = () => {
 
       <div className="flex flex-col gap-3">
         <SettingTab
-        onClick={() => navigate("/editprofile")}
+          onClick={() => navigate("/editProfile")}
           title="Edit Profile"
           icon={
             <img
@@ -45,7 +43,6 @@ const Profile = () => {
         <SettingTab
           title="Change Password"
           onClick={() => navigate("/changepassword")}
-
           icon={
             <img
               src={i5}
@@ -55,8 +52,7 @@ const Profile = () => {
           }
         />
         <SettingTab
-                onClick={() => navigate("/termsandcondition")}
-
+          onClick={() => navigate("/termsandcondition")}
           title="Terms & Conditions"
           icon={
             <img
@@ -68,8 +64,7 @@ const Profile = () => {
         />
 
         <SettingTab
-                onClick={() => navigate("/editprofile")}
-
+          onClick={() => navigate("#")}
           title="Delete Account"
           icon={
             <img
@@ -78,11 +73,11 @@ const Profile = () => {
               style={{ width: 20, height: 20 }}
             />
           }
+          showNextIcon={false}
         />
 
         <SettingTab
-                onClick={() => navigate("/editprofile")}
-
+          onClick={() => navigate("#")}
           title="Logout"
           icon={
             <img
@@ -91,6 +86,7 @@ const Profile = () => {
               style={{ width: 20, height: 20 }}
             />
           }
+          showNextIcon={false}
         />
       </div>
 

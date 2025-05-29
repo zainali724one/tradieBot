@@ -24,7 +24,7 @@ const TermsAndConditionsScreen = () => {
 
   return (
     <div className="w-full max-w-md  min-h-screen flex flex-col bg-[#D3DCE5] mb-10 h-[100dvh]">
-      <header className="flex items-center p-4 pt-10 pb-6 relative  z-10 bg-[#D3DCE5]">
+      <header className="flex items-center p-4 pt-12 pb-6 relative  z-10 bg-[#D3DCE5]">
         <BackButton />
         <h1 className="flex-grow text-center text-xl font-semibold text-gray-800">
           Terms & Conditions

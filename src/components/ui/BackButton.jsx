@@ -5,7 +5,7 @@ const BackButton = () => {
   const navigate = useNavigate();
 
   return (
-    <button onClick={() => navigate(-1)} className="flex items-center">
+    <button onClick={() => navigate(-1)} className="flex items-center cursor-pointer">
       <img src={arrowback} alt="Back" className="w-5 h-5" />
     </button>
   );

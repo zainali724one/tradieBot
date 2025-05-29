@@ -1,8 +1,4 @@
-// src/components/SettingOption.js
-import React from "react";
-import { RightOutlined } from "@ant-design/icons";
 import arrowforward from "../assets/icons/arrowforward.png";
-
 
 const SettingTab = ({ title, icon, showNextIcon = true, onClick }) => {
   return (
@@ -18,14 +14,18 @@ const SettingTab = ({ title, icon, showNextIcon = true, onClick }) => {
         {icon}
         <span className="font-medium">{title}</span>
       </div>
-      {/* {showNextIcon && <RightOutlined style={{ color: "#1976d2" }} />} */}
       {showNextIcon && (
-  <img
-    src={arrowforward}
-    alt="Next"
-    style={{ width: 10, height: 10, marginLeft: 8, verticalAlign: "middle" }}
-  />
-)}
+        <img
+          src={arrowforward}
+          alt="Next"
+          style={{
+            width: 10,
+            height: 10,
+            marginLeft: 8,
+            verticalAlign: "middle",
+          }}
+        />
+      )}
     </div>
   );
 };

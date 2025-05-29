@@ -26,8 +26,8 @@ function EditNameScreen() {
   };
 
   return (
-    <div className="w-full max-w-md h-[100dvh] bg-[#D3DCE5]">
-      <header className="flex items-center p-4 pt-10 ">
+    <div className="p-4 h-[100dvh] relative bg-[#D3DCE5]  pt-12 px-5  max-w-[430px]">
+      <header className="flex items-center ">
         <BackButton />
 
         <h1 className="flex-grow text-center text-xl font-semibold text-gray-800">
@@ -35,7 +35,7 @@ function EditNameScreen() {
         </h1>
       </header>
 
-      <form onSubmit={handleUpdate} className="px-4 mt-8">
+      <form onSubmit={handleUpdate} className="mt-8">
         <div>
           <LabeledInput
             label="Old Name"
@@ -58,8 +58,8 @@ function EditNameScreen() {
           />
         </div>
 
-        <div className="fixed bottom-0 left-0 w-full px-4 pb-4 z-10">
-          <PrimaryButton>Update</PrimaryButton>
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
+          <PrimaryButton children="Update" />
         </div>
       </form>
     </div>
