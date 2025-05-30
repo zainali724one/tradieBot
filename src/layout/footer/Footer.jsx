@@ -58,6 +58,7 @@ const Footer = () => {
               ? "text-[#5290C1]"
               : "text-[#1E1E1E80]"
           }`}
+          onClick={() => navigate("/invoice")}
         >
           Invoice
         </span>
@@ -65,7 +66,11 @@ const Footer = () => {
       {/* Center Icon */}
 
       <div className="flex flex-col items-center -mt-10">
-        <div className="w-16 h-16 rounded-full bg-[#1980d4] border-[8px] border-[#D3DCE5] flex items-center justify-center shadow-md">
+        <div
+                  onClick={() => navigate("/schedule")}
+
+        
+        className="w-16 h-16 rounded-full bg-[#1980d4] border-[8px] border-[#D3DCE5] flex items-center justify-center shadow-md">
           <FiCalendar size={22} className="text-white" />
           {/* <Image src={i8} /> */}
         </div>

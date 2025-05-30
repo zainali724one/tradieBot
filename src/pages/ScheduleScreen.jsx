@@ -5,7 +5,7 @@ import UserProfile from "../components/ui/UserProfile";
 import TextArea from "../components/ui/TextArea";
 import UserProfileHeader from "../components/UserProfileHeader";
 
-function QuoteForm() {
+function ScheduleScreen() {
   const [formData, setFormData] = useState({
     customerName: "Lorem Steve",
     jobDescription:
@@ -61,19 +61,19 @@ function QuoteForm() {
         </div>
 
         <LabeledInput
-          label="Quote Amount"
-          id="quoteAmount"
-          type="text" // Keep as text to allow '$' symbol display
-          placeholder="$ 0.00"
+          label="Date"
+          id="Date"
+          type="Date" // Keep as text to allow '$' symbol display
+          placeholder="12/12/2025"
           value={`$ ${formData.quoteAmount}`}
           onChange={handleChange}
         />
 
         <LabeledInput
-          label="Customer Email"
-          id="customerEmail"
-          type="email"
-          placeholder="customer@example.com"
+          label="Time"
+          id="Time"
+          type="time"
+          placeholder="04:00 PM"
           value={formData.customerEmail}
           onChange={handleChange}
         />
@@ -86,4 +86,4 @@ function QuoteForm() {
   );
 }
 
-export default QuoteForm;
+export default ScheduleScreen;

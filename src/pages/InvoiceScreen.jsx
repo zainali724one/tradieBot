@@ -4,8 +4,9 @@ import PrimaryButton from "../components/PrimaryButton";
 import UserProfile from "../components/ui/UserProfile";
 import TextArea from "../components/ui/TextArea";
 import UserProfileHeader from "../components/UserProfileHeader";
+import Selector from "../components/selector";
 
-function QuoteForm() {
+function InvoiceScreen() {
   const [formData, setFormData] = useState({
     customerName: "Lorem Steve",
     jobDescription:
@@ -14,6 +15,7 @@ function QuoteForm() {
     customerEmail: "xya@gmail.com",
   });
 
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -60,23 +62,36 @@ function QuoteForm() {
           />
         </div>
 
-        <LabeledInput
+        {/* <LabeledInput
           label="Quote Amount"
           id="quoteAmount"
-          type="text" // Keep as text to allow '$' symbol display
+          type="Select" // Keep as text to allow '$' symbol display
           placeholder="$ 0.00"
           value={`$ ${formData.quoteAmount}`}
           onChange={handleChange}
-        />
+        /> */}
 
-        <LabeledInput
-          label="Customer Email"
-          id="customerEmail"
-          type="email"
-          placeholder="customer@example.com"
-          value={formData.customerEmail}
-          onChange={handleChange}
-        />
+<Selector
+  label="Include Cost"
+  type="select"
+  value={formData.includeCost}
+  onChange={(e) => handleChange({ target: { id: 'includeCost', value: e.target.value } })}
+  options={[
+    { label: "Yes", value: "yes" },
+    { label: "No", value: "no" },
+  ]}
+/>
+
+<Selector
+  label="Include Receipt"
+  type="select"
+  value={formData.includeReceipt}
+  onChange={(e) => handleChange({ target: { id: 'includeReceipt', value: e.target.value } })}
+  options={[
+    { label: "Yes", value: "yes" },
+    { label: "No", value: "no" },
+  ]}
+/>
         
       </div>
       <div className="w-[90%]  flex fixed bottom-21">
@@ -86,4 +101,4 @@ function QuoteForm() {
   );
 }
 
-export default QuoteForm;
+export default InvoiceScreen;

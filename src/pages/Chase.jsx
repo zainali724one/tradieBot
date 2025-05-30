@@ -13,14 +13,15 @@ const Chase = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center h-[100dvh] bg-[#D3DCE5] pt-12 px-5 relative">
+    <div className="flex flex-col items-center h-[100dvh] bg-[#D3DCE5] pt-12 px-6 " >
       <UserProfileHeader
+      style={{border:"2px solid blue"}}
         image="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
         name="Mr. Thomas John"
         subtitle="Welcome"
       />
 
-      <div className="mt-4 w-full max-w-[335px]">
+      <div className="mt-4 w-full ">
         <h2 className="text-lg text-[#5290C1] font-semibold font-poppins">
           Chase
         </h2>
@@ -59,14 +60,22 @@ const Chase = () => {
             </div>
           ))}
         </div>
+
+   
       </div>
-      <div className="absolute bottom-23 w-full px-5 ">
+
+      <div className=" mt-2 flex  w-[90%] fixed bottom-20">
+                <PrimaryButton  children="Continue" />
+              </div>
+      {/* <div className="absolute bottom-23 w-full px-10 ">
         <PrimaryButton
           type="button"
           children="Continue"
           onClick={() => navigate(`/chases/${selectedOption}`)}
         />
-      </div>
+      </div> */}
+
+      
     </div>
   );
 };

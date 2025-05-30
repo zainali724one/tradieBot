@@ -1,6 +1,6 @@
 const UserProfileHeader = ({ image, name, subtitle }) => {
   return (
-    <div className="flex items-center gap-3 w-full max-w-[335px]">
+    <div className="flex items-center gap-3 w-full">
       <div className="w-11 h-11 rounded-full overflow-hidden">
         <img className="w-full h-full object-cover" src={image} alt={name} />
       </div>

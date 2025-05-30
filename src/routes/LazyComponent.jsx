@@ -19,6 +19,9 @@ const componentMap = {
   "/history": lazy(() => import("../pages/History")),
   "/profile": lazy(() => import("../pages/Profile")),
   "/editProfile": lazy(() => import("../pages/EditProfile")),
+  "/schedule": lazy(() => import("../pages/ScheduleScreen")),
+  "/invoice": lazy(() => import("../pages/InvoiceScreen")),
+
   // "/thehive": lazy(() => import("../pages/TheHive")),
   // "/you": lazy(() => import("../pages/You")),
 };
