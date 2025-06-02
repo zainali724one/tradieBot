@@ -12,16 +12,11 @@ import PrimaryButton from "../components/PrimaryButton";
 import Button from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
 // import { userSignup } from "../services/userService";
-import {userSignup} from "../api/auth/Signup"
-
-
+// import { userSignup } from "../api/auth/Signup";
 
 const Signup = () => {
   const navigate = useNavigate();
-  
   const [userData, setUserData] = React.useState({});
-
-
 
   useEffect(() => {
     const authenticatingUser = async () => {
@@ -43,25 +38,23 @@ const Signup = () => {
           isPremium: tg?.initDataUnsafe?.user?.is_premium,
         };
 
-        console.log("telegramData",telegramData);
+        console.log("telegramData", telegramData);
         // setUserData(telegramData);
 
-        userSignup(telegramData)
-          .then((data) => {
-            console.log(data);
-            setUserData(data);
-          })
-          .catch((error) => {
-            console.log(error || "An error occurred");
-          });
+        // userSignup(telegramData)
+        //   .then((data) => {
+        //     console.log(data);
+        //     setUserData(data);
+        //   })
+        //   .catch((error) => {
+        //     console.log(error || "An error occurred");
+        //   });
       }
     };
 
     authenticatingUser();
   }, []);
 
-
-  
   return (
     <div className="bg-[#D3DCE5] w-[100%] h-[100dvh] flex flex-col items-center overflow-y-scroll pb-8">
       <Image src={logo} className="object-cover mt-10" />
@@ -74,17 +67,26 @@ const Signup = () => {
         {/* <p>{userData}</p> */}
 
         {userData ? (
-        <div className="mt-4">
-          <p><strong>First Name:</strong> {userData.firstName}</p>
-          <p><strong>Last Name:</strong> {userData.lastName}</p>
-          <p><strong>Username:</strong> {userData.username}</p>
-          <p><strong>Language Code:</strong> {userData.languageCode}</p>
-          <p><strong>Is Premium:</strong> {userData.telegramId}</p>
-        </div>
-      ) : (
-        <p>Loading user info...</p>
-      )}
-
+          <div className="mt-4">
+            <p>
+              <strong>First Name:</strong> {userData.firstName}
+            </p>
+            <p>
+              <strong>Last Name:</strong> {userData.lastName}
+            </p>
+            <p>
+              <strong>Username:</strong> {userData.username}
+            </p>
+            <p>
+              <strong>Language Code:</strong> {userData.languageCode}
+            </p>
+            <p>
+              <strong>Is Premium:</strong> {userData.telegramId}
+            </p>
+          </div>
+        ) : (
+          <p>Loading user info...</p>
+        )}
       </div>
 
       <div className="w-[90%] mt-8">
