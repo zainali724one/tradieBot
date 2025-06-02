@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "../components/ui/Image";
 import logo from "../assets/logo.png";
 import Text from "../components/ui/Text";
@@ -12,16 +12,29 @@ import PrimaryButton from "../components/PrimaryButton";
 import Button from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
 // import { userSignup } from "../services/userService";
-import {userSignup} from "../api/auth/Signup"
-
-
+import { userSignup } from "../api/auth/Signup";
 
 const Signup = () => {
   const navigate = useNavigate();
-  
-  const [userData, setUserData] = React.useState({});
 
+  const [userData, setUserData] = useState({});
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    country: "",
+    password: "",
+    confirmPassword: "",
+  });
 
+  const handleChange = (field) => (e) => {
+    setFormData({ ...formData, [field]: e.target.value });
+    console.log(">>>>>>>>>>........", ...formData);
+  };
+  const handleSubmit = () => {
+    // Example validation or API call
+    console.log("Form data submitted:", formData);
+  };
 
   useEffect(() => {
     const authenticatingUser = async () => {
@@ -43,7 +56,7 @@ const Signup = () => {
           isPremium: tg?.initDataUnsafe?.user?.is_premium,
         };
 
-        console.log("telegramData",telegramData);
+        console.log("telegramData", telegramData);
         // setUserData(telegramData);
 
         userSignup(telegramData)
@@ -60,8 +73,6 @@ const Signup = () => {
     authenticatingUser();
   }, []);
 
-
-  
   return (
     <div className="bg-[#D3DCE5] w-[100%] h-[100dvh] flex flex-col items-center overflow-y-scroll pb-8">
       <Image src={logo} className="object-cover mt-10" />
@@ -74,28 +85,41 @@ const Signup = () => {
         {/* <p>{userData}</p> */}
 
         {userData ? (
-        <div className="mt-4">
-          <p><strong>First Name:</strong> {userData.firstName}</p>
-          <p><strong>Last Name:</strong> {userData.lastName}</p>
-          <p><strong>Username:</strong> {userData.username}</p>
-          <p><strong>Language Code:</strong> {userData.languageCode}</p>
-          <p><strong>Is Premium:</strong> {userData.telegramId}</p>
-        </div>
-      ) : (
-        <p>Loading user info...</p>
-      )}
-
+          <div className="mt-4">
+            <p>
+              <strong>First Name:</strong> {userData.firstName}
+            </p>
+            <p>
+              <strong>Last Name:</strong> {userData.lastName}
+            </p>
+            <p>
+              <strong>Username:</strong> {userData.username}
+            </p>
+            <p>
+              <strong>Language Code:</strong> {userData.languageCode}
+            </p>
+            <p>
+              <strong>Is Premium:</strong> {userData.telegramId}
+            </p>
+          </div>
+        ) : (
+          <p>Loading user info...</p>
+        )}
       </div>
 
       <div className="w-[90%] mt-8">
         <LabeledInput
           label="Name"
+          value={formData.name}
+          onChange={handleChange("name")}
           prefix={<img src={i1} className="h-[18px] w-[18px]" />}
           placeholder="Enter your name"
         />
         <div className="mt-3.5">
           <LabeledInput
             label="Phone"
+            value={formData.phone}
+            onChange={handleChange("phone")}
             prefix={<img src={i2} className="h-[18px] w-[18px]" />}
             placeholder="Enter phone number"
           />
@@ -104,6 +128,8 @@ const Signup = () => {
         <div className="mt-3.5">
           <LabeledInput
             label="Email"
+            value={formData.email}
+            onChange={handleChange("email")}
             prefix={<img src={i3} className="h-[14px] w-[18px]" />}
             placeholder="Enter email"
           />
@@ -112,6 +138,8 @@ const Signup = () => {
         <div className="mt-3.5">
           <LabeledInput
             label="Country"
+            value={formData.country}
+            onChange={handleChange("country")}
             prefix={<img src={i4} className="h-[18px] w-[18px]" />}
             placeholder="Enter country"
           />
@@ -120,6 +148,8 @@ const Signup = () => {
         <div className="mt-3.5">
           <LabeledInput
             label="Password"
+            value={formData.password}
+            onChange={handleChange("password")}
             prefix={<img src={i5} className="h-[18px] w-[16px]" />}
             placeholder="Enter password"
           />
@@ -128,13 +158,19 @@ const Signup = () => {
         <div className="mt-3.5">
           <LabeledInput
             label="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange("confirmPassword")}
             prefix={<img src={i5} className="h-[18px] w-[16px]" />}
             placeholder="Enter confirm password"
           />
         </div>
 
         <div className="mt-3.5 w-[100%]">
-          <PrimaryButton children="Signup" color="blue" />
+          <PrimaryButton
+            onClick={handleSubmit}
+            children="Signup"
+            color="blue"
+          />
         </div>
       </div>
 
