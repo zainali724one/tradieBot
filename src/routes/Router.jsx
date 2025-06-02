@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import LazyComponent from "./LazyComponent";
 import AppLayout from "../layout/Layout";
+import { FaHireAHelper } from "react-icons/fa";
 // import AppLayout from "../layout/Layout";
 // import LazyComponent from "./LazyComponent";
 // import ErrorScreen from "../pages/error/ErrorScreen";
@@ -93,6 +94,18 @@ export const router = createBrowserRouter([
         path: "/invoice",
         element: <LazyComponent path="/invoice" />,
       },
+
+      {
+        path: "/verifyotp",
+        element: <LazyComponent path="/verifyotp" />,
+      },
+      {
+        path: "/resetpassword",
+        element: <LazyComponent path="/resetpassword" />,
+      },
+
+      
+      
       
     ],
   },

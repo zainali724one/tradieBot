@@ -7,9 +7,15 @@ const componentMap = {
   "/": lazy(() => import("../pages/Signup")),
   "/signin": lazy(() => import("../pages/Login")),
   "/forgetpassword": lazy(() => import("../pages/ForgetPassword")),
+  "/verifyotp": lazy(() => import("../pages/VerifyOtpScreen")),
+
+  "/resetpassword": lazy(() => import("../pages/ResetPasswordScreen")),
+
+
   "/quoteform": lazy(() => import("../pages/QuoteForm")),
   "/editname": lazy(() => import("../pages/EditNameScreen")),
   "/editemail": lazy(() => import("../pages/EditEmailScreen")),
+  // VerifyOtpScreen
   "/editphonenumber": lazy(() => import("../pages/EditPhoneNumberScreen")),
   "/changepassword": lazy(() => import("../pages/ChangePasswordScreen")),
   "/termsandcondition": lazy(() => import("../pages/TermsAndConditionsScreen")),

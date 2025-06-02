@@ -1,13 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "../components/ui/Image";
 import logo from "../assets/logo.png";
 import Text from "../components/ui/Text";
 import LabeledInput from "../components/LabeledInput";
 import i3 from "../assets/icons/i3.png";
 import PrimaryButton from "../components/PrimaryButton";
+import { useSendOtp } from "../reactQuery/mutations/auth";
+import { useNavigate } from "react-router-dom";
 // import Button from "../components/ui/Button";
 
 const ForgetPassword = () => {
+      const navigate = useNavigate()
+  
+  const [formData, setFormData] = useState({
+    email: "",
+  });
+
+  const {sendotp} = useSendOtp();
+
+  const handleChange = (field) => (e) => {
+    setFormData({ ...formData, [field]: e.target.value });
+    console.log(">>>>>>>>>>........", ...formData);
+  };
+
+  const handleSubmit = () => {
+    // sendotp(formData);
+    navigate("/verifyotp", { state: { email: "sufyan@724.one" } });
+
+
+  };
+
   return (
     <div className="bg-[#D3DCE5] w-[100%] h-[100dvh] flex flex-col items-center overflow-y-scroll pb-3.5">
       <Image src={logo} className="object-cover mt-10" />
@@ -22,12 +44,19 @@ const ForgetPassword = () => {
       <div className="w-[90%] mt-8">
         <LabeledInput
           label="Email"
+          value={formData.email}
+          onChange={handleChange("email")}
           prefix={<img src={i3} className="h-[14px] w-[18px]" />}
           placeholder="Enter email"
         />
 
         <div className="mt-5 w-[100%]">
-          <PrimaryButton children="Send OTP" color="blue" />
+          <PrimaryButton
+            // onClick={() => signup(formData)}
+            onClick={handleSubmit}
+            children="Send OTP"
+            color="blue"
+          />
         </div>
       </div>
     </div>

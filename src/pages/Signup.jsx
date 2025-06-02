@@ -9,10 +9,13 @@ import i3 from "../assets/icons/i3.png";
 import i4 from "../assets/icons/i4.png";
 import i5 from "../assets/icons/i5.png";
 import PrimaryButton from "../components/PrimaryButton";
+
 import Button from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
 // import { userSignup } from "../services/userService";
-import { userSignup } from "../api/auth/Signup";
+// import { userSignup } from "../api/auth/Signup";
+import { useSignup } from "../reactQuery/mutations/auth";
+import Loading from "../components/Loading";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -26,6 +29,7 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
+  const {signup,isLoading} = useSignup();
 
   const handleChange = (field) => (e) => {
     setFormData({ ...formData, [field]: e.target.value });
@@ -33,7 +37,24 @@ const Signup = () => {
   };
   const handleSubmit = () => {
     // Example validation or API call
-    console.log("Form data submitted:", formData);
+
+    let useralldata ={
+      // telegramId:userData?.telegramId,
+      telegramId:"1123",
+      username:"sufyan",
+      // username:userData.username,
+      name:formData?.name,
+      email:formData?.email,
+      phone:formData?.phone,
+      password:formData?.password,
+      country:formData?.country,
+      
+
+    }
+    signup(useralldata);
+    
+    // console.log("Form data submitted:", formData);
+
   };
 
   useEffect(() => {
@@ -57,7 +78,7 @@ const Signup = () => {
         };
 
         console.log("telegramData", telegramData);
-        // setUserData(telegramData);
+        setUserData(telegramData);
 
         // userSignup(telegramData)
         //   .then((data) => {
@@ -72,7 +93,13 @@ const Signup = () => {
 
     authenticatingUser();
   }, []);
-
+if(isLoading){
+  return(
+    <>
+    <Loading/>
+    </>
+  )
+}
   return (
     <div className="bg-[#D3DCE5] w-[100%] h-[100dvh] flex flex-col items-center overflow-y-scroll pb-8">
       <Image src={logo} className="object-cover mt-10" />
