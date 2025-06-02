@@ -1,4 +1,4 @@
-import axiosClient from "./axiosClient";
+import axiosClient from "./auth/axiosClient";
 
 export const userSignup = async (formData) => {
   const response = await axiosClient.post("/signup", {
