@@ -59,14 +59,14 @@ const Signup = () => {
         console.log("telegramData", telegramData);
         // setUserData(telegramData);
 
-        userSignup(telegramData)
-          .then((data) => {
-            console.log(data);
-            setUserData(data);
-          })
-          .catch((error) => {
-            console.log(error || "An error occurred");
-          });
+        // userSignup(telegramData)
+        //   .then((data) => {
+        //     console.log(data);
+        //     setUserData(data);
+        //   })
+        //   .catch((error) => {
+        //     console.log(error || "An error occurred");
+        //   });
       }
     };
 
