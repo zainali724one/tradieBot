@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "../components/ui/Image";
 import logo from "../assets/logo.png";
 import Text from "../components/ui/Text";
@@ -12,11 +12,14 @@ import PrimaryButton from "../components/PrimaryButton";
 import Button from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
 // import { userSignup } from "../services/userService";
-// import { userSignup } from "../api/auth/Signup";
+import { userSignup } from "../api/auth/Signup";
 
 const Signup = () => {
   const navigate = useNavigate();
+  
   const [userData, setUserData] = React.useState({});
+
+
 
   useEffect(() => {
     const authenticatingUser = async () => {
@@ -92,12 +95,16 @@ const Signup = () => {
       <div className="w-[90%] mt-8">
         <LabeledInput
           label="Name"
+          value={formData.name}
+          onChange={handleChange("name")}
           prefix={<img src={i1} className="h-[18px] w-[18px]" />}
           placeholder="Enter your name"
         />
         <div className="mt-3.5">
           <LabeledInput
             label="Phone"
+            value={formData.phone}
+            onChange={handleChange("phone")}
             prefix={<img src={i2} className="h-[18px] w-[18px]" />}
             placeholder="Enter phone number"
           />
@@ -106,6 +113,8 @@ const Signup = () => {
         <div className="mt-3.5">
           <LabeledInput
             label="Email"
+            value={formData.email}
+            onChange={handleChange("email")}
             prefix={<img src={i3} className="h-[14px] w-[18px]" />}
             placeholder="Enter email"
           />
@@ -114,6 +123,8 @@ const Signup = () => {
         <div className="mt-3.5">
           <LabeledInput
             label="Country"
+            value={formData.country}
+            onChange={handleChange("country")}
             prefix={<img src={i4} className="h-[18px] w-[18px]" />}
             placeholder="Enter country"
           />
@@ -122,6 +133,8 @@ const Signup = () => {
         <div className="mt-3.5">
           <LabeledInput
             label="Password"
+            value={formData.password}
+            onChange={handleChange("password")}
             prefix={<img src={i5} className="h-[18px] w-[16px]" />}
             placeholder="Enter password"
           />
@@ -130,13 +143,19 @@ const Signup = () => {
         <div className="mt-3.5">
           <LabeledInput
             label="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange("confirmPassword")}
             prefix={<img src={i5} className="h-[18px] w-[16px]" />}
             placeholder="Enter confirm password"
           />
         </div>
 
         <div className="mt-3.5 w-[100%]">
-          <PrimaryButton children="Signup" color="blue" />
+          <PrimaryButton
+            onClick={handleSubmit}
+            children="Signup"
+            color="blue"
+          />
         </div>
       </div>
 

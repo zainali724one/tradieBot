@@ -50,8 +50,7 @@ LabeledInput.propTypes = {
   label: PropTypes.string,
   prefix: PropTypes.node,
   postfix: PropTypes.node,
-  //   className: PropTypes.string,
-  //   style: PropTypes.object,
+
 };
 
 LabeledInput.defaultProps = {
