@@ -63,18 +63,18 @@ function ScheduleScreen() {
         <LabeledInput
           label="Date"
           id="Date"
-          type="Date" // Keep as text to allow '$' symbol display
+          // type="Date" // Keep as text to allow '$' symbol display
           placeholder="12/12/2025"
-          value={`$ ${formData.quoteAmount}`}
+          // value={`$ ${formData.quoteAmount}`}
           onChange={handleChange}
         />
 
         <LabeledInput
           label="Time"
           id="Time"
-          type="time"
+          // type="time"
           placeholder="04:00 PM"
-          value={formData.customerEmail}
+          // value={formData.customerEmail}
           onChange={handleChange}
         />
         

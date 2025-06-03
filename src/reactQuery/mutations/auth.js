@@ -19,12 +19,11 @@ export function useSignup() {
     mutationFn: (formData) => userSignup(formData),
     onSuccess: () => {
       navigate("/signin");
-      toast.success("Signup Successfully")
+      toast.success("Signup Successfully");
       queryClient.invalidateQueries({ queryKey: ["signup"] });
     },
     onError: (error) => {
       message.error(error.message);
-      
     },
   });
 
@@ -32,14 +31,21 @@ export function useSignup() {
 }
 export function useLogin() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { mutate: login, isPending: isLoading } = useMutation({
     mutationFn: (formData) => userLogin(formData),
     onSuccess: () => {
+      navigate("/quoteform");
+      console.log("zulqarnain");
+      toast.success("Login Successfully");
       queryClient.invalidateQueries({ queryKey: ["login"] });
     },
     onError: (error) => {
       message.error(error.message);
+      toast.error(
+        error.message
+      )
     },
   });
 
@@ -79,11 +85,14 @@ export function useVerifyOtp() {
 }
 
 export function useResetPassword() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { mutate: resetPassword, isPending: isLoading } = useMutation({
     mutationFn: (formData) => userResetPassword(formData),
     onSuccess: () => {
+      navigate("/signin")
+      toast.success("Reset Password Successfully");
       queryClient.invalidateQueries({ queryKey: ["resetPassword"] });
     },
     onError: (error) => {

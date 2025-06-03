@@ -29,7 +29,7 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
-  const {signup,isLoading} = useSignup();
+  const { signup, isLoading } = useSignup();
 
   const handleChange = (field) => (e) => {
     setFormData({ ...formData, [field]: e.target.value });
@@ -38,23 +38,20 @@ const Signup = () => {
   const handleSubmit = () => {
     // Example validation or API call
 
-    let useralldata ={
+    let useralldata = {
       // telegramId:userData?.telegramId,
-      telegramId:"1123",
-      username:"sufyan",
+      telegramId: "1224992255",
+      username: "sufyan",
       // username:userData.username,
-      name:formData?.name,
-      email:formData?.email,
-      phone:formData?.phone,
-      password:formData?.password,
-      country:formData?.country,
-      
-
-    }
+      name: formData?.name,
+      email: formData?.email,
+      phone: formData?.phone,
+      password: formData?.password,
+      country: formData?.country,
+    };
     signup(useralldata);
-    
-    // console.log("Form data submitted:", formData);
 
+    // console.log("Form data submitted:", formData);
   };
 
   useEffect(() => {
@@ -93,13 +90,13 @@ const Signup = () => {
 
     authenticatingUser();
   }, []);
-if(isLoading){
-  return(
-    <>
-    <Loading/>
-    </>
-  )
-}
+  if (isLoading) {
+    return (
+      <>
+        <Loading />
+      </>
+    );
+  }
   return (
     <div className="bg-[#D3DCE5] w-[100%] h-[100dvh] flex flex-col items-center overflow-y-scroll pb-8">
       <Image src={logo} className="object-cover mt-10" />
@@ -109,29 +106,6 @@ if(isLoading){
           children="Enter your details to get access."
           className="font-[500] text-[14px] mt-2"
         />
-        {/* <p>{userData}</p> */}
-
-        {userData ? (
-          <div className="mt-4">
-            <p>
-              <strong>First Name:</strong> {userData.firstName}
-            </p>
-            <p>
-              <strong>Last Name:</strong> {userData.lastName}
-            </p>
-            <p>
-              <strong>Username:</strong> {userData.username}
-            </p>
-            <p>
-              <strong>Language Code:</strong> {userData.languageCode}
-            </p>
-            <p>
-              <strong>Is Premium:</strong> {userData.telegramId}
-            </p>
-          </div>
-        ) : (
-          <p>Loading user info...</p>
-        )}
       </div>
 
       <div className="w-[90%] mt-8">

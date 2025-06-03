@@ -3,6 +3,8 @@ import LabeledInput from "../components/LabeledInput";
 import PrimaryButton from "../components/PrimaryButton";
 import i5 from "../assets/icons/i5.png";
 import BackButton from "../components/ui/BackButton";
+import Loading from "../components/Loading";
+import { useVerifyOtp } from "../reactQuery/mutations/auth";
 
 function ChangePasswordScreen() {
   const [formData, setFormData] = useState({
@@ -10,6 +12,8 @@ function ChangePasswordScreen() {
     newPassword: "",
     confirmPassword: "",
   });
+
+  const {isLoading} = useVerifyOtp();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +42,14 @@ function ChangePasswordScreen() {
     // Here you would typically send the data to a backend for password update
     // alert("Password updated (check console for data)");
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Loading />
+      </>
+    );
+  }
 
   return (
     <div className="p-4 h-[100dvh] relative bg-[#D3DCE5]  pt-12 px-5  max-w-[430px]">

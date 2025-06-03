@@ -54,8 +54,8 @@ const AppLayout = () => {
         location?.pathname === "/questions" ||
         location?.pathname === "/profile" ||
         location?.pathname === "/editProfile" ||
-        location?.pathname === "resetpassword"||
-        location?.pathname === "verifyOtp"||
+        location?.pathname === "/resetpassword"||
+        location?.pathname === "/verifyotp"||
 
 
         location?.pathname === "/forgetpassword" ? null : (

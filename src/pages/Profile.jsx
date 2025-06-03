@@ -91,7 +91,7 @@ const Profile = () => {
       </div>
 
       <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
-        <PrimaryButton children="Connect with Stripe" />
+        <PrimaryButton onClick={()=>navigate("/editProfile")} children="Connect with Stripe" />
       </div>
     </div>
   );

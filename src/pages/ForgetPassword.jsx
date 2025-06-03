@@ -7,28 +7,46 @@ import i3 from "../assets/icons/i3.png";
 import PrimaryButton from "../components/PrimaryButton";
 import { useSendOtp } from "../reactQuery/mutations/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Loading from "../components/Loading";
 // import Button from "../components/ui/Button";
 
 const ForgetPassword = () => {
-      const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+  const { sendotp, isLoading } = useSendOtp();
+
   const [formData, setFormData] = useState({
     email: "",
   });
-
-  const {sendotp} = useSendOtp();
 
   const handleChange = (field) => (e) => {
     setFormData({ ...formData, [field]: e.target.value });
     console.log(">>>>>>>>>>........", ...formData);
   };
 
+  // const handleSubmit = () => {
+  //   sendotp(formData);
+  //   navigate("/verifyotp", { state: { email: formData.email } });
+
+  // };
   const handleSubmit = () => {
-    // sendotp(formData);
-    navigate("/verifyotp", { state: { email: "sufyan@724.one" } });
-
-
+    sendotp(formData, {
+      onSuccess: (data) => {
+        // console.log("OTP sent successfully", data);
+        toast.success("OTP has been sent successfully.");
+        navigate("/verifyotp", { state: { email: formData.email } });
+      },
+      onError: (error) => {
+        console.error("Failed to send OTP", error);
+        toast.error(error.message);
+        // Show an error message if needed
+      },
+    });
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="bg-[#D3DCE5] w-[100%] h-[100dvh] flex flex-col items-center overflow-y-scroll pb-3.5">

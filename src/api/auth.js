@@ -8,7 +8,7 @@ export const userSignup = async (formData) => {
 };
 
 export const userLogin = async (formData) => {
-  const response = await axiosClient.post("/login", {
+  const response = await axiosClient.post("/signin", {
     ...formData,
   });
   return response.data;
@@ -16,14 +16,14 @@ export const userLogin = async (formData) => {
 
 
 export const userSendOtp = async (formData) => {
-  const response = await axiosClient.post("/forgot-password/send-otp", {
+  const response = await axiosClient.post("/sendOTP", {
     ...formData,
   });
   return response.data;
 };
 
 export const userVerifyOtp = async (formData) => {
-  const response = await axiosClient.post("/forgot-password/verify-otp", {
+  const response = await axiosClient.post("/verifyOTP", {
     ...formData,
   });
   return response.data;
@@ -31,7 +31,7 @@ export const userVerifyOtp = async (formData) => {
 
 
 export const userResetPassword = async (formData) => {
-  const response = await axiosClient.post("/forgot-password/update-password", {
+  const response = await axiosClient.post("/updatePassword", {
     ...formData,
   });
   return response.data;

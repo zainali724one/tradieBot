@@ -9,9 +9,12 @@ import i5 from "../assets/icons/i5.png";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import LabeledInput from "../components/LabeledInput";
+import Loading from "../components/Loading";
 
 const ResetPasswordScreen = () => {
   const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const location = useLocation();
   const emailFromState = location.state?.email || "";
@@ -20,17 +23,26 @@ const ResetPasswordScreen = () => {
     setOtp(otpValue);
   };
 
-  const { resetPassword } = useResetPassword();
+  const { resetPassword,isLoading } = useResetPassword();
 
   const handleSubmit = () => {
     // verifyOtp(formData);
     const sendverifyotp = {
       email: emailFromState,
-      otp: otp,
+      newPassword:password,
+    //   otp: otp,
     };
     resetPassword(sendverifyotp);
   };
 
+
+  if (isLoading) {
+    return (
+      <>
+        <Loading />
+      </>
+    );
+  }
   return (
     <div className="bg-[#D3DCE5] w-[100%] h-[100dvh] flex flex-col items-center overflow-y-scroll pb-3.5">
       <Image src={logo} className="object-cover mt-10" />
@@ -45,23 +57,25 @@ const ResetPasswordScreen = () => {
       <div className="w-[90%] mt-8">
         <div>
                  <LabeledInput
-                   label="Old Password"
-                   id="oldPassword"
+                   label="Password"
+                   id="Password"
+                   value={password}
+                   onChange={(e) => setPassword(e.target.value)}
                    prefix={<img src={i5} className="h-[18px] w-[16px]" />}
                    placeholder="Enter your old password"
-                //    value={formData.oldPassword}
-                //    onChange={handleChange}
+          
                  />
                </div>
        
                <div className="mt-4">
                  <LabeledInput
-                   label="New Password"
+                   label=" Confirm Password"
                    id="newPassword"
                    prefix={<img src={i5} className="h-[18px] w-[16px]" />}
                    placeholder="Enter your new password"
-                //    value={formData.newPassword}
-                //    onChange={handleChange}
+                   value={confirmPassword}
+                   onChange={(e) => setConfirmPassword(e.target.value)}
+             
                  />
                </div>
 
