@@ -1,4 +1,5 @@
 import { Suspense, lazy } from "react";
+
 import Loading from "../components/Loading";
 // import Loading from "../components/loading/Loading";
 
@@ -10,7 +11,6 @@ const componentMap = {
   "/verifyotp": lazy(() => import("../pages/VerifyOtpScreen")),
 
   "/resetpassword": lazy(() => import("../pages/ResetPasswordScreen")),
-
 
   "/quoteform": lazy(() => import("../pages/QuoteForm")),
   "/editname": lazy(() => import("../pages/EditNameScreen")),

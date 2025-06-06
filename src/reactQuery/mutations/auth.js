@@ -1,15 +1,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { message } from "antd";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { message } from "antd";
+
+import {setUserId} from "../../store/sessionSlice"
+
 
 import {
+  addInvoice,
+  addJob,
+  addQuote,
+  userChangePassword,
+  userDeleteAccount,
+  userEditName,
   userLogin,
   userResetPassword,
   userSendOtp,
   userSignup,
   userVerifyOtp,
-} from "../../api/auth";
-import { useNavigate } from "react-router-dom";
+} from "../../api/auth/auth";
 
 export function useSignup() {
   const navigate = useNavigate();
@@ -23,29 +33,33 @@ export function useSignup() {
       queryClient.invalidateQueries({ queryKey: ["signup"] });
     },
     onError: (error) => {
-      message.error(error.message);
+      // message.error(error.message);
+      toast.error(error?.response?.data?.message);
     },
   });
 
   return { signup, isLoading };
 }
+
 export function useLogin() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   const { mutate: login, isPending: isLoading } = useMutation({
     mutationFn: (formData) => userLogin(formData),
-    onSuccess: () => {
+    onSuccess: (response) => {
+      if (response?.user) {
+        dispatch(setUserId(response.user)); // ✅ Store userId in Redux
+      }
       navigate("/quoteform");
-      console.log("zulqarnain");
       toast.success("Login Successfully");
       queryClient.invalidateQueries({ queryKey: ["login"] });
     },
     onError: (error) => {
       message.error(error.message);
-      toast.error(
-        error.message
-      )
+      toast.error(error.message);
     },
   });
 
@@ -91,7 +105,7 @@ export function useResetPassword() {
   const { mutate: resetPassword, isPending: isLoading } = useMutation({
     mutationFn: (formData) => userResetPassword(formData),
     onSuccess: () => {
-      navigate("/signin")
+      navigate("/signin");
       toast.success("Reset Password Successfully");
       queryClient.invalidateQueries({ queryKey: ["resetPassword"] });
     },
@@ -102,3 +116,125 @@ export function useResetPassword() {
 
   return { resetPassword, isLoading };
 }
+
+export function useEditProfile() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { mutate: editProfile, isPending: isLoading } = useMutation({
+    mutationFn: (formData) => userEditName(formData),
+    onSuccess: () => {
+      navigate("/editProfile");
+      toast.success("Update Successfully");
+      queryClient.invalidateQueries({ queryKey: ["editName"] });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
+  });
+
+  return { editProfile, isLoading };
+}
+
+export function useChangePassword() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { mutate: editChangePass, isPending: isLoading } = useMutation({
+    mutationFn: (formData) => userChangePassword(formData),
+    onSuccess: () => {
+      navigate("/profile");
+      toast.success("Update Successfully");
+      queryClient.invalidateQueries({ queryKey: ["editChangePass"] });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
+  });
+
+  return { editChangePass, isLoading };
+}
+
+export function useDelete() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteUser, isPending: isLoading } = useMutation({
+    mutationFn: (formData) => userDeleteAccount(formData),
+    onSuccess: () => {
+      navigate("/profile");
+      // toast.success("Delete Successfully");
+      queryClient.invalidateQueries({ queryKey: ["useDel"] });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
+  });
+
+  return { deleteUser, isLoading };
+}
+
+
+export function useAddQuote() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { mutate: Addquote, isPending: isLoading } = useMutation({
+    mutationFn: (formData) => addQuote(formData),
+    onSuccess: () => {
+      // navigate("/profile");
+      // toast.success("Delete Successfully");
+      queryClient.invalidateQueries({ queryKey: ["Addquote"] });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
+  });
+
+  return { Addquote, isLoading };
+}
+
+
+
+
+export function useAddInvoice() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { mutate: AddInvoice, isPending: isLoading } = useMutation({
+    mutationFn: (formData) => addInvoice(formData),
+    onSuccess: () => {
+      // navigate("/profile");
+      // toast.success("Delete Successfully");
+      queryClient.invalidateQueries({ queryKey: ["AddInvoice"] });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
+  });
+
+  return { AddInvoice, isLoading };
+}
+
+
+
+
+export function useAddJob() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { mutate: usAddJob, isPending: isLoading } = useMutation({
+    mutationFn: (formData) => addJob(formData),
+    onSuccess: () => {
+      // navigate("/profile");
+      // toast.success("Delete Successfully");
+      queryClient.invalidateQueries({ queryKey: ["usAddJob"] });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
+  });
+
+  return { usAddJob, isLoading };
+}
+

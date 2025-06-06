@@ -5,8 +5,6 @@ const { Content, Footer } = Layout;
 const AppLayout = () => {
   const location = useLocation();
 
-  console.log(location?.pathname != "/signin");
-
   return (
     <Layout
       style={{
@@ -53,11 +51,10 @@ const AppLayout = () => {
         location?.pathname === "/formscreen" ||
         location?.pathname === "/questions" ||
         location?.pathname === "/profile" ||
+        location?.pathname === "/editprofile" ||
         location?.pathname === "/editProfile" ||
-        location?.pathname === "/resetpassword"||
-        location?.pathname === "/verifyotp"||
-
-
+        location?.pathname === "/resetpassword" ||
+        location?.pathname === "/verifyOtp" ||
         location?.pathname === "/forgetpassword" ? null : (
           <Footer
             style={{

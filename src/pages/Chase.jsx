@@ -1,21 +1,20 @@
 import { useState } from "react";
+
+import UserProfileHeader from "../components/UserProfileHeader";
 import PrimaryButton from "../components/PrimaryButton";
 import { useNavigate } from "react-router-dom";
-import UserProfileHeader from "../components/UserProfileHeader";
 
 const Chase = () => {
   const [selectedOption, setSelectedOption] = useState("quote");
   const navigate = useNavigate();
-
   const chaseOptions = [
     { id: "quote", label: "Quote" },
     { id: "invoice", label: "Invoice" },
   ];
 
   return (
-    <div className="flex flex-col items-center h-[100dvh] bg-[#D3DCE5] pt-12 px-6 " >
+    <div className="flex flex-col items-center h-[100dvh] bg-[#D3DCE5] pt-12 px-6 ">
       <UserProfileHeader
-      style={{border:"2px solid blue"}}
         image="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
         name="Mr. Thomas John"
         subtitle="Welcome"
@@ -60,13 +59,14 @@ const Chase = () => {
             </div>
           ))}
         </div>
-
-   
       </div>
 
       <div className=" mt-2 flex  w-[90%] fixed bottom-20">
-                <PrimaryButton  children="Continue" />
-              </div>
+        <PrimaryButton
+          children="Continue"
+          onClick={() => navigate(`/chases/${selectedOption}`)}
+        />
+      </div>
       {/* <div className="absolute bottom-23 w-full px-10 ">
         <PrimaryButton
           type="button"
@@ -74,8 +74,6 @@ const Chase = () => {
           onClick={() => navigate(`/chases/${selectedOption}`)}
         />
       </div> */}
-
-      
     </div>
   );
 };

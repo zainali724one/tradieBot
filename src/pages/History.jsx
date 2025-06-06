@@ -1,59 +1,16 @@
-import { InfoCard } from "../components/InfoCard";
 import UserProfileHeader from "../components/UserProfileHeader";
-
-const jobs = [
-  {
-    id: "#A102",
-    name: "Jane Smith",
-    status: "Scheduled",
-    statusColor: "#FF950080",
-    image: "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png",
-  },
-  {
-    id: "#A102",
-    name: "Jane Smith",
-    status: "Completed",
-    statusColor: "#18721E80",
-    image: "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png",
-  },
-  {
-    id: "#A102",
-    name: "Jane Smith",
-    status: "Awaiting Payment",
-    statusColor: "#E81E1E80",
-    image: "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png",
-  },
-  {
-    id: "#A102",
-    name: "Jane Smith",
-    status: "Scheduled",
-    statusColor: "#FF9500",
-    image: "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png",
-  },
-  {
-    id: "#A102",
-    name: "Jane Smith",
-    status: "Completed",
-    statusColor: "#18721E80",
-    image: "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png",
-  },
-  {
-    id: "#A102",
-    name: "Jane Smith",
-    status: "Awaiting Payment",
-    statusColor: "#E81E1E80",
-    image: "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png",
-  },
-  {
-    id: "#A102",
-    name: "Jane Smith",
-    status: "Scheduled",
-    statusColor: "#FF9500",
-    image: "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png",
-  },
-];
+import { useGethistory } from "../reactQuery/queries/queries";
+import { InfoCard } from "../components/InfoCard";
+import { useSelector } from "react-redux";
 
 const History = () => {
+  const userId = useSelector((state) => state.session.userId);
+  const { data, isLoading } = useGethistory(userId?.telegramId);
+
+  if (isLoading) {
+    return <isLoading />;
+  }
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-12 px-6">
       <UserProfileHeader
@@ -70,17 +27,18 @@ const History = () => {
       </div>
 
       <div className="w-full  space-y-3 h-[60vh] overflow-y-scroll">
-        {jobs.map((job, index) => (
+        {data?.history?.map((quote, index) => (
           <InfoCard
-            key={index}
-            image={job?.image}
-            title="Job ID:"
-            id={job?.id}
+            image={
+              quote?.image ||
+              "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
+            }
+            index={index + 1}
             label1="Customer"
-            value1={job?.name}
+            value1={quote?.customerName}
             showStatus={true}
-            status={job?.status}
-            statusColor={job?.statusColor}
+            status={quote?.status}
+            statusColor={quote?.statusColor}
           />
         ))}
       </div>

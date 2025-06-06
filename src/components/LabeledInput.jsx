@@ -1,4 +1,5 @@
 import React from "react";
+
 import CustomInput from "./ui/Input";
 import PropTypes from "prop-types";
 import Text from "./ui/Text";
@@ -11,6 +12,7 @@ const LabeledInput = ({
   label,
   prefix,
   postfix,
+  error,
 }) => {
   return (
     <div>
@@ -27,6 +29,7 @@ const LabeledInput = ({
         <CustomInput
           type={type}
           value={value}
+
           onChange={onChange}
           placeholder={placeholder}
           className={`w-[100%] h-[50px]  outline-none   ${
@@ -39,6 +42,9 @@ const LabeledInput = ({
           </span>
         )}
       </div>
+      <p className="text-red-500 text-sm pl-1">
+      {error}
+      </p>
     </div>
   );
 };

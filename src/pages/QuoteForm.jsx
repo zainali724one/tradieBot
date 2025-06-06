@@ -1,31 +1,42 @@
 import React, { useState } from "react";
-import LabeledInput from "../components/LabeledInput";
-import PrimaryButton from "../components/PrimaryButton";
-import UserProfile from "../components/ui/UserProfile";
-import TextArea from "../components/ui/TextArea";
+
 import UserProfileHeader from "../components/UserProfileHeader";
+import { useAddQuote } from "../reactQuery/mutations/auth";
+import PrimaryButton from "../components/PrimaryButton";
+import LabeledInput from "../components/LabeledInput";
+import TextArea from "../components/ui/TextArea";
+import { useSelector } from "react-redux";
+
 
 function QuoteForm() {
+  // const {}
+  const { Addquote, isLoading } = useAddQuote();
+
+  const userId = useSelector((state) => state.session.userId);
+
   const [formData, setFormData] = useState({
-    customerName: "Lorem Steve",
-    jobDescription:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    quoteAmount: "500",
-    customerEmail: "xya@gmail.com",
+    customerName: "",
+    jobDescription: "",
+    quoteAmount: "",
+    customerEmail: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleChange = (field) => (e) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    // setFormErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form data submitted:", formData);
-    alert("Quote Submitted (check console for data)");
+    const customerData = {
+      // formData
+      userId: userId?._id,
+      telegramId: userId?.telegramId,
+      customerName: formData?.customerName,
+      jobDescription: formData?.jobDescription,
+      quoteAmount: formData?.quoteAmount,
+      customerEmail: formData?.customerEmail,
+    };
+    Addquote(customerData);
   };
 
   return (
@@ -36,16 +47,20 @@ function QuoteForm() {
         subtitle="Welcome"
       />
 
-  <div className="mt-4 w-full max-h-[64dvh] overflow-y-auto ">
+      <div className="mt-4 w-full max-h-[64dvh] overflow-y-auto ">
         <h2 className="text-lg text-[#5290C1] font-semibold font-poppins">
           Quote
         </h2>
         <LabeledInput
           label="Customer Name"
-          id="customerName"
+          // id="customerName"
+          // type="text"
           placeholder="Customer Name"
+          // value={formData.customerName}
+          // onChange={handleChange}
+          // value={`$ ${formData.customerName}`}
           value={formData.customerName}
-          onChange={handleChange}
+          onChange={handleChange("customerName")}
         />
         <div className="mt-3">
           <p className="font-[500] text-[14px]">Job Description</p>
@@ -53,20 +68,31 @@ function QuoteForm() {
             label="Job Description"
             id="jobDescription"
             placeholder="Enter job description"
+            // value={formData.jobDescription}
+            // value={`$ ${formData.jobDescription}`}
             value={formData.jobDescription}
-            onChange={handleChange}
+            onChange={handleChange("jobDescription")}
             className="w-[100%] min-h-[140px] outline-none rounded-[10px] p-3"
             style={{ boxShadow: "1px 1px 4px 4px #5290C11A inset" }}
           />
         </div>
 
         <LabeledInput
+          // label="Quote Amount"
+          // id="quoteAmount"
+          // type="number"
+          // placeholder="$ 0.00"
+          // value={formData.quoteAmount}
+          // onChange={handleChange("quoteAmount")}
+
           label="Quote Amount"
-          id="quoteAmount"
-          type="text" // Keep as text to allow '$' symbol display
           placeholder="$ 0.00"
-          value={`$ ${formData.quoteAmount}`}
-          onChange={handleChange}
+          type="number"
+          // error={formErrors.quoteAmount}
+          value={formData.quoteAmount}
+          onChange={handleChange("quoteAmount")}
+
+          // onChange={handleChange}
         />
 
         <LabeledInput
@@ -75,13 +101,23 @@ function QuoteForm() {
           type="email"
           placeholder="customer@example.com"
           value={formData.customerEmail}
-          onChange={handleChange}
+          onChange={handleChange("customerEmail")}
+
+          // onChange={handleChange}
         />
-        
       </div>
       <div className="w-[90%]  flex fixed bottom-21">
-          <PrimaryButton onClick={handleSubmit} children="Continue" />
-        </div>
+        <PrimaryButton
+          //  onClick={handleSubmit}
+          //  children="Continue"
+          children="Continue"
+          color="blue"
+          onClick={() => handleSubmit()}
+          disabled={isLoading}
+          loading={isLoading}
+          loadingText="Loading..."
+        />
+      </div>
     </div>
   );
 }

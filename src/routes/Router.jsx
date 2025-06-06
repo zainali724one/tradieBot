@@ -1,11 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
+
 import LazyComponent from "./LazyComponent";
 import AppLayout from "../layout/Layout";
-import { FaHireAHelper } from "react-icons/fa";
-// import AppLayout from "../layout/Layout";
-// import LazyComponent from "./LazyComponent";
-// import ErrorScreen from "../pages/error/ErrorScreen";
-// import PrivateRoute from "./PrivateRoute";
+
 
 export const router = createBrowserRouter([
   {

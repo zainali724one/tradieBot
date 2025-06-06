@@ -61,7 +61,7 @@ const EditProfile = () => {
         />
       </div>
 
-      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
+      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
         <PrimaryButton children="Update" type="submit" />
       </div>
     </div>

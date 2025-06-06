@@ -1,89 +1,79 @@
-import React, { useEffect, useState } from "react";
-import Image from "../components/ui/Image";
-import logo from "../assets/logo.png";
-import Text from "../components/ui/Text";
-import PrimaryButton from "../components/PrimaryButton";
+import React, { useState } from "react";
+
 import { useSendOtp, useVerifyOtp } from "../reactQuery/mutations/auth";
-import OTPInput from "react-otp-input";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Loading from "../components/Loading";
+import OTPInput from "react-otp-input";
+
+import PrimaryButton from "../components/PrimaryButton";
+import BackButton from "../components/ui/BackButton";
+import Image from "../components/ui/Image";
+import Text from "../components/ui/Text";
+import logo from "../assets/logo.png";
 
 const VerifyOtpScreen = () => {
-  const [otp, setOtp] = useState("");
-  const {sendotp} = useSendOtp()
-  const navigate=useNavigate();
+  const { verifyOtp, isLoading } = useVerifyOtp();
 
   const location = useLocation();
   const emailFromState = location.state?.email || "";
+
+  const [otp, setOtp] = useState("");
+  const [formErrors, setFormErrors] = useState({});
+
+  const { sendotp } = useSendOtp();
+  const navigate = useNavigate();
 
   const handleOtpChange = (otpValue) => {
     setOtp(otpValue);
   };
 
-  const { verifyOtp,isLoading  } = useVerifyOtp();
-
-//   const handleResendOtp = () => {
-//     const sendverifyotp = {
-//       email: emailFromState,
-//     //   otp: otp,
-//     };
-//     sendotp(sendverifyotp);
-//   };
-
-
-const handleResendOtp = () => {
+  const handleResendOtp = () => {
     const sendverifyotp = {
-        email: emailFromState,
-        // otp: otp,
-      };
-      sendotp(sendverifyotp, {
+      email: emailFromState,
+    };
+    sendotp(sendverifyotp, {
       onSuccess: (data) => {
-        // console.log("OTP Verify successfully", data);
-        toast.success(
-            "OTP Send successfully"
-        )
-        // navigate("/resetpassword", { state: { email: emailFromState } });
+        toast.success("OTP Send successfully");
       },
       onError: (error) => {
-        console.error("Failed to send OTP", error);
+        // console.error("Failed to send OTP", error);
         toast.error(error.message);
-        // Show an error message if needed
       },
     });
   };
   const handleSubmit = () => {
     const sendverifyotp = {
-        email: emailFromState,
-        otp: otp,
-      };
-      verifyOtp(sendverifyotp, {
+      email: emailFromState,
+      otp: otp,
+    };
+    verifyOtp(sendverifyotp, {
       onSuccess: (data) => {
-        // console.log("OTP Verify successfully", data);
-        toast.success(
-            "OTP Verify successfully"
-        )
+        toast.success("OTP Verify successfully");
         navigate("/resetpassword", { state: { email: emailFromState } });
       },
       onError: (error) => {
-        console.error("Failed to send OTP", error);
+        // console.error("Failed to send OTP", error);
         toast.error(error.message);
-        // Show an error message if needed
       },
     });
   };
 
-  if (isLoading) {
-    return (
-      <>
-        <Loading />
-      </>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <>
+  //       <Loading />
+  //     </>
+  //   );
+  // }
 
   return (
     <div className="bg-[#D3DCE5] w-[100%] h-[100dvh] flex flex-col items-center overflow-y-scroll pb-3.5">
-      <Image src={logo} className="object-cover mt-10" />
+      <div className="w-full pt-16 ml-6">
+        <header className="flex justify-start">
+          <BackButton />
+        </header>
+      </div>
+      <Image src={logo} className="object-cover mt-2" />
       <div className="w-[90%] mt-5">
         <Text children="Verify OTP" className="font-[600] text-[20px]" />
         <Text
@@ -103,8 +93,7 @@ const handleResendOtp = () => {
             margin: "auto",
             height: "2.5rem",
 
-            // margin: "0 0.3rem",
-            boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)", // Inner shadow
+            boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
 
             fontSize: "1rem",
             borderRadius: 8,
@@ -113,27 +102,28 @@ const handleResendOtp = () => {
           }}
           renderInput={(props) => <input {...props} />}
         />
-        
-        <div className="font-[500] text-[14px] mt-2">
-  Didn’t you receive the OTP?{' '}
-  <button 
-  onClick={handleResendOtp}
-   className="text-blue-600 underline hover:text-blue-800">
-    Resend OTP
-  </button>
-</div>
 
+        <div className="font-[500] text-[14px] mt-2">
+          Didn’t you receive the OTP?{" "}
+          <button
+            onClick={handleResendOtp}
+            className="text-[#5290C1] underline hover:text-[#5290C1]"
+          >
+            Resend OTP
+          </button>
+        </div>
 
         <div className="mt-5 w-[100%]">
           <PrimaryButton
-            // onClick={() => signup(formData)}
+            disabled={isLoading}
+            loading={isLoading}
+            loadingText="Loading..."
             onClick={handleSubmit}
             children="Verify"
             color="blue"
           />
         </div>
       </div>
-
     </div>
   );
 };

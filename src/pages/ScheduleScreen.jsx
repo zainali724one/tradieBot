@@ -1,32 +1,49 @@
 import React, { useState } from "react";
-import LabeledInput from "../components/LabeledInput";
-import PrimaryButton from "../components/PrimaryButton";
-import UserProfile from "../components/ui/UserProfile";
-import TextArea from "../components/ui/TextArea";
+
 import UserProfileHeader from "../components/UserProfileHeader";
+import PrimaryButton from "../components/PrimaryButton";
+import LabeledInput from "../components/LabeledInput";
+import TextArea from "../components/ui/TextArea";
+
+import { useAddJob } from "../reactQuery/mutations/auth";
+import { useSelector } from "react-redux";
 
 function ScheduleScreen() {
+  const { usAddJob, isLoading } = useAddJob();
+  const userId = useSelector((state) => state.session.userId);
+
+  // useAddJob
   const [formData, setFormData] = useState({
-    customerName: "Lorem Steve",
-    jobDescription:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    quoteAmount: "500",
-    customerEmail: "xya@gmail.com",
+    customerName: "",
+    jobDescription: "",
+    date: "",
+    time: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleChange = (field) => (e) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form data submitted:", formData);
-    alert("Quote Submitted (check console for data)");
+  const handleSubmit = () => {
+    // if (!validateForm()) {
+    //   toast.error("Please fix the errors before Login.");
+    //   return;
+    // }
+    const addjob = {
+      customerName: formData?.customerName,
+      jobDescription: formData?.jobDescription,
+      telegramId: userId?.telegramId,
+      date: formData.date,
+      time: formData.time,
+      userId: userId._id,
+    };
+    usAddJob(addjob);
   };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   alert("Quote Submitted (check console for data)");
+  // };
 
   return (
     <div className="flex flex-col items-center h-[100dvh] bg-[#D3DCE5] pt-12 px-6 overflow-y-auto ">
@@ -36,7 +53,7 @@ function ScheduleScreen() {
         subtitle="Welcome"
       />
 
-  <div className="mt-4 w-full max-h-[64dvh] overflow-y-auto ">
+      <div className="mt-4 w-full max-h-[64dvh] overflow-y-auto ">
         <h2 className="text-lg text-[#5290C1] font-semibold font-poppins">
           Quote
         </h2>
@@ -45,7 +62,7 @@ function ScheduleScreen() {
           id="customerName"
           placeholder="Customer Name"
           value={formData.customerName}
-          onChange={handleChange}
+          onChange={handleChange("customerName")}
         />
         <div className="mt-3">
           <p className="font-[500] text-[14px]">Job Description</p>
@@ -54,7 +71,7 @@ function ScheduleScreen() {
             id="jobDescription"
             placeholder="Enter job description"
             value={formData.jobDescription}
-            onChange={handleChange}
+            onChange={handleChange("jobDescription")}
             className="w-[100%] min-h-[140px] outline-none rounded-[10px] p-3"
             style={{ boxShadow: "1px 1px 4px 4px #5290C11A inset" }}
           />
@@ -62,26 +79,32 @@ function ScheduleScreen() {
 
         <LabeledInput
           label="Date"
+          type="Date"
           id="Date"
-          // type="Date" // Keep as text to allow '$' symbol display
+          value={formData.date}
           placeholder="12/12/2025"
-          // value={`$ ${formData.quoteAmount}`}
-          onChange={handleChange}
+          onChange={handleChange("date")}
         />
 
         <LabeledInput
           label="Time"
+          type="time"
           id="Time"
-          // type="time"
+          value={formData.time}
           placeholder="04:00 PM"
-          // value={formData.customerEmail}
-          onChange={handleChange}
+          onChange={handleChange("time")}
         />
-        
       </div>
       <div className="w-[90%]  flex fixed bottom-21">
-          <PrimaryButton onClick={handleSubmit} children="Continue" />
-        </div>
+        <PrimaryButton
+          children="Continue"
+          color="blue"
+          onClick={() => handleSubmit()}
+          disabled={isLoading}
+          loading={isLoading}
+          loadingText="Loading..."
+        />
+      </div>
     </div>
   );
 }

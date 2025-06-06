@@ -1,30 +1,32 @@
 import React, { useState } from "react";
-// import { FaArrowLeft, FaPhoneAlt } from 'react-icons/fa'; // Import icons
-// import InputGroup from '../components/InputGroup'; // Re-use InputGroup
-import LabeledInput from "../components/LabeledInput";
+
+import { useEditProfile } from "../reactQuery/mutations/auth";
+
 import PrimaryButton from "../components/PrimaryButton";
-import i2 from "../assets/icons/i2.png";
+import LabeledInput from "../components/LabeledInput";
 import BackButton from "../components/ui/BackButton";
+import i2 from "../assets/icons/i2.png";
 
 function EditPhoneNumberScreen() {
+  const { editProfile, isLoading } = useEditProfile();
+
   const [formData, setFormData] = useState({
-    oldPhoneNumber: "123-456-7890", // Example old phone number
-    newPhoneNumber: "", // New phone number will be entered by user
+    oldPhoneNumber: "",
+    newPhoneNumber: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleChange = (field) => (e) => {
+    setFormData({ ...formData, [field]: e.target.value });
   };
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    console.log("Update Phone Number data:", formData);
-    // Here you would typically send the data to a backend
-    alert("Phone Number updated (check console for data)");
+  const handleUpdate = () => {
+    const editnamedata = {
+      type: "phone",
+      id: "1224992255",
+      oldPhone: formData?.oldPhoneNumber,
+      newPhone: formData?.newPhoneNumber,
+    };
+    editProfile(editnamedata);
   };
 
   return (
@@ -36,37 +38,43 @@ function EditPhoneNumberScreen() {
         </h1>
       </header>
 
-      <form onSubmit={handleUpdate} className="mt-8">
-        <div>
-          <LabeledInput
-            label="Old Phone Number"
-            prefix={<img src={i2} className="h-[18px] w-[18px]" />}
-            id="oldPhoneNumber"
-            placeholder="Enter your old phone number"
-            value={formData.oldPhoneNumber}
-            onChange={handleChange}
-            //   icon={FaPhoneAlt} // Add phone icon
-            type="tel" // Use 'tel' type for phone numbers
-          />
-        </div>
+      <div className="mt-8">
+        <LabeledInput
+          label="Old Phone Number"
+          prefix={<img src={i2} className="h-[18px] w-[18px]" />}
+          id="oldPhoneNumber"
+          placeholder="Enter your old phone number"
+          value={formData.oldPhoneNumber}
+          // error={formErrors.email}
 
-        <div className="mt-4">
-          <LabeledInput
-            label="New Phone Number"
-            id="newPhoneNumber"
-            prefix={<img src={i2} className="h-[18px] w-[18px]" />}
-            placeholder="Enter your new phone number"
-            value={formData.newPhoneNumber}
-            onChange={handleChange}
-            //   icon={FaPhoneAlt} // Add phone icon
-            type="tel" // Use 'tel' type for phone numbers
-          />
-        </div>
+          onChange={handleChange("oldPhoneNumber")}
+          type="number"
+        />
+      </div>
 
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
-          <PrimaryButton type="submit" children={"Update"} />
-        </div>
-      </form>
+      <div className="mt-4">
+        <LabeledInput
+          label="New Phone Number"
+          id="newPhoneNumber"
+          prefix={<img src={i2} className="h-[18px] w-[18px]" />}
+          placeholder="Enter your new phone number"
+          value={formData.newPhoneNumber}
+          onChange={handleChange("newPhoneNumber")}
+          type="number"
+        />
+      </div>
+
+      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
+        <PrimaryButton
+          children="Update"
+          disabled={isLoading}
+          loading={isLoading}
+          loadingText="Loading..."
+          onClick={() => handleUpdate()}
+          color="blue"
+          type="submit"
+        />
+      </div>
     </div>
   );
 }

@@ -1,28 +1,32 @@
 import { useState } from "react";
-import LabeledInput from "../components/LabeledInput";
+
+import { useEditProfile } from "../reactQuery/mutations/auth";
+
 import PrimaryButton from "../components/PrimaryButton";
-import i3 from "../assets/icons/i3.png";
+import LabeledInput from "../components/LabeledInput";
 import BackButton from "../components/ui/BackButton";
+import i3 from "../assets/icons/i3.png";
 
 function EditEmailScreen() {
+  const { editProfile, isLoading } = useEditProfile();
+
   const [formData, setFormData] = useState({
-    oldEmail: "xya@gmail.com", // Example old email
-    newEmail: "", // New email will be entered by user
+    oldEmail: "",
+    newEmail: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleChange = (field) => (e) => {
+    setFormData({ ...formData, [field]: e.target.value });
   };
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    console.log("Update Email data:", formData);
-    // Here you would typically send the data to a backend
-    // alert("Email updated (check console for data)");
+  const handleUpdate = () => {
+    const editnamedata = {
+      type: "email",
+      id: "1224992255",
+      oldEmail: formData?.oldEmail,
+      newEmail: formData?.newEmail,
+    };
+    editProfile(editnamedata);
   };
 
   return (
@@ -34,38 +38,41 @@ function EditEmailScreen() {
         </h1>
       </header>
 
-      <form onSubmit={handleUpdate} className="mt-8">
-        <div>
-          {" "}
-          <LabeledInput
-            label="Old Email"
-            id="oldEmail"
-            placeholder="Enter your email"
-            prefix={<img src={i3} className="h-[14px] w-[18px]" />}
-            value={formData.oldEmail}
-            onChange={handleChange}
-            //   icon={FaEnvelope} // Add email icon
-            type="email"
-          />
-        </div>
+      <div className="mt-8">
+        <LabeledInput
+          label="Old Email"
+          value={formData?.oldEmail}
+          // error={formErrors.email}
 
-        <div className="mt-4">
-          <LabeledInput
-            label="New Email"
-            id="newEmail"
-            prefix={<img src={i3} className="h-[14px] w-[18px]" />}
-            placeholder="Enter your email"
-            value={formData.newEmail}
-            onChange={handleChange}
-            //   icon={FaEnvelope} // Add email icon
-            type="email"
-          />
-        </div>
+          onChange={handleChange("oldEmail")}
+          prefix={<img src={i3} className="h-[14px] w-[18px]" />}
+          placeholder="Enter your email"
+        />
+      </div>
 
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
-          <PrimaryButton children="Update" type="submit" />
-        </div>
-      </form>
+      <div className="mt-4">
+        <LabeledInput
+          label="New Email"
+          value={formData?.newEmail}
+          // error={formErrors.email}
+
+          onChange={handleChange("newEmail")}
+          prefix={<img src={i3} className="h-[14px] w-[18px]" />}
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
+        <PrimaryButton
+          children="Update"
+          disabled={isLoading}
+          loading={isLoading}
+          loadingText="Loading..."
+          onClick={() => handleUpdate()}
+          color="blue"
+          type="submit"
+        />
+      </div>
     </div>
   );
 }

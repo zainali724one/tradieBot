@@ -21,7 +21,8 @@ const Footer = () => {
   const navigate = useNavigate();
 
   const currentRoute = window.location.pathname;
-  // console.log(currentRoute);
+
+
 
   return (
     <div className="fixed bottom-0  w-full bg-white shadow-md rounded-t-3xl px-4 py-2 flex justify-between items-center max-w-[430px] mx-auto">
