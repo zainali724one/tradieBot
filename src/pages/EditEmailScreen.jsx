@@ -6,9 +6,13 @@ import PrimaryButton from "../components/PrimaryButton";
 import LabeledInput from "../components/LabeledInput";
 import BackButton from "../components/ui/BackButton";
 import i3 from "../assets/icons/i3.png";
+import { useSelector } from "react-redux";
 
 function EditEmailScreen() {
   const { editProfile, isLoading } = useEditProfile();
+  const userId = useSelector((state) => state.session.userId);
+
+  // console.log("userId", userId);
 
   const [formData, setFormData] = useState({
     oldEmail: "",
@@ -22,7 +26,7 @@ function EditEmailScreen() {
   const handleUpdate = () => {
     const editnamedata = {
       type: "email",
-      id: "1224992255",
+      id: userId?.telegramId,
       oldEmail: formData?.oldEmail,
       newEmail: formData?.newEmail,
     };

@@ -24,7 +24,7 @@ const componentMap = {
   "/chases": lazy(() => import("../pages/Chases")),
   "/history": lazy(() => import("../pages/History")),
   "/profile": lazy(() => import("../pages/Profile")),
-  "/editProfile": lazy(() => import("../pages/EditProfile")),
+  "/editprofile": lazy(() => import("../pages/EditProfile")),
   "/schedule": lazy(() => import("../pages/ScheduleScreen")),
   "/invoice": lazy(() => import("../pages/InvoiceScreen")),
 

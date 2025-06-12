@@ -6,10 +6,11 @@ import PrimaryButton from "../components/PrimaryButton";
 import LabeledInput from "../components/LabeledInput";
 import BackButton from "../components/ui/BackButton";
 import i2 from "../assets/icons/i2.png";
+import { useSelector } from "react-redux";
 
 function EditPhoneNumberScreen() {
   const { editProfile, isLoading } = useEditProfile();
-
+  const userId = useSelector((state) => state.session.userId);
   const [formData, setFormData] = useState({
     oldPhoneNumber: "",
     newPhoneNumber: "",
@@ -22,7 +23,7 @@ function EditPhoneNumberScreen() {
   const handleUpdate = () => {
     const editnamedata = {
       type: "phone",
-      id: "1224992255",
+      id: userId?.telegramId,
       oldPhone: formData?.oldPhoneNumber,
       newPhone: formData?.newPhoneNumber,
     };

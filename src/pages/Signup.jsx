@@ -102,8 +102,8 @@ const Signup = () => {
     }
 
     let useralldata = {
-      telegramId: "6794492093",
-      username: "sufyan",
+      telegramId: userdata?.telegramId,
+      username: userdata?.telegramId || "NA",
       name: formData?.name,
       email: formData?.email,
       phone: formData?.phone,
@@ -134,7 +134,6 @@ const Signup = () => {
 
         setUserdata(telegramData)
         dispatch(setTelegramId(telegramData));
-        console.log("telegramdata", telegramId?.telegramId);
       }
     };
 
@@ -159,7 +158,7 @@ const Signup = () => {
           className="font-[500] text-[14px] mt-2"
         />
 
-{userdata && (
+{/* {userdata && (
   <div className="mt-4">
     <Text className="text-[14px] font-[500] text-gray-700">
       Telegram ID: {userdata?.telegramId}
@@ -169,7 +168,7 @@ const Signup = () => {
       </Text>
    
   </div>
-)}
+)} */}
       </div>
 
       <div className="w-[90%] mt-8">

@@ -31,7 +31,6 @@ const Footer = () => {
         className="flex flex-col items-center"
         onClick={() => navigate("/quoteform")}
       >
-        {/* <FaQuoteLeft size={20} /> */}
         <Image
           src={isCurrentPage("/quoteform", currentRoute) ? i10 : i6}
           className="h-[20px] w-[20px]"

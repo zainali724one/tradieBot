@@ -6,10 +6,11 @@ import PrimaryButton from "../components/PrimaryButton";
 import LabeledInput from "../components/LabeledInput";
 import BackButton from "../components/ui/BackButton";
 import i5 from "../assets/icons/i5.png";
+import { useSelector } from "react-redux";
 
 function ChangePasswordScreen() {
   const { editChangePass, isLoading } = useChangePassword();
-
+  const userId = useSelector((state) => state.session.userId);
   const [formData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
@@ -22,7 +23,7 @@ function ChangePasswordScreen() {
 
   const handleUpdate = () => {
     const editchangePassword = {
-      telegramId: "1224992255",
+      telegramId: userId?.telegramId,
       oldPassword: formData?.oldPassword,
       newPassword: formData?.newPassword,
     };

@@ -53,6 +53,7 @@ export function useLogin() {
       if (response?.user) {
         dispatch(setUserId(response.user)); // ✅ Store userId in Redux
       }
+      localStorage.setItem("telegramid",response.user?.telegramId);
       navigate("/quoteform");
       toast.success("Login Successfully");
       queryClient.invalidateQueries({ queryKey: ["login"] });
@@ -163,7 +164,7 @@ export function useDelete() {
     mutationFn: (formData) => userDeleteAccount(formData),
     onSuccess: () => {
       navigate("/profile");
-      // toast.success("Delete Successfully");
+      toast.success("Delete Successfully");
       queryClient.invalidateQueries({ queryKey: ["useDel"] });
     },
     onError: (error) => {
@@ -183,6 +184,7 @@ export function useAddQuote() {
     mutationFn: (formData) => addQuote(formData),
     onSuccess: () => {
       // navigate("/profile");
+      toast.success("Data added successfully!");
       // toast.success("Delete Successfully");
       queryClient.invalidateQueries({ queryKey: ["Addquote"] });
     },
@@ -205,6 +207,7 @@ export function useAddInvoice() {
     mutationFn: (formData) => addInvoice(formData),
     onSuccess: () => {
       // navigate("/profile");
+      toast.success("Data added successfully!");
       // toast.success("Delete Successfully");
       queryClient.invalidateQueries({ queryKey: ["AddInvoice"] });
     },
@@ -226,8 +229,9 @@ export function useAddJob() {
   const { mutate: usAddJob, isPending: isLoading } = useMutation({
     mutationFn: (formData) => addJob(formData),
     onSuccess: () => {
-      // navigate("/profile");
-      // toast.success("Delete Successfully");
+   
+      toast.success("Data added successfully!");
+
       queryClient.invalidateQueries({ queryKey: ["usAddJob"] });
     },
     onError: (error) => {

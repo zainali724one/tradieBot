@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import sessionReducer from "./sessionSlice";
-import telegramReducer from "./telegramSlice"
 import storage from "redux-persist/lib/storage"; // defaults to localStorage
 import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "redux";
@@ -12,7 +11,6 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   session: sessionReducer,
-  session:telegramReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

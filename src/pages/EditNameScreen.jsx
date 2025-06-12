@@ -6,9 +6,11 @@ import PrimaryButton from "../components/PrimaryButton";
 import LabeledInput from "../components/LabeledInput";
 import BackButton from "../components/ui/BackButton";
 import i1 from "../assets/icons/i1.png";
+import { useSelector } from "react-redux";
 
 function EditNameScreen() {
   const { editProfile, isLoading } = useEditProfile();
+  const userId = useSelector((state) => state.session.userId);
 
   const [userData, setUserData] = useState({});
 
@@ -24,36 +26,13 @@ function EditNameScreen() {
   const handleUpdate = () => {
     const editnamedata = {
       type: "name",
-      id: "1224992255",
+      id: userId?.telegramId,
       name: formData?.newName,
     };
     editProfile(editnamedata);
   };
 
-  useEffect(() => {
-    const authenticatingUser = async () => {
-      const tg = window?.Telegram?.WebApp;
-
-      tg?.ready();
-      if (tg?.initDataUnsafe?.user?.id) {
-        const userId = tg.initDataUnsafe.user.id;
-        const userIdString = userId.toString();
-
-        const telegramData = {
-          telegramId: userIdString,
-          firstName: tg?.initDataUnsafe?.user?.first_name,
-          lastName: tg?.initDataUnsafe?.user?.last_name,
-          username: tg?.initDataUnsafe?.user?.username,
-          languageCode: tg?.initDataUnsafe?.user?.language_code,
-          isPremium: tg?.initDataUnsafe?.user?.is_premium,
-        };
-
-        setUserData(telegramData);
-      }
-    };
-
-    authenticatingUser();
-  }, []);
+ 
 
   return (
     <div className="p-4 h-[100dvh] relative bg-[#D3DCE5]  pt-12 px-5  max-w-[430px]">

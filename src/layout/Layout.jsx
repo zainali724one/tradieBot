@@ -55,6 +55,9 @@ const AppLayout = () => {
         location?.pathname === "/editProfile" ||
         location?.pathname === "/resetpassword" ||
         location?.pathname === "/verifyOtp" ||
+        location?.pathname === "/verifyotp" ||
+       
+        
         location?.pathname === "/forgetpassword" ? null : (
           <Footer
             style={{

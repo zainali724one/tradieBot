@@ -60,7 +60,9 @@ const Profile = () => {
   const handleLogoutAccount = async () => {
     setLogout(true);
     // Simulate an API call or async operation
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    localStorage.removeItem("telegramid");
+    navigate("/signin");
     setLogout(false);
     setIsModalOpen(false); // Close the modal after action
   };
@@ -143,7 +145,7 @@ const Profile = () => {
 
       <div className="flex flex-col gap-3">
         <SettingTab
-          onClick={() => navigate("/editProfile")}
+          onClick={() => navigate("/editprofile")}
           title="Edit Profile"
           icon={
             <img
