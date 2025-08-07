@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { useEditProfile } from "../reactQuery/mutations/auth";
-
 import PrimaryButton from "../components/PrimaryButton";
 import LabeledInput from "../components/LabeledInput";
 import BackButton from "../components/ui/BackButton";
 import i1 from "../assets/icons/i1.png";
 import { useSelector } from "react-redux";
+import { Getuser } from "../api/auth/auth";
 
 function EditNameScreen() {
   const { editProfile, isLoading } = useEditProfile();
@@ -22,6 +22,40 @@ function EditNameScreen() {
   const handleChange = (field) => (e) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
+    const returnUserData = async (telegramId) => {
+      // 8141119319
+  
+      Getuser(telegramId)
+        .then((res) => {
+  
+          setFormData((prevData) => ({
+            ...prevData,
+            newName: res?.user?.name || "",
+          }));
+
+          
+          console.log(res, "data is added");
+        })
+        .catch((err) => {
+          // localStorage.removeItem("telegramid");
+          // nevigate("/signin");
+          console.log(err, "here is the error");
+        });
+      // return theUser;
+    };
+
+     const tg = window?.Telegram?.WebApp;
+      console.log(tg.initDataUnsafe.user, "here is user");
+      // const telegramUserData = tg.initDataUnsafe.user;
+    
+      tg?.ready();
+      useEffect(() => {
+        if (tg?.initDataUnsafe?.user?.id) {
+          const userId = tg.initDataUnsafe.user.id;
+          returnUserData(userId);
+        }
+      }, [tg?.initDataUnsafe?.user?.id]);
+
 
   const handleUpdate = () => {
     const editnamedata = {
@@ -44,20 +78,20 @@ function EditNameScreen() {
         </h1>
       </header>
 
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <LabeledInput
           label="Old Name"
           value={formData.oldName}
-          // error={formErrors.email}
+         
 
           onChange={handleChange("oldName")}
           prefix={<img src={i1} className="h-[14px] w-[18px]" />}
           placeholder="Enter your name"
-        />
-      </div>
-      <div className="mt-4">
+        /> */}
+      {/* </div> */}
+      <div className="mt-8">
         <LabeledInput
-          label="New Name"
+          label="Edit Name"
           value={formData.newName}
           // error={formErrors.email}
 

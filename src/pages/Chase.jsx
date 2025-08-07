@@ -12,11 +12,14 @@ const Chase = () => {
     { id: "invoice", label: "Invoice" },
   ];
 
+  const tg = window?.Telegram?.WebApp;
+  const telegramUserData = tg.initDataUnsafe.user;
+
   return (
     <div className="flex flex-col items-center h-[100dvh] bg-[#D3DCE5] pt-12 px-6 ">
       <UserProfileHeader
-        image="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
-        name="Mr. Thomas John"
+        image={telegramUserData?.photo_url}
+        name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
         subtitle="Welcome"
       />
 

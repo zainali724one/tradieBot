@@ -12,6 +12,7 @@ import Text from "../components/ui/Text";
 import i3 from "../assets/icons/i3.png";
 import i5 from "../assets/icons/i5.png";
 import logo from "../assets/logo.png";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const { login, isLoading } = useLogin();

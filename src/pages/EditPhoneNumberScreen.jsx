@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useEditProfile } from "../reactQuery/mutations/auth";
 
@@ -7,6 +7,7 @@ import LabeledInput from "../components/LabeledInput";
 import BackButton from "../components/ui/BackButton";
 import i2 from "../assets/icons/i2.png";
 import { useSelector } from "react-redux";
+import { Getuser } from "../api/auth/auth";
 
 function EditPhoneNumberScreen() {
   const { editProfile, isLoading } = useEditProfile();
@@ -24,11 +25,45 @@ function EditPhoneNumberScreen() {
     const editnamedata = {
       type: "phone",
       id: userId?.telegramId,
-      oldPhone: formData?.oldPhoneNumber,
       newPhone: formData?.newPhoneNumber,
     };
     editProfile(editnamedata);
   };
+
+
+   const returnUserData = async (telegramId) => {
+        // 8141119319
+    
+        Getuser(telegramId)
+          .then((res) => {
+    
+            setFormData((prevData) => ({
+              ...prevData,
+              newPhoneNumber: res?.user?.phone || "",
+            }));
+  
+            
+            console.log(res, "data is added");
+          })
+          .catch((err) => {
+            // localStorage.removeItem("telegramid");
+            // nevigate("/signin");
+            console.log(err, "here is the error");
+          });
+        // return theUser;
+      };
+  
+       const tg = window?.Telegram?.WebApp;
+        console.log(tg.initDataUnsafe.user, "here is user");
+        // const telegramUserData = tg.initDataUnsafe.user;
+      
+        tg?.ready();
+        useEffect(() => {
+          if (tg?.initDataUnsafe?.user?.id) {
+            const userId = tg.initDataUnsafe.user.id;
+            returnUserData(userId);
+          }
+        }, [tg?.initDataUnsafe?.user?.id]);
 
   return (
     <div className="p-4 h-[100dvh] relative bg-[#D3DCE5]  pt-12 px-5  max-w-[430px]">
@@ -39,23 +74,21 @@ function EditPhoneNumberScreen() {
         </h1>
       </header>
 
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <LabeledInput
           label="Old Phone Number"
           prefix={<img src={i2} className="h-[18px] w-[18px]" />}
           id="oldPhoneNumber"
           placeholder="Enter your old phone number"
           value={formData.oldPhoneNumber}
-          // error={formErrors.email}
-
           onChange={handleChange("oldPhoneNumber")}
           type="number"
         />
-      </div>
+      </div> */}
 
-      <div className="mt-4">
+      <div className="mt-8">
         <LabeledInput
-          label="New Phone Number"
+          label="Enter Phone Number"
           id="newPhoneNumber"
           prefix={<img src={i2} className="h-[18px] w-[18px]" />}
           placeholder="Enter your new phone number"

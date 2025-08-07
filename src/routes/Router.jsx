@@ -48,9 +48,9 @@ export const router = createBrowserRouter([
       {
         path: "/quoteform",
         element: (
-          <PrivateRoute>
+          // <PrivateRoute>
             <LazyComponent path="/quoteform" />
-          </PrivateRoute>
+          // </PrivateRoute>
         ),
         // element: <LazyComponent path="/quoteform" />,
       },
@@ -180,10 +180,63 @@ export const router = createBrowserRouter([
             <LazyComponent path="/resetpassword" />
           </PublicRoute>
         ),
-        // element: <LazyComponent path="/resetpassword" />,
+      },
+
+      {
+        path: "/pay/quote/:quoteId",
+        element: (
+          // <PublicRoute>
+          <LazyComponent path="/stripe" />
+          // </PublicRoute>
+        ),
+      },
+
+      {
+        path: "/xeroconnected",
+        element: (
+          // <PublicRoute>
+          <LazyComponent path="/xeroconnected" />
+          // </PublicRoute>
+        ),
+      },
+
+       {
+        path: "/templateTwo",
+        element: (
+          // <PublicRoute>
+          <LazyComponent path="/templateTwo" />
+          // </PublicRoute>
+        ),
+      },
+
+      {
+        path: "/templateOne",
+        element: (
+          // <PublicRoute>
+          <LazyComponent path="/templateOne" />
+          // </PublicRoute>
+        ),
+      },
+      {
+        path: "/selectTemp",
+        element: (
+          // <PublicRoute>
+          <LazyComponent path="/selectTemp" />
+          // </PublicRoute>
+        ),
+      },
+
+        {
+        path: "/editlogo",
+        element: (
+          // <PublicRoute>
+          <LazyComponent path="/editlogo" />
+          // </PublicRoute>
+        ),
       },
     ],
   },
+
   // auth route
   //   {
   //     path: "/login",

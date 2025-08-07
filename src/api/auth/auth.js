@@ -84,7 +84,6 @@ export const addJob = async (formData) => {
   return response.data;
 };
 
-
 export const Gethistory = async (telegramId) => {
   const response = await axiosClient.get(
     `/job/getHistory?telegramId=${telegramId}`
@@ -92,3 +91,21 @@ export const Gethistory = async (telegramId) => {
   return response.data;
 };
 
+export const Getuser = async (telegramId) => {
+  const response = await axiosClient.get(`/user/getUser/${telegramId}`);
+  console.log(response, "here is response");
+
+  return response.data;
+};
+
+
+export const uploadPdf = async(formData)=>{
+    try {
+      const uploadRes = await axiosClient.post('/uploadpdf', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      console.log('Upload Success:', uploadRes.data);
+    } catch (err) {
+      console.error('Upload Failed:', err);
+    }
+}

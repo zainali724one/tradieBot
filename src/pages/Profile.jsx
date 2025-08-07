@@ -13,6 +13,7 @@ import SettingTab from "../components/SettingTab";
 import trash from "../assets/icons/trash.png";
 import i1 from "../assets/icons/i1.png";
 import i5 from "../assets/icons/i5.png";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -100,10 +101,10 @@ const Profile = () => {
     setIsCancellingforDelete(false);
     setIsModalOpenforDelete(false);
   };
-
+      const tg = window?.Telegram?.WebApp;
   useEffect(() => {
     const authenticatingUser = async () => {
-      const tg = window?.Telegram?.WebApp;
+  
 
       tg?.ready();
       if (tg?.initDataUnsafe?.user?.id) {
@@ -126,6 +127,7 @@ const Profile = () => {
 
     authenticatingUser();
   }, []);
+  const telegramUserData = tg.initDataUnsafe.user;
   return (
     <div className="p-4 h-[100dvh] relative bg-[#D3DCE5]  pt-12 px-5  max-w-[430px]">
       <header className="flex items-center">
@@ -137,7 +139,7 @@ const Profile = () => {
 
       <div className="flex flex-col items-center gap-4  mt-4 mb-6">
         <img
-          src="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
+          src={telegramUserData?.photo_url}
           alt="Profile"
           className="w-20 h-20 rounded-full object-cover"
         />
@@ -180,6 +182,18 @@ const Profile = () => {
         />
 
         <SettingTab
+          onClick={() => navigate("/selectTemp")}
+          title="Select Template"
+          icon={
+            <img
+              src={clipboardtext}
+              alt="Edit Profile Icon"
+              style={{ width: 20, height: 20 }}
+            />
+          }
+        />
+
+        <SettingTab
           onClick={() => setIsModalOpenforDelete(true)}
           title="Delete Account"
           icon={
@@ -206,12 +220,12 @@ const Profile = () => {
         />
       </div>
 
-      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
+      {/* <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[430px] px-5">
         <PrimaryButton
           onClick={() => navigate("/editProfile")}
           children="Connect with Stripe"
         />
-      </div>
+      </div> */}
       <CustomConfirmationModal
         isOpen={isModalOpenforDelete}
         title="Delete Account"

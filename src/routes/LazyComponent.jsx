@@ -27,6 +27,12 @@ const componentMap = {
   "/editprofile": lazy(() => import("../pages/EditProfile")),
   "/schedule": lazy(() => import("../pages/ScheduleScreen")),
   "/invoice": lazy(() => import("../pages/InvoiceScreen")),
+  "/stripe": lazy(() => import("../pages/Stripe")),
+  "/xeroconnected": lazy(() => import("../pages/XeroConnected")),  // Route with dynamic params
+  "/templateTwo": lazy(() => import("../pages/TemplateTwo")),
+  "/templateOne": lazy(() => import("../pages/TemplateOne")),
+    "/selectTemp": lazy(() => import("../pages/SelectTemplate")),
+  "/editlogo": lazy(() => import("../pages/EditLogoScreen")),
 
   // "/thehive": lazy(() => import("../pages/TheHive")),
   // "/you": lazy(() => import("../pages/You")),

@@ -4,8 +4,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { message } from "antd";
 
-import {setUserId} from "../../store/sessionSlice"
-
+import { setUserId } from "../../store/sessionSlice";
 
 import {
   addInvoice,
@@ -46,21 +45,21 @@ export function useLogin() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   const { mutate: login, isPending: isLoading } = useMutation({
     mutationFn: (formData) => userLogin(formData),
     onSuccess: (response) => {
       if (response?.user) {
         dispatch(setUserId(response.user)); // ✅ Store userId in Redux
       }
-      localStorage.setItem("telegramid",response.user?.telegramId);
+      localStorage.setItem("telegramid", response.user?.telegramId);
       navigate("/quoteform");
       toast.success("Login Successfully");
       queryClient.invalidateQueries({ queryKey: ["login"] });
     },
     onError: (error) => {
-      message.error(error.message);
-      toast.error(error.message);
+      message.error(error.response.data?.message);
+      toast.error(error.response.data?.message || "Login failed");
+      console.log(error, "error in login mutation");
     },
   });
 
@@ -175,9 +174,8 @@ export function useDelete() {
   return { deleteUser, isLoading };
 }
 
-
 export function useAddQuote() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { mutate: Addquote, isPending: isLoading } = useMutation({
@@ -196,11 +194,8 @@ export function useAddQuote() {
   return { Addquote, isLoading };
 }
 
-
-
-
 export function useAddInvoice() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { mutate: AddInvoice, isPending: isLoading } = useMutation({
@@ -213,23 +208,20 @@ export function useAddInvoice() {
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message);
+
     },
   });
 
   return { AddInvoice, isLoading };
 }
 
-
-
-
 export function useAddJob() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { mutate: usAddJob, isPending: isLoading } = useMutation({
     mutationFn: (formData) => addJob(formData),
     onSuccess: () => {
-   
       toast.success("Data added successfully!");
 
       queryClient.invalidateQueries({ queryKey: ["usAddJob"] });
@@ -241,4 +233,3 @@ export function useAddJob() {
 
   return { usAddJob, isLoading };
 }
-

@@ -7,6 +7,12 @@ const History = () => {
   const userId = useSelector((state) => state.session.userId);
   const { data, isLoading } = useGethistory(userId?.telegramId);
 
+    const tg = window?.Telegram?.WebApp;
+
+  tg?.ready();
+
+  const telegramUserData = tg.initDataUnsafe.user;
+
   if (isLoading) {
     return <isLoading />;
   }
@@ -14,8 +20,8 @@ const History = () => {
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-12 px-6">
       <UserProfileHeader
-        image="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
-        name="Mr. Thomas John"
+   image={telegramUserData?.photo_url}
+        name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
         subtitle="Welcome"
       />
 

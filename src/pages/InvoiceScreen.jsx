@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import UserProfileHeader from "../components/UserProfileHeader";
 import { useAddInvoice } from "../reactQuery/mutations/auth";
@@ -8,25 +8,63 @@ import TextArea from "../components/ui/TextArea";
 import Selector from "../components/selector";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { Getuser, uploadPdf } from "../api/auth/auth";
+import StripeConnectModal from "../components/StripeConnectModal";
+import TemplateTwo from "./TemplateTwo";
+import TemplateOne from "./TemplateOne";
+import { handleGeneratePdf } from "../services";
 
 function InvoiceScreen() {
   const { AddInvoice, isLoading } = useAddInvoice();
   const userId = useSelector((state) => state.session.userId);
   const [formErrors, setFormErrors] = useState({});
+  const [crntUser, setCrntUser] = useState({});
+  const [responseData,setResponseData]=useState(null)
 
+  const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     customerName: "",
     jobDescription: "",
     InvoiceAmount: "",
     CustomerEmail: "",
-    includeCost: "", 
-    includeReceipt: "", 
+    includeCost: "",
+    includeReceipt: "",
+    sheetId: "",
+    address:"",
+    customerPhone: "",
   });
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     setFormErrors((prev) => ({ ...prev, [field]: "" }));
   };
+
+  const returnUserData = async (telegramId) => {
+    // 8141119319
+
+    Getuser(telegramId)
+      .then((res) => {
+        setCrntUser(res?.user);
+        setFormData((prevData) => ({
+          ...prevData,
+          sheetId: res?.user?.sheetId || "",
+        }));
+        console.log(res, "data is added");
+      })
+      .catch((err) => {
+        console.log(err, "here is the error");
+      });
+    // return theUser;
+  };
+  const tg = window?.Telegram?.WebApp;
+
+  tg?.ready();
+  useEffect(() => {
+    if (tg?.initDataUnsafe?.user?.id) {
+      const userId = tg.initDataUnsafe.user.id;
+      returnUserData(userId);
+    }
+  }, [tg?.initDataUnsafe?.user?.id]);
 
   const validateForm = () => {
     let errors = {};
@@ -61,6 +99,14 @@ function InvoiceScreen() {
       errors.includeReceipt = "Include Receipt is required";
     }
 
+    if (!formData.sheetId.trim()) {
+      errors.includeReceipt = "Google sheet id is required";
+    }
+
+    if (!formData.customerPhone.trim()) {
+      errors.includeReceipt = "Phone number is required";
+    }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -70,37 +116,83 @@ function InvoiceScreen() {
       toast.error("All fields are required");
       return;
     }
+    if (
+      !crntUser?.stripeAccountId ||
+      !crntUser?.googleRefreshToken ||
+      !crntUser?.googleAccessToken
+    ) {
+      setModalOpen(true);
+      return;
+    }
     const Addinvoice = {
       userId: userId._id,
       telegramId: userId?.telegramId,
       customerName: formData?.customerName,
       invoiceAmount: formData?.InvoiceAmount,
-
+address:formData?.address,
       jobDescription: formData?.jobDescription,
       customerEmail: formData?.CustomerEmail,
       includeCost: formData.includeCost,
       includeReceipt: formData.includeReceipt,
+      customerPhone: formData.customerPhone,
+      sheetId: formData.sheetId,
     };
 
     AddInvoice(Addinvoice, {
-      onSuccess: () => {
+      onSuccess: (res) => {
+         setResponseData(res.data)
         setFormData({
           customerName: "",
           jobDescription: "",
           InvoiceAmount: "",
           CustomerEmail: "",
-          includeCost: "", 
+          includeCost: "",
           includeReceipt: "",
+          customerPhone: "",
+          address:""
         });
       },
+      onError: (error) => {
+        console.error("Error adding invoice:", error);
+        toast.error("Failed to add invoice. Please try again.");
+      }
     });
   };
+
+  const telegramUserData = tg.initDataUnsafe.user;
+
+
+  const pdfRef = useRef(null);
+  
+  
+  
+  useEffect(() => {
+      if (responseData) {
+          // Add a small delay to ensure DOM is updated
+          setTimeout(async () => {
+              try {
+                  const pdfBlob = await handleGeneratePdf(pdfRef);
+                  const formData = new FormData();
+                  formData.append('file', pdfBlob, 'invoice.pdf');
+                  formData.append('telegramId', responseData?.telegramId);
+                  formData.append('pdfType', "invoice");
+                  formData.append('customerEmail', responseData?.customerEmail);
+                  formData.append('customerName', responseData?.customerName);
+                  
+                  await uploadPdf(formData);
+              } catch (error) {
+                  console.error("Failed to generate or upload PDF:", error);
+                  // Handle error appropriately
+              }
+          }, 500); // 500ms delay to ensure DOM updates
+      }
+  }, [responseData]);
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-12 px-6 overflow-y-auto ">
       <UserProfileHeader
-        image="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
-        name="Mr. Thomas John"
+        image={telegramUserData?.photo_url}
+        name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
         subtitle="Welcome"
       />
 
@@ -183,6 +275,34 @@ function InvoiceScreen() {
             { label: "No", value: "No" },
           ]}
         />
+<LabeledInput
+          label="Customer Address"
+          id="address"
+          type="text"
+          error={formErrors.address}
+          placeholder="Customer Address"
+          value={formData.address}
+          onChange={handleChange("address")}
+        />
+        <LabeledInput
+          label="Customer Phone"
+          id="customerPhone"
+          type="text"
+          error={formErrors.customerPhone}
+          placeholder="+44 20 7123 4567"
+          value={formData.customerPhone}
+          onChange={handleChange("customerPhone")}
+        />
+
+        <LabeledInput
+          label="Google sheet id"
+          id="sheetId"
+          type="text"
+          error={formErrors.sheetId}
+          placeholder="Google spread sheet id"
+          value={formData.sheetId}
+          onChange={handleChange("sheetId")}
+        />
 
         <div className="w-[100%]  flex mt-12">
           <PrimaryButton
@@ -195,6 +315,34 @@ function InvoiceScreen() {
           />
         </div>
       </div>
+      <StripeConnectModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        userId={userId?._id}
+        isStripeConnected={crntUser?.stripeAccountId}
+        isGoogleConnected={
+          crntUser?.googleRefreshToken && crntUser?.googleAccessToken
+        }
+        isXeroConnected={ crntUser?.xeroToken &&
+      crntUser?.tenantId}
+      />
+
+       <div style={{
+          position: 'absolute',
+          left: '-9999px',
+          top: 0,
+      
+        }}>
+              <div ref={pdfRef}>
+      
+              {crntUser?.pdfTemplateId==="2"?
+              <TemplateTwo data={{...responseData,type:"quote"}}/>
+              :
+              <TemplateOne data={{...responseData,type:"quote"}}/>
+              }
+            
+              </div>
+            </div>
     </div>
   );
 }

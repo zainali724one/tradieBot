@@ -7,6 +7,7 @@ import TextArea from "../components/ui/TextArea";
 
 import { useAddJob } from "../reactQuery/mutations/auth";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 function ScheduleScreen() {
   const { usAddJob, isLoading } = useAddJob();
@@ -64,7 +65,6 @@ function ScheduleScreen() {
   //   usAddJob(addjob);
   // };
 
-
   const handleSubmit = () => {
     if (!validateForm()) {
       toast.error("All fields are required");
@@ -94,11 +94,16 @@ function ScheduleScreen() {
       },
     });
   };
+
+  const tg = window?.Telegram?.WebApp;
+  console.log(tg.initDataUnsafe.user, "here is user");
+  const telegramUserData = tg.initDataUnsafe.user;
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-12 px-6 overflow-y-auto ">
       <UserProfileHeader
-        image="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
-        name="Mr. Thomas John"
+        image={telegramUserData?.photo_url}
+        name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
         subtitle="Welcome"
       />
 

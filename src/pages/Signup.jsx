@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSignup } from "../reactQuery/mutations/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import LabeledInput from "../components/LabeledInput";
@@ -20,11 +20,11 @@ import i5 from "../assets/icons/i5.png";
 import logo from "../assets/logo.png";
 
 const Signup = () => {
-  const telegramId = useSelector((state) => state.session.telegramId);
+  // const telegramId = useSelector((state) => state.session.telegramId);
   const { signup, isLoading } = useSignup();
   const dispatch = useDispatch();
 
-  const [userdata,setUserdata]= useState();
+  const [userdata, setUserdata] = useState();
 
   const navigate = useNavigate();
 
@@ -132,7 +132,7 @@ const Signup = () => {
           isPremium: tg?.initDataUnsafe?.user?.is_premium,
         };
 
-        setUserdata(telegramData)
+        setUserdata(telegramData);
         dispatch(setTelegramId(telegramData));
       }
     };
@@ -158,7 +158,7 @@ const Signup = () => {
           className="font-[500] text-[14px] mt-2"
         />
 
-{/* {userdata && (
+        {/* {userdata && (
   <div className="mt-4">
     <Text className="text-[14px] font-[500] text-gray-700">
       Telegram ID: {userdata?.telegramId}

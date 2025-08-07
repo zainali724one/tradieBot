@@ -4,6 +4,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import { useSelector } from "react-redux";
+import invoiceImage from "../assets/icons/invoice.png";
 
 const Chases = () => {
   const { id } = useParams();
@@ -32,8 +33,7 @@ const Chases = () => {
           <InfoCard
             key={index}
             image={
-              quote?.image ||
-              "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
+            id==="quote" ? "https://img.icons8.com/external-filled-outline-wichaiwi/64/external-bill-customer-validation-filled-outline-wichaiwi.png":invoiceImage
             }
             title={id === "quote" ? "Quote" : "Invoice"}
             id={index + 1}

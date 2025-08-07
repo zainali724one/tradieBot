@@ -8,7 +8,7 @@ const AppLayout = () => {
   return (
     <Layout
       style={{
-        minHeight: "100dvh",
+        minHeight: "100vh",
         width: "100vw",
         display: "flex",
         justifyContent: "center",
@@ -20,7 +20,7 @@ const AppLayout = () => {
         style={{
           maxWidth: "430px",
           width: "100%",
-          height: "100dvh",
+          height: "100vh",
         }}
       >
         {/* <Layout> */}
@@ -55,9 +55,10 @@ const AppLayout = () => {
         location?.pathname === "/editProfile" ||
         location?.pathname === "/resetpassword" ||
         location?.pathname === "/verifyOtp" ||
-        location?.pathname === "/verifyotp" ||
-       
-        
+        location?.pathname === "/stripe" ||
+        location?.pathname.includes("/pay/quote/") ||
+        location?.pathname === "/xeroconnected" ||
+
         location?.pathname === "/forgetpassword" ? null : (
           <Footer
             style={{

@@ -5,9 +5,12 @@ import i1 from "../assets/icons/i1.png";
 import i2 from "../assets/icons/i2.png";
 import i3 from "../assets/icons/i3.png";
 import { useNavigate } from "react-router-dom";
+import { MdImage } from "react-icons/md";
 
 const EditProfile = () => {
   const navigate = useNavigate();
+  const tg = window?.Telegram?.WebApp;
+    const telegramUserData = tg.initDataUnsafe.user;
   return (
     <div className="p-4 h-[100dvh] relative bg-[#D3DCE5]  pt-12 px-5  max-w-[430px]">
       <header className="flex items-center">
@@ -19,7 +22,7 @@ const EditProfile = () => {
 
       <div className="flex flex-col items-center gap-4 mb-6  mt-4">
         <img
-          src="https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
+          src={telegramUserData?.photo_url}
           alt="Profile"
           className="w-20 h-20 rounded-full object-cover"
         />
@@ -57,6 +60,18 @@ const EditProfile = () => {
               alt="Edit Profile Icon"
               style={{ width: 18, height: 18 }}
             />
+          }
+        />
+        <SettingTab
+          onClick={() => navigate("/editlogo")}
+          title="Edit Company Logo"
+          icon={
+            // <img
+            //   src={i2}
+            //   alt="Edit Profile Icon"
+            //   style={{ width: 18, height: 18 }}
+            // />
+            <MdImage className="text-[17px] text-[#5290C1]"/>
           }
         />
       </div>
