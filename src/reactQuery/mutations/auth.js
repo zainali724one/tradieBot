@@ -82,7 +82,7 @@ export function useSendOtp() {
   return { sendotp, isLoading };
 }
 
-export function useVerifyOtp() {
+export function useVerifyOtp(){
   const queryClient = useQueryClient();
 
   const { mutate: verifyOtp, isPending: isLoading } = useMutation({

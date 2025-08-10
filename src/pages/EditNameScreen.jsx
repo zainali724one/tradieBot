@@ -37,8 +37,6 @@ function EditNameScreen() {
           console.log(res, "data is added");
         })
         .catch((err) => {
-          // localStorage.removeItem("telegramid");
-          // nevigate("/signin");
           console.log(err, "here is the error");
         });
       // return theUser;

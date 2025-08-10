@@ -168,23 +168,26 @@ address:formData?.address,
   
   useEffect(() => {
       if (responseData) {
-          // Add a small delay to ensure DOM is updated
+
           setTimeout(async () => {
               try {
-                  const pdfBlob = await handleGeneratePdf(pdfRef);
+                  const pdfBlob = await handleGeneratePdf(pdfRef, {...responseData,type:"quote"}, crntUser?.pdfTemplateId);
                   const formData = new FormData();
                   formData.append('file', pdfBlob, 'invoice.pdf');
                   formData.append('telegramId', responseData?.telegramId);
                   formData.append('pdfType', "invoice");
                   formData.append('customerEmail', responseData?.customerEmail);
                   formData.append('customerName', responseData?.customerName);
+                  formData.append('customerPhone', responseData?.customerPhone);
+                  formData.append('amount', responseData?.amount);
+            
                   
                   await uploadPdf(formData);
               } catch (error) {
                   console.error("Failed to generate or upload PDF:", error);
-                  // Handle error appropriately
+                
               }
-          }, 500); // 500ms delay to ensure DOM updates
+          }, 500); 
       }
   }, [responseData]);
 
@@ -336,9 +339,9 @@ address:formData?.address,
               <div ref={pdfRef}>
       
               {crntUser?.pdfTemplateId==="2"?
-              <TemplateTwo data={{...responseData,type:"quote"}}/>
+              <TemplateTwo data={{...responseData,type:"invoice"}}/>
               :
-              <TemplateOne data={{...responseData,type:"quote"}}/>
+              <TemplateOne data={{...responseData,type:"invoice"}}/>
               }
             
               </div>

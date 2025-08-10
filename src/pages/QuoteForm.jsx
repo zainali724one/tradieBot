@@ -171,23 +171,26 @@ const pdfRef = useRef(null);
 
 useEffect(() => {
     if (responseData) {
-        // Add a small delay to ensure DOM is updated
+      
         setTimeout(async () => {
             try {
-                const pdfBlob = await handleGeneratePdf(pdfRef);
+                const pdfBlob = await handleGeneratePdf(pdfRef, {...responseData,type:"quote"}, crntUser?.pdfTemplateId)
                 const formData = new FormData();
                 formData.append('file', pdfBlob, 'quote.pdf');
                 formData.append('telegramId', responseData?.telegramId);
                 formData.append('pdfType', "quote");
                 formData.append('customerEmail', responseData?.customerEmail);
                 formData.append('customerName', responseData?.customerName);
+                   formData.append('customerPhone', responseData?.customerPhone);
+                  formData.append('amount', responseData?.amount);
+                formData.append('paymentUrl', responseData?.paymentUrl)
                 
                 await uploadPdf(formData);
             } catch (error) {
                 console.error("Failed to generate or upload PDF:", error);
-                // Handle error appropriately
+                
             }
-        }, 500); // 500ms delay to ensure DOM updates
+        }, 500); 
     }
 }, [responseData]);
   return (
