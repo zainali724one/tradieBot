@@ -63,14 +63,15 @@ function QuoteForm() {
     // return theUser;
   };
   const tg = window?.Telegram?.WebApp;
-  console.log(tg.initDataUnsafe.user, "here is user");
+   tg?.ready();
+  // console.log(tg.initDataUnsafe.user, "here is user");
   const telegramUserData = tg.initDataUnsafe.user;
 
 
 
 
 // const telegramUserData={}
-  tg?.ready();
+ 
   useEffect(() => {
     if (tg?.initDataUnsafe?.user?.id) {
       const userId = tg.initDataUnsafe.user.id;
