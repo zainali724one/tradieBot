@@ -56,15 +56,17 @@ function InvoiceScreen() {
       });
     // return theUser;
   };
-  const tg = window?.Telegram?.WebApp;
 
-  tg?.ready();
   useEffect(() => {
+      const tg = window?.Telegram?.WebApp;
+  tg?.ready();
+  if(tg){
     if (tg?.initDataUnsafe?.user?.id) {
       const userId = tg.initDataUnsafe.user.id;
       returnUserData(userId);
     }
-  }, [tg?.initDataUnsafe?.user?.id]);
+  }
+  }, []);
 
   const validateForm = () => {
     let errors = {};

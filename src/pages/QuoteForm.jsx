@@ -30,6 +30,8 @@ function QuoteForm() {
 
   const userId = useSelector((state) => state.session.userId);
 
+const [telegramUserData, setTelegramUserData] = useState({});
+
   const [formData, setFormData] = useState({
     customerName: "",
     jobDescription: "",
@@ -62,22 +64,27 @@ function QuoteForm() {
       });
     // return theUser;
   };
-  const tg = window?.Telegram?.WebApp;
-   tg?.ready();
-  // console.log(tg.initDataUnsafe.user, "here is user");
-  const telegramUserData = tg.initDataUnsafe.user;
 
 
 
 
-// const telegramUserData={}
  
   useEffect(() => {
+    const tg = window?.Telegram?.WebApp;
+
+    if (tg) {
+      tg.ready(); // Signal that the app is ready
+
+      if (tg.initDataUnsafe?.user) {
+        setTelegramUserData(tg.initDataUnsafe?.user)
     if (tg?.initDataUnsafe?.user?.id) {
       const userId = tg.initDataUnsafe.user.id;
       returnUserData(userId);
     }
-  }, [tg?.initDataUnsafe?.user?.id]);
+
+  }
+}
+  }, []);
   console.log(crntUser, "abc");
 
   const handleChange = (field) => (e) => {
