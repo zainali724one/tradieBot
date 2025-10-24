@@ -74,18 +74,6 @@ const TemplateOne = ({data}) => {
         {data?.address && <p><span className="font-medium">Address:</span> {data?.address}</p>}
         <p><span className="font-medium">Email:</span> {data?.customerEmail}</p>
         <p><span className="font-medium">Phone:</span> {data?.customerPhone}</p>
-        {data?.type === 'quote' && data?.paymentUrl && (
-          <p>
-            <span className="font-medium">Click here to pay:</span>{' '}
-            <a 
-              href={data?.paymentUrl} 
-              className="underline break-all"
-              style={{ color: '#2563eb' }} // Replaces text-blue-600
-            >
-              {data?.paymentUrl}
-            </a>
-          </p>
-        )}
       </div>
 
       <div 

@@ -1,6 +1,3 @@
-import React from 'react';
-
-
 
 const TemplateTwo = ({data}) => {
 
@@ -24,12 +21,7 @@ const TemplateTwo = ({data}) => {
         {data?.address && <p><span className="font-medium">Address:</span> {data?.address}</p>}
         <p><span className="font-medium">Email:</span> {data?.customerEmail}</p>
         <p><span className="font-medium">Phone:</span> {data?.customerPhone}</p>
-        {data?.type === 'quote' && data?.paymentUrl && (
-          <p>
-            <span className="font-medium">Click here to pay:</span>{' '}
-            <a href={data?.paymentUrl} className="text-blue-600 underline break-all">{data?.paymentUrl}</a>
-          </p>
-        )}
+       
       </div>
 
       <div className="mt-6 text-center text-xs text-gray-500">

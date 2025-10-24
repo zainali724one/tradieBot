@@ -5,7 +5,6 @@ import PrimaryButton from "../components/PrimaryButton";
 import LabeledInput from "../components/LabeledInput";
 import TextArea from "../components/ui/TextArea";
 import { useSelector } from "react-redux";
-
 import { setAddQuote } from "../store/sessionSlice"; // Import the action
 import { useDispatch } from "react-redux";
 // import { useNavigate } from "react-router-dom";
@@ -67,6 +66,10 @@ function QuoteForm() {
   console.log(tg.initDataUnsafe.user, "here is user");
   const telegramUserData = tg.initDataUnsafe.user;
 
+
+
+
+// const telegramUserData={}
   tg?.ready();
   useEffect(() => {
     if (tg?.initDataUnsafe?.user?.id) {
@@ -194,7 +197,7 @@ useEffect(() => {
     }
 }, [responseData]);
   return (
-    <div className="flex flex-col items-center min-h-[100dvh] h-[100%] bg-[#D3DCE5] pt-8 px-6 pb-10 overflow-y-scroll">
+    <div className="flex flex-col items-center min-h-[100vh] h-[100%] bg-[#D3DCE5] pt-8 px-6 pb-20 overflow-y-scroll">
       <UserProfileHeader
         image={telegramUserData?.photo_url}
         name={telegramUserData?.first_name + " " + telegramUserData?.last_name}

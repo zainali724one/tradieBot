@@ -48,9 +48,9 @@ export const router = createBrowserRouter([
       {
         path: "/quoteform",
         element: (
-          // <PrivateRoute>
+          <PrivateRoute>
             <LazyComponent path="/quoteform" />
-          // </PrivateRoute>
+           </PrivateRoute>
         ),
         // element: <LazyComponent path="/quoteform" />,
       },

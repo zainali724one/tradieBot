@@ -319,5 +319,10 @@ export const handleOpenExternalLink = (link) => {
 };
 
 
+export const getSheetId=(url)=> {
+  return url.split("/d/")[1].split("/")[0];
+}
+
+
 
 
