@@ -66,11 +66,11 @@ const [telegramUserData, setTelegramUserData] = useState({});
   };
 
 
-
+ const tg = window?.Telegram?.WebApp;
 
  
   useEffect(() => {
-    const tg = window?.Telegram?.WebApp;
+   
 
     if (tg) {
       tg.ready(); // Signal that the app is ready
@@ -84,7 +84,7 @@ const [telegramUserData, setTelegramUserData] = useState({});
 
   }
 }
-  }, []);
+  }, [tg]);
   console.log(crntUser, "abc");
 
   const handleChange = (field) => (e) => {
