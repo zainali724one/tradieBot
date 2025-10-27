@@ -66,29 +66,29 @@ const [telegramUserData, setTelegramUserData] = useState({});
   };
 
 
-//  const tg = window?.Telegram?.WebApp;
-//   useEffect(() => {
+ const tg = window?.Telegram?.WebApp;
+  useEffect(() => {
    
 
-//     if (tg) {
-//       tg.ready(); 
+    if (tg) {
+      tg.ready(); 
 
-//       if (tg.initDataUnsafe?.user) {
-//         setTelegramUserData(tg.initDataUnsafe?.user)
-//     if (tg?.initDataUnsafe?.user?.id) {
-//       const userId = tg.initDataUnsafe.user.id;
-//       returnUserData(userId);
-//     }
+      if (tg.initDataUnsafe?.user) {
+        setTelegramUserData(tg.initDataUnsafe?.user)
+    if (tg?.initDataUnsafe?.user?.id) {
+      const userId = tg.initDataUnsafe.user.id;
+      returnUserData(userId);
+    }
 
-//   }
-// }
-//   }, [tg]);
+  }
+}
+  }, [tg]);
 
 
 
-  useEffect(()=>{
- returnUserData("8141119319");
-  },[])
+//   useEffect(()=>{
+//  returnUserData("8141119319");
+//   },[])
   console.log(crntUser, "abc----");
 
   const handleChange = (field) => (e) => {
