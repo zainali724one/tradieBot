@@ -8,7 +8,7 @@ const ConnectXeroButton = ({userId}) => {
   useEffect(() => {
     const fetchAuthUrl = async () => {
       try {
-          const res = await axios.post(`https://tradie-bot-backend.vercel.app/api/xero/consentUrl`, {
+          const res = await axios.post(`https://tradie-bot-backend-three.vercel.app/api/xero/consentUrl`, {
     
        userId:userId
         
