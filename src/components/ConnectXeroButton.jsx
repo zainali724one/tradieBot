@@ -8,15 +8,16 @@ const ConnectXeroButton = ({userId}) => {
   useEffect(() => {
     const fetchAuthUrl = async () => {
       try {
-          const res = await axios.get(`https://tradie-bot-backend.vercel.app/api/xero/consetUrl`, {
-        params: {
+          const res = await axios.post(`https://tradie-bot-backend.vercel.app/api/xero/consentUrl`, {
+    
        userId:userId
-        }
+        
       });
       setAuthUrl(res.data.url); 
       } catch (error) {
         console.log("Error fetching Xero auth URL:", error);
         
+
       }
    
     };
