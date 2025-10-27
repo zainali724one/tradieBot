@@ -89,7 +89,7 @@ const [telegramUserData, setTelegramUserData] = useState({});
   useEffect(()=>{
  returnUserData("8141119319");
   },[])
-  console.log(crntUser, "abc");
+  console.log(crntUser, "abc----");
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -105,7 +105,7 @@ const [telegramUserData, setTelegramUserData] = useState({});
       errors.customerEmail = "Email is required";
     } else if (formData.customerEmail.length < 6) {
       errors.customerEmail = "Email must be at least 6 characters";
-    } else if (!emailRegex.test(formData.customerEmail)) {
+    } else if (!emailRegex.test(formData.customerEmail)){
       errors.customerEmail = "Invalid email format";
     }
 
