@@ -3,7 +3,7 @@ import { handleOpenExternalLink } from "../services";
 
 const ConnectGoogleButton = ({ userId }) => {
   const handleConnect = () => {
-    const redirectUrl = `https://tradie-bot-backend.vercel.app/api/user/connect/${userId}`;
+    const redirectUrl = `https://tradie-bot-backend-three.vercel.app/api/user/connect/${userId}`;
     handleOpenExternalLink(redirectUrl)
     // window.open(redirectUrl, "_blank");
   };
