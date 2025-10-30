@@ -60,7 +60,8 @@ const StripeConnectModal = ({
           {/* Stripe Section */}
           <div className="flex items-center justify-between">
             <span className="font-medium">Stripe</span>
-            {isStripeConnected ? (
+            
+            {userData?.stripeAccountId ? (
               <span className="text-green-600 font-semibold">✅ Connected</span>
             ) : (
               <ConnectStripeButton userId={userId} />
@@ -70,7 +71,9 @@ const StripeConnectModal = ({
           {/* Google Section */}
           <div className="flex items-center justify-between">
             <span className="font-medium">Google</span>
-            {isGoogleConnected ? (
+         
+          
+            {userData?.googleRefreshToken && userData?.googleAccessToken ? (
               <span className="text-green-600 font-semibold">✅ Connected</span>
             ) : (
               <ConnectGoogleButton userId={userId} />
@@ -80,7 +83,11 @@ const StripeConnectModal = ({
 
           <div className="flex items-center justify-between">
             <span className="font-medium">Xero</span>
-            {isXeroConnected ? (
+
+                     
+         
+            {userData?.xeroToken &&
+      userData?.tenantId ? (
               <span className="text-green-600 font-semibold">✅ Connected</span>
             ) : (
               <ConnectXeroButton userId={userId} />
