@@ -12,25 +12,25 @@ import { toast } from "react-toastify";
 import StripeConnectModal from "../components/StripeConnectModal";
 import { Getuser, uploadPdf } from "../api/auth/auth";
 import { useNavigate } from "react-router-dom";
-import TemplateTwo from "./TemplateTwo"
-import TemplateOne from "./TemplateOne"
+import TemplateTwo from "./TemplateTwo";
+import TemplateOne from "./TemplateOne";
 import { handleGeneratePdf } from "../services";
-
-
+import AddressSelector from "../components/AddressSelector";
 
 function QuoteForm() {
   const dispatch = useDispatch();
   const { Addquote, isLoading } = useAddQuote();
   const [formErrors, setFormErrors] = useState({});
   const [crntUser, setCrntUser] = useState({});
-  const [responseData,setResponseData]=useState(null)
+  const [responseData, setResponseData] = useState(null);
   const nevigate = useNavigate();
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
 
   const userId = useSelector((state) => state.session.userId);
 
-const [telegramUserData, setTelegramUserData] = useState({});
+  const [telegramUserData, setTelegramUserData] = useState({});
 
   const [formData, setFormData] = useState({
     customerName: "",
@@ -39,10 +39,9 @@ const [telegramUserData, setTelegramUserData] = useState({});
     customerEmail: "",
     stripeId: "",
     customerPhone: "",
-    address:"",
+    address: "",
     sheetId: "",
   });
-
 
   const returnUserData = async (telegramId) => {
     // 8141119319
@@ -65,30 +64,24 @@ const [telegramUserData, setTelegramUserData] = useState({});
     // return theUser;
   };
 
-
- const tg = window?.Telegram?.WebApp;
+  const tg = window?.Telegram?.WebApp;
   useEffect(() => {
-   
-
     if (tg) {
-      tg.ready(); 
+      tg.ready();
 
       if (tg.initDataUnsafe?.user) {
-        setTelegramUserData(tg.initDataUnsafe?.user)
-    if (tg?.initDataUnsafe?.user?.id) {
-      const userId = tg.initDataUnsafe.user.id;
-      returnUserData(userId);
+        setTelegramUserData(tg.initDataUnsafe?.user);
+        if (tg?.initDataUnsafe?.user?.id) {
+          const userId = tg.initDataUnsafe.user.id;
+          returnUserData(userId);
+        }
+      }
     }
-
-  }
-}
   }, [tg]);
 
-
-
-//   useEffect(()=>{
-//  returnUserData("8141119319");
-//   },[])
+  //   useEffect(()=>{
+  //  returnUserData("8141119319");
+  //   },[])
   console.log(crntUser, "abc----");
 
   const handleChange = (field) => (e) => {
@@ -105,7 +98,7 @@ const [telegramUserData, setTelegramUserData] = useState({});
       errors.customerEmail = "Email is required";
     } else if (formData.customerEmail.length < 6) {
       errors.customerEmail = "Email must be at least 6 characters";
-    } else if (!emailRegex.test(formData.customerEmail)){
+    } else if (!emailRegex.test(formData.customerEmail)) {
       errors.customerEmail = "Invalid email format";
     }
 
@@ -137,9 +130,6 @@ const [telegramUserData, setTelegramUserData] = useState({});
       !crntUser?.googleAccessToken ||
       !crntUser?.xeroToken ||
       !crntUser?.tenantId
-
-
-      
     ) {
       setModalOpen(true);
       return;
@@ -154,7 +144,7 @@ const [telegramUserData, setTelegramUserData] = useState({});
       quoteAmount: formData?.quoteAmount,
       customerEmail: formData?.customerEmail,
       customerPhone: formData?.customerPhone,
-      address:formData?.address,
+      address: formData?.address,
       sheetId: formData?.sheetId,
     };
 
@@ -164,50 +154,61 @@ const [telegramUserData, setTelegramUserData] = useState({});
 
     Addquote(addquot, {
       onSuccess: (res) => {
-        console.log(res,"here is res from backend")
-         setResponseData(res.data)
-   
-       
+        console.log(res, "here is res from backend");
+        setResponseData(res.data);
+
         setFormData({
           customerName: "",
           jobDescription: "",
           quoteAmount: "",
           customerEmail: "",
           customerPhone: "",
-          address:""
+          address: "",
           // stripeId: "", // Reset stripeId after successful submission
         });
       },
     });
   };
-const pdfRef = useRef(null);
+  const pdfRef = useRef(null);
 
-
-
-useEffect(() => {
+  useEffect(() => {
     if (responseData) {
-      
-        setTimeout(async () => {
-            try {
-                const pdfBlob = await handleGeneratePdf(pdfRef, {...responseData,type:"quote"}, crntUser?.pdfTemplateId)
-                const formData = new FormData();
-                formData.append('file', pdfBlob, 'quote.pdf');
-                formData.append('telegramId', responseData?.telegramId);
-                formData.append('pdfType', "quote");
-                formData.append('customerEmail', responseData?.customerEmail);
-                formData.append('customerName', responseData?.customerName);
-                   formData.append('customerPhone', responseData?.customerPhone);
-                  formData.append('amount', responseData?.amount);
-                formData.append('paymentUrl', responseData?.paymentUrl)
-                
-                await uploadPdf(formData);
-            } catch (error) {
-                console.error("Failed to generate or upload PDF:", error);
-                
-            }
-        }, 500); 
+      setTimeout(async () => {
+        try {
+          const pdfBlob = await handleGeneratePdf(
+            pdfRef,
+            { ...responseData, type: "quote" },
+            crntUser?.pdfTemplateId
+          );
+          const formData = new FormData();
+          formData.append("file", pdfBlob, "quote.pdf");
+          formData.append("telegramId", responseData?.telegramId);
+          formData.append("pdfType", "quote");
+          formData.append("customerEmail", responseData?.customerEmail);
+          formData.append("customerName", responseData?.customerName);
+          formData.append("customerPhone", responseData?.customerPhone);
+          formData.append("amount", responseData?.amount);
+          formData.append("paymentUrl", responseData?.paymentUrl);
+
+          await uploadPdf(formData);
+        } catch (error) {
+          console.error("Failed to generate or upload PDF:", error);
+        }
+      }, 500);
     }
-}, [responseData]);
+  }, [responseData]);
+
+  const handleAddressSelected = (fullAddress) => {
+    setFormData((prev) => ({
+      ...prev,
+      address: fullAddress, // Update the form data
+    }));
+    setFormErrors((prev) => ({
+      ...prev,
+      address: "", // Clear any errors for this field
+    }));
+    setIsAddressModalOpen(false); // Close the modal
+  };
   return (
     <div className="flex flex-col items-center min-h-[100vh] h-[100%] bg-[#D3DCE5] pt-8 px-6 pb-20 overflow-y-scroll">
       <UserProfileHeader
@@ -262,7 +263,7 @@ useEffect(() => {
           onChange={handleChange("customerEmail")}
         />
 
-        <LabeledInput
+        {/* <LabeledInput
           label="Customer Address"
           id="address"
           type="text"
@@ -270,6 +271,14 @@ useEffect(() => {
           placeholder="Customer Address"
           value={formData.address}
           onChange={handleChange("address")}
+        /> */}
+
+        <AddressSelector
+          label="Customer Address"
+          placeholder="Click to find address"
+          value={formData.address}
+          onClick={() => setIsAddressModalOpen(true)}
+          error={formErrors.address}
         />
 
         <LabeledInput
@@ -319,28 +328,24 @@ useEffect(() => {
           isGoogleConnected={
             crntUser?.googleRefreshToken && crntUser?.googleAccessToken
           }
-          isXeroConnected={ crntUser?.xeroToken &&
-      crntUser?.tenantId}
+          isXeroConnected={crntUser?.xeroToken && crntUser?.tenantId}
         />
 
-
-
-        <div style={{
-    position: 'absolute',
-    left: '-9999px',
-    top: 0,
-
-  }}>
-        <div ref={pdfRef}>
-
-        {crntUser?.pdfTemplateId==="2"?
-        <TemplateTwo data={{...responseData,type:"quote"}}/>
-        :
-        <TemplateOne data={{...responseData,type:"quote"}}/>
-        }
-      
+        <div
+          style={{
+            position: "absolute",
+            left: "-9999px",
+            top: 0,
+          }}
+        >
+          <div ref={pdfRef}>
+            {crntUser?.pdfTemplateId === "2" ? (
+              <TemplateTwo data={{ ...responseData, type: "quote" }} />
+            ) : (
+              <TemplateOne data={{ ...responseData, type: "quote" }} />
+            )}
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );
