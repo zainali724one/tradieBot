@@ -13,13 +13,17 @@ import StripeConnectModal from "../components/StripeConnectModal";
 import TemplateTwo from "./TemplateTwo";
 import TemplateOne from "./TemplateOne";
 import { handleGeneratePdf } from "../services";
+import AddressSelector from "../components/AddressSelector";
+import AddressFinderModal from "../components/AddressFinderModal";
 
 function InvoiceScreen() {
   const { AddInvoice, isLoading } = useAddInvoice();
   const userId = useSelector((state) => state.session.userId);
   const [formErrors, setFormErrors] = useState({});
   const [crntUser, setCrntUser] = useState({});
-  const [responseData,setResponseData]=useState(null)
+  const [responseData, setResponseData] = useState(null);
+  const [telegramUserData, setTelegramUserData] = useState({});
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -30,7 +34,7 @@ function InvoiceScreen() {
     includeCost: "",
     includeReceipt: "",
     sheetId: "",
-    address:"",
+    address: "",
     customerPhone: "",
   });
 
@@ -58,14 +62,15 @@ function InvoiceScreen() {
   };
 
   useEffect(() => {
-      const tg = window?.Telegram?.WebApp;
-  tg?.ready();
-  if(tg){
-    if (tg?.initDataUnsafe?.user?.id) {
-      const userId = tg.initDataUnsafe.user.id;
-      returnUserData(userId);
+    const tg = window?.Telegram?.WebApp;
+    tg?.ready();
+    if (tg) {
+      if (tg?.initDataUnsafe?.user?.id) {
+        const userId = tg.initDataUnsafe.user.id;
+        setTelegramUserData(tg.initDataUnsafe.user);
+        returnUserData(userId);
+      }
     }
-  }
   }, []);
 
   const validateForm = () => {
@@ -131,7 +136,7 @@ function InvoiceScreen() {
       telegramId: userId?.telegramId,
       customerName: formData?.customerName,
       invoiceAmount: formData?.InvoiceAmount,
-address:formData?.address,
+      address: formData?.address,
       jobDescription: formData?.jobDescription,
       customerEmail: formData?.CustomerEmail,
       includeCost: formData.includeCost,
@@ -142,7 +147,7 @@ address:formData?.address,
 
     AddInvoice(Addinvoice, {
       onSuccess: (res) => {
-         setResponseData(res.data)
+        setResponseData(res.data);
         setFormData({
           customerName: "",
           jobDescription: "",
@@ -151,47 +156,58 @@ address:formData?.address,
           includeCost: "",
           includeReceipt: "",
           customerPhone: "",
-          address:""
+          address: "",
         });
       },
       onError: (error) => {
         console.error("Error adding invoice:", error);
         toast.error("Failed to add invoice. Please try again.");
-      }
+      },
     });
   };
 
-  const telegramUserData = tg.initDataUnsafe.user;
-//  const telegramUserData ={}
+  // const telegramUserData = tg.initDataUnsafe.user;
+  //  const telegramUserData ={}
 
   const pdfRef = useRef(null);
-  
-  
-  
-  useEffect(() => {
-      if (responseData) {
 
-          setTimeout(async () => {
-              try {
-                  const pdfBlob = await handleGeneratePdf(pdfRef, {...responseData,type:"quote"}, crntUser?.pdfTemplateId);
-                  const formData = new FormData();
-                  formData.append('file', pdfBlob, 'invoice.pdf');
-                  formData.append('telegramId', responseData?.telegramId);
-                  formData.append('pdfType', "invoice");
-                  formData.append('customerEmail', responseData?.customerEmail);
-                  formData.append('customerName', responseData?.customerName);
-                  formData.append('customerPhone', responseData?.customerPhone);
-                  formData.append('amount', responseData?.amount);
-            
-                  
-                  await uploadPdf(formData);
-              } catch (error) {
-                  console.error("Failed to generate or upload PDF:", error);
-                
-              }
-          }, 500); 
-      }
+  useEffect(() => {
+    if (responseData) {
+      setTimeout(async () => {
+        try {
+          const pdfBlob = await handleGeneratePdf(
+            pdfRef,
+            { ...responseData, type: "quote" },
+            crntUser?.pdfTemplateId
+          );
+          const formData = new FormData();
+          formData.append("file", pdfBlob, "invoice.pdf");
+          formData.append("telegramId", responseData?.telegramId);
+          formData.append("pdfType", "invoice");
+          formData.append("customerEmail", responseData?.customerEmail);
+          formData.append("customerName", responseData?.customerName);
+          formData.append("customerPhone", responseData?.customerPhone);
+          formData.append("amount", responseData?.amount);
+
+          await uploadPdf(formData);
+        } catch (error) {
+          console.error("Failed to generate or upload PDF:", error);
+        }
+      }, 500);
+    }
   }, [responseData]);
+
+  const handleAddressSelected = (fullAddress) => {
+    setFormData((prev) => ({
+      ...prev,
+      address: fullAddress, // Update the form data
+    }));
+    setFormErrors((prev) => ({
+      ...prev,
+      address: "", // Clear any errors for this field
+    }));
+    setIsAddressModalOpen(false); // Close the modal
+  };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-12 px-6 overflow-y-auto ">
@@ -280,7 +296,7 @@ address:formData?.address,
             { label: "No", value: "No" },
           ]}
         />
-<LabeledInput
+        {/* <LabeledInput
           label="Customer Address"
           id="address"
           type="text"
@@ -288,6 +304,14 @@ address:formData?.address,
           placeholder="Customer Address"
           value={formData.address}
           onChange={handleChange("address")}
+        /> */}
+
+        <AddressSelector
+          label="Customer Address"
+          placeholder="Click to find address"
+          value={formData.address}
+          onClick={() => setIsAddressModalOpen(true)}
+          error={formErrors.address}
         />
         <LabeledInput
           label="Customer Phone"
@@ -328,26 +352,30 @@ address:formData?.address,
         isGoogleConnected={
           crntUser?.googleRefreshToken && crntUser?.googleAccessToken
         }
-        isXeroConnected={ crntUser?.xeroToken &&
-      crntUser?.tenantId}
+        isXeroConnected={crntUser?.xeroToken && crntUser?.tenantId}
       />
 
-       <div style={{
-          position: 'absolute',
-          left: '-9999px',
+      <AddressFinderModal
+        isOpen={isAddressModalOpen}
+        onClose={() => setIsAddressModalOpen(false)}
+        onAddressSelect={handleAddressSelected}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          left: "-9999px",
           top: 0,
-      
-        }}>
-              <div ref={pdfRef}>
-      
-              {crntUser?.pdfTemplateId==="2"?
-              <TemplateTwo data={{...responseData,type:"invoice"}}/>
-              :
-              <TemplateOne data={{...responseData,type:"invoice"}}/>
-              }
-            
-              </div>
-            </div>
+        }}
+      >
+        <div ref={pdfRef}>
+          {crntUser?.pdfTemplateId === "2" ? (
+            <TemplateTwo data={{ ...responseData, type: "invoice" }} />
+          ) : (
+            <TemplateOne data={{ ...responseData, type: "invoice" }} />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
