@@ -247,7 +247,7 @@ function QuoteForm() {
 
         <LabeledInput
           label="Quote Amount"
-          placeholder="$ 0.00"
+          placeholder="£ 0.00"
           type="number"
           error={formErrors.quoteAmount}
           value={formData.quoteAmount}

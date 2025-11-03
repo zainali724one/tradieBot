@@ -247,7 +247,7 @@ function InvoiceScreen() {
           <LabeledInput
             label="Invoice Amount"
             type="number"
-            placeholder="$"
+            placeholder="£ 0.00"
             value={formData.InvoiceAmount}
             error={formErrors.InvoiceAmount}
             onChange={handleChange("InvoiceAmount")}
