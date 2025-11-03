@@ -16,6 +16,7 @@ import TemplateTwo from "./TemplateTwo";
 import TemplateOne from "./TemplateOne";
 import { handleGeneratePdf } from "../services";
 import AddressSelector from "../components/AddressSelector";
+import AddressFinderModal from "../components/AddressFinderModal";
 
 function QuoteForm() {
   const dispatch = useDispatch();
@@ -329,6 +330,11 @@ function QuoteForm() {
             crntUser?.googleRefreshToken && crntUser?.googleAccessToken
           }
           isXeroConnected={crntUser?.xeroToken && crntUser?.tenantId}
+        />
+        <AddressFinderModal
+          isOpen={isAddressModalOpen}
+          onClose={() => setIsAddressModalOpen(false)}
+          onAddressSelect={handleAddressSelected}
         />
 
         <div
