@@ -1,24 +1,6 @@
-// components/AddressFinderModal.js
 import React, { useState } from "react";
 import LabeledInput from "./LabeledInput"; // Re-using your input
 import PrimaryButton from "./PrimaryButton";
-
-// --- THIS IS A FAKE API CALL ---
-// Replace this with your call to Ideal Postcodes, getaddress.io, etc.
-const fakePostcodeLookup = (postcode) => {
-  console.log("API: Searching for postcode:", postcode);
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Simulating a successful API response
-      resolve([
-        { id: 1, fullAddress: "10 Downing Street, London, SW1A 2AA" },
-        { id: 2, fullAddress: "11 Downing Street, London, SW1A 2AA" },
-        { id: 3, fullAddress: "12 Downing Street, London, SW1A 2AA" },
-      ]);
-    }, 1000); // 1-second delay
-  });
-};
-// --- END OF FAKE API ---
 
 const AddressFinderModal = ({ isOpen, onClose, onAddressSelect }) => {
   const [postcode, setPostcode] = useState("");
@@ -37,25 +19,59 @@ const AddressFinderModal = ({ isOpen, onClose, onAddressSelect }) => {
     setError("");
     setAddresses([]);
 
-    try {
-      // *** REPLACE THIS with your real API call ***
-      const results = await fakePostcodeLookup(postcode);
+    // --- Real API Implementation ---
 
-      if (results.length === 0) {
-        setError("No addresses found for that postcode.");
-      } else {
-        setAddresses(results);
+    // WARNING: This API key is visible to anyone using your website.
+    // For production, you should move this API call to your backend
+    // to protect your key.
+    const apiKey = "6ef199aa-1e50-4519-ab10-27aae057a6ac";
+    const encodedPostcode = encodeURIComponent(postcode);
+    const url = `https://api.simplylookupadmin.co.uk/full_v3/getaddresslist?data_api_Key=${apiKey}&query=${encodedPostcode}`;
+
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        // Handle network-level errors
+        throw new Error("API request failed. Please try again later.");
       }
+
+      const data = await response.json();
+
+      // Handle API-level errors (e.g., "Invalid API Key")
+      if (data.errormessage) {
+        throw new Error(data.errormessage);
+      }
+
+      // Handle no results found
+      if (!data.results || data.results.length === 0) {
+        setError(
+          "No addresses found for that postcode. Please check and try again."
+        );
+        setLoading(false);
+        return;
+      }
+
+      // Map the API response (data.results) to the format our list expects
+      // The API returns: { "results": [{ "Line": "...", "ID": "..." }] }
+      const formattedAddresses = data.results.map((addr) => ({
+        id: addr.ID,
+        fullAddress: addr.Line,
+      }));
+
+      setAddresses(formattedAddresses);
     } catch (err) {
-      setError("Failed to fetch addresses. Please try again.");
+      setError(err.message || "An unknown error occurred.");
     } finally {
       setLoading(false);
     }
+    // --- End of API Implementation ---
   };
 
   const handleSelect = (address) => {
-    onAddressSelect(address.fullAddress); // Send the full string back
-    // Reset state for next time
+    onAddressSelect(address.fullAddress); // Send the full address string back
+
+    // Reset modal state for next time
     setPostcode("");
     setAddresses([]);
     setError("");
@@ -63,7 +79,7 @@ const AddressFinderModal = ({ isOpen, onClose, onAddressSelect }) => {
   };
 
   return (
-    // Simple Modal Background
+    // Modal Background
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
       onClick={onClose}
