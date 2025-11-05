@@ -1,10 +1,11 @@
 import React from "react";
 import { handleOpenExternalLink } from "../services";
 
-const ConnectGoogleButton = ({ userId }) => {
+const ConnectGoogleButton = ({ userId, onClose }) => {
   const handleConnect = () => {
     const redirectUrl = `https://tradie-bot-backend-three.vercel.app/api/user/connect/${userId}`;
-    handleOpenExternalLink(redirectUrl)
+    handleOpenExternalLink(redirectUrl);
+    onClose();
     // window.open(redirectUrl, "_blank");
   };
 

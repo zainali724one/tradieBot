@@ -54,11 +54,10 @@ const AppLayout = () => {
         location?.pathname === "/editprofile" ||
         location?.pathname === "/editProfile" ||
         location?.pathname === "/resetpassword" ||
-        location?.pathname === "/verifyOtp" ||
+        location?.pathname === "/verifyotp" ||
         location?.pathname === "/stripe" ||
         location?.pathname.includes("/pay/quote/") ||
         location?.pathname === "/xeroconnected" ||
-
         location?.pathname === "/forgetpassword" ? null : (
           <Footer
             style={{

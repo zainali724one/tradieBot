@@ -8,40 +8,40 @@ const StripeConnectModal = ({
   isOpen,
   onClose,
   userId,
-  isStripeConnected,
-  isGoogleConnected,
-  isXeroConnected,
+  // isStripeConnected,
+  // isGoogleConnected,
+  // isXeroConnected,
 }) => {
   if (!isOpen) return null;
-  const [userData,setUserData]=useState({})
- const returnUserData = async (telegramId) => {
-         // 8141119319
-     
-         Getuser(telegramId)
-           .then((res) => {
-     setUserData(res?.user)
-            
-             console.log(res, "data is added");
-           })
-           .catch((err) => {
-             // localStorage.removeItem("telegramid");
-             // nevigate("/signin");
-             console.log(err, "here is the error");
-           });
-         // return theUser;
-       };
-   
-        const tg = window?.Telegram?.WebApp;
-         console.log(tg.initDataUnsafe.user, "here is user");
-         // const telegramUserData = tg.initDataUnsafe.user;
-       
-         tg?.ready();
-         useEffect(() => {
-           if (tg?.initDataUnsafe?.user?.id) {
-             const userId = tg.initDataUnsafe.user.id;
-             returnUserData(userId);
-           }
-         }, [tg?.initDataUnsafe?.user?.id]);
+  const [userData, setUserData] = useState({});
+  const returnUserData = async (telegramId) => {
+    // 8141119319
+
+    Getuser(telegramId)
+      .then((res) => {
+        setUserData(res?.user);
+
+        console.log(res, "data is added");
+      })
+      .catch((err) => {
+        // localStorage.removeItem("telegramid");
+        // nevigate("/signin");
+        console.log(err, "here is the error");
+      });
+    // return theUser;
+  };
+
+  const tg = window?.Telegram?.WebApp;
+  console.log(tg.initDataUnsafe.user, "here is user");
+  // const telegramUserData = tg.initDataUnsafe.user;
+
+  tg?.ready();
+  useEffect(() => {
+    if (tg?.initDataUnsafe?.user?.id) {
+      const userId = tg.initDataUnsafe.user.id;
+      returnUserData(userId);
+    }
+  }, [tg?.initDataUnsafe?.user?.id]);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
@@ -60,37 +60,29 @@ const StripeConnectModal = ({
           {/* Stripe Section */}
           <div className="flex items-center justify-between">
             <span className="font-medium">Stripe</span>
-            
             {userData?.stripeAccountId ? (
               <span className="text-green-600 font-semibold">✅ Connected</span>
             ) : (
-              <ConnectStripeButton userId={userId} />
+              <ConnectStripeButton userId={userId} onClose={onClose} />
             )}
           </div>
 
           {/* Google Section */}
           <div className="flex items-center justify-between">
             <span className="font-medium">Google</span>
-         
-          
-            {userData?.googleRefreshToken && userData?.googleAccessToken ? (
+            {userData?.googleAccessToken && userData?.googleRefreshToken ? (
               <span className="text-green-600 font-semibold">✅ Connected</span>
             ) : (
-              <ConnectGoogleButton userId={userId} />
+              <ConnectGoogleButton userId={userId} onClose={onClose} />
             )}
           </div>
 
-
           <div className="flex items-center justify-between">
             <span className="font-medium">Xero</span>
-
-                     
-         
-            {userData?.xeroToken &&
-      userData?.tenantId ? (
+            {userData?.xeroToken && userData?.tenantId ? (
               <span className="text-green-600 font-semibold">✅ Connected</span>
             ) : (
-              <ConnectXeroButton userId={userId} />
+              <ConnectXeroButton userId={userId} onClose={onClose} />
             )}
           </div>
         </div>

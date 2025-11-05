@@ -12,7 +12,9 @@ import Text from "../components/ui/Text";
 import i3 from "../assets/icons/i3.png";
 import i5 from "../assets/icons/i5.png";
 import logo from "../assets/logo.png";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import { FaRegEye } from "react-icons/fa6";
+import { FaRegEyeSlash } from "react-icons/fa6";
 
 const Login = () => {
   const { login, isLoading } = useLogin();
@@ -20,6 +22,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [formErrors, setFormErrors] = useState({});
+  const [showPass, setShowPass] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
@@ -39,8 +42,6 @@ const Login = () => {
     // Email validation
     if (!form.email.trim()) {
       errors.email = "Email is required";
-    } else if (form.email.length < 6) {
-      errors.email = "Email must be at least 6 characters";
     } else if (!emailRegex.test(form.email)) {
       errors.email = "Invalid email format";
     }
@@ -55,7 +56,7 @@ const Login = () => {
 
   const handleSubmit = () => {
     if (!validateForm()) {
-      toast.error("Please fix the errors before Login.");
+      // toast.error("Please fix the errors before Login.");
       return;
     }
     login(form);
@@ -69,11 +70,9 @@ const Login = () => {
   // }
 
   return (
-    <div className="bg-[#D3DCE5] w-[100%] h-[100dvh] flex flex-col items-center overflow-y-scroll pb-3.5">
+    <div className="bg-[#D3DCE5] w-[100%] max-h-[100vh] h-[100%] flex flex-col items-center overflow-y-scroll pb-3.5">
       <div className="w-full pt-16 ml-6">
-        <header className="flex justify-start">
-          <BackButton />
-        </header>
+        <header className="flex justify-start">{/* <BackButton /> */}</header>
       </div>
       <Image src={logo} className="object-cover mt-2" />
       <div className="w-[90%]">
@@ -97,7 +96,40 @@ const Login = () => {
         <div className="mt-3.5">
           <LabeledInput
             label="Password"
-            prefix={<img src={i5} className="h-[18px] w-[16px]" />}
+            prefix={
+              <img
+                src={i5}
+                className="h-[18px] w-[16px]"
+                onClick={() => console.log("zain")}
+              />
+            }
+            postfix={
+              showPass ? (
+                // <div
+                //   onClick={() => setShowPass(!showPass)}
+                //   className="cursor-pointer"
+                // >
+                <FaRegEye
+                  className="text-[#5290C1]  text-xl cursor-pointer"
+                  onClick={() => {
+                    setShowPass(!showPass), console.log("working");
+                  }}
+                />
+              ) : (
+                // </div>
+                // <div
+                //   onClick={() => setShowPass(!showPass)}
+                //   className="cursor-pointer"
+                // >
+                <FaRegEyeSlash
+                  className="text-[#5290C1] text-xl cursor-pointer"
+                  onClick={() => setShowPass(!showPass)}
+                />
+                // </div>
+              )
+            }
+            // postfixOnClick={() => setShowPass(!showPass)}
+            type={showPass ? "text" : "password"}
             placeholder="Enter password"
             error={formErrors.password}
             value={form.password}
@@ -123,7 +155,7 @@ const Login = () => {
           />
         </div>
 
-        <div className="font-[500] text-[14px] flex justify-center mt-90 gap-2">
+        <div className="font-[500] text-[14px] flex justify-center mt-[10px] gap-2">
           Don’t have an account?
           <button
             onClick={handlesignup}
