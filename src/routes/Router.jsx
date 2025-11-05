@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <LazyComponent path="/quoteform" />
-           </PrivateRoute>
+          </PrivateRoute>
         ),
         // element: <LazyComponent path="/quoteform" />,
       },
@@ -200,7 +200,7 @@ export const router = createBrowserRouter([
         ),
       },
 
-       {
+      {
         path: "/templateTwo",
         element: (
           // <PublicRoute>
@@ -226,7 +226,7 @@ export const router = createBrowserRouter([
         ),
       },
 
-        {
+      {
         path: "/editlogo",
         element: (
           // <PublicRoute>

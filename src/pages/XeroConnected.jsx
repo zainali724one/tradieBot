@@ -1,5 +1,5 @@
-import React from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
+import React from "react";
+import { FaCheckCircle } from "react-icons/fa";
 
 const XeroConnected = () => {
   return (
@@ -11,12 +11,19 @@ const XeroConnected = () => {
             alt="Xero Logo"
             className="h-12"
           /> */}
-          <img width="70" height="70" src="https://img.icons8.com/external-tal-revivo-bold-tal-revivo/96/external-xero-is-a-new-zealand-public-technology-company-logo-bold-tal-revivo.png" alt="external-xero-is-a-new-zealand-public-technology-company-logo-bold-tal-revivo"/>
+          <img
+            width="70"
+            height="70"
+            src="https://img.icons8.com/external-tal-revivo-bold-tal-revivo/96/external-xero-is-a-new-zealand-public-technology-company-logo-bold-tal-revivo.png"
+            alt="external-xero-is-a-new-zealand-public-technology-company-logo-bold-tal-revivo"
+          />
         </div>
 
         <FaCheckCircle className="text-green-500 text-6xl mx-auto mb-4" />
 
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Xero Connected!</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">
+          Xero Connected!
+        </h1>
         <p className="text-gray-600 mb-6">
           Your Xero account is now successfully connected to your app.
         </p>
