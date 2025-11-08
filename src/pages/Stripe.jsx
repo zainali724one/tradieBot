@@ -42,14 +42,18 @@ function CheckoutForm({ clientSecret, quoteAmount, customerName }) {
   };
 
   return (
-     <form
+    <form
       onSubmit={handleSubmit}
       className="max-w-[430px] w-[90%] mx-auto p-6 bg-white rounded-2xl shadow-lg space-y-5"
     >
       <div>
         <h2 className="text-xl font-semibold text-gray-800">Pay for Quote</h2>
-        <p className="text-gray-600 mt-1">Customer: <span className="font-medium">{customerName}</span></p>
-        <p className="text-gray-600">Total: <span className="font-medium">${quoteAmount}</span></p>
+        <p className="text-gray-600 mt-1">
+          Customer: <span className="font-medium">{customerName}</span>
+        </p>
+        <p className="text-gray-600">
+          Total: <span className="font-medium">${quoteAmount}</span>
+        </p>
       </div>
 
       <div className="p-3 border border-gray-300 rounded-md">
@@ -59,7 +63,7 @@ function CheckoutForm({ clientSecret, quoteAmount, customerName }) {
               base: {
                 fontSize: "16px",
                 color: "#32325d",
-                '::placeholder': {
+                "::placeholder": {
                   color: "#a0aec0",
                 },
               },
@@ -79,11 +83,7 @@ function CheckoutForm({ clientSecret, quoteAmount, customerName }) {
         Pay
       </button>
 
-      {status && (
-        <p className="text-sm text-center text-gray-700">
-          {status}
-        </p>
-      )}
+      {status && <p className="text-sm text-center text-gray-700">{status}</p>}
     </form>
   );
 }
@@ -94,7 +94,7 @@ export default function QuotePaymentPage() {
   console.log("quoteId", quoteId);
   useEffect(() => {
     fetch(
-      `https://tradie-bot-backend.vercel.app/api/stripe/quote-payment/${quoteId}`
+      `https://tradie-bot-backend-three.vercel.app/api/stripe/quote-payment/${quoteId}`
     )
       .then((res) => res.json())
       .then(setPaymentData);
@@ -104,10 +104,9 @@ export default function QuotePaymentPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-  <Elements stripe={stripePromise}>
-      <CheckoutForm {...paymentData} />
-    </Elements>
+      <Elements stripe={stripePromise}>
+        <CheckoutForm {...paymentData} />
+      </Elements>
     </div>
-  
   );
 }
