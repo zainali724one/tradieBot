@@ -1,5 +1,5 @@
 import React from "react";
-import { handleOpenExternalLink } from "../services";
+// import { handleOpenExternalLink } from "../services";
 
 const ConnectStripeButton = ({ userId, onClose }) => {
   const handleConnect = () => {

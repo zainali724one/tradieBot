@@ -173,6 +173,16 @@ export const router = createBrowserRouter([
         ),
         // element: <LazyComponent path="/verifyotp" />,
       },
+
+      {
+        path: "/onboarding",
+        element: (
+          <PrivateRoute>
+            <LazyComponent path="/onboarding" />
+          </PrivateRoute>
+        ),
+        // element: <LazyComponent path="/verifyotp" />,
+      },
       {
         path: "/resetpassword",
         element: (

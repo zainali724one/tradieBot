@@ -58,6 +58,7 @@ const AppLayout = () => {
         location?.pathname === "/stripe" ||
         location?.pathname.includes("/pay/quote/") ||
         location?.pathname === "/xeroconnected" ||
+        location?.pathname === "/onboarding" ||
         location?.pathname === "/forgetpassword" ? null : (
           <Footer
             style={{

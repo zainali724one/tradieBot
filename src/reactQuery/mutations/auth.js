@@ -47,14 +47,37 @@ export function useLogin() {
 
   const { mutate: login, isPending: isLoading } = useMutation({
     mutationFn: (formData) => userLogin(formData),
+    // onSuccess: (response) => {
+    //   if (response?.user) {
+    //     dispatch(setUserId(response.user)); // ✅ Store userId in Redux
+    //   }
+    //   localStorage.setItem("telegramid", response.user?.telegramId);
+    //   navigate("/quoteform");
+    //   toast.success("Login Successfully");
+    //   queryClient.invalidateQueries({ queryKey: ["login"] });
+    // },
     onSuccess: (response) => {
+      // These actions happen for every successful login
       if (response?.user) {
         dispatch(setUserId(response.user)); // ✅ Store userId in Redux
       }
       localStorage.setItem("telegramid", response.user?.telegramId);
-      navigate("/quoteform");
       toast.success("Login Successfully");
       queryClient.invalidateQueries({ queryKey: ["login"] });
+
+      // --- NEW CONDITIONAL NAVIGATION ---
+      // Check the new flag from your API
+      const userHasOnboarded = response?.user?.has_completed_onboarding;
+
+      if (userHasOnboarded) {
+        // 1. User has completed onboarding, send them to the main app
+        navigate("/quoteform");
+      } else {
+        // 2. New user, send them to the onboarding wizard
+        // (Make sure you have a route set up for '/onboarding')
+        navigate("/onboarding");
+      }
+      // --- END OF NEW LOGIC ---
     },
     onError: (error) => {
       message.error(error.response.data?.message);
@@ -82,7 +105,7 @@ export function useSendOtp() {
   return { sendotp, isLoading };
 }
 
-export function useVerifyOtp(){
+export function useVerifyOtp() {
   const queryClient = useQueryClient();
 
   const { mutate: verifyOtp, isPending: isLoading } = useMutation({
@@ -124,7 +147,7 @@ export function useEditProfile() {
   const { mutate: editProfile, isPending: isLoading } = useMutation({
     mutationFn: (formData) => userEditName(formData),
     onSuccess: () => {
-      navigate("/editProfile");
+      // navigate("/editProfile");
       toast.success("Update Successfully");
       queryClient.invalidateQueries({ queryKey: ["editName"] });
     },
@@ -208,7 +231,6 @@ export function useAddInvoice() {
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message);
-
     },
   });
 

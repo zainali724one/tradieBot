@@ -33,6 +33,7 @@ const componentMap = {
   "/templateOne": lazy(() => import("../pages/TemplateOne")),
   "/selectTemp": lazy(() => import("../pages/SelectTemplate")),
   "/editlogo": lazy(() => import("../pages/EditLogoScreen")),
+  "/onboarding": lazy(() => import("../pages/OnboardingWizard")),
 
   // "/thehive": lazy(() => import("../pages/TheHive")),
   // "/you": lazy(() => import("../pages/You")),
