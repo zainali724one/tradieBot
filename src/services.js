@@ -20,7 +20,8 @@ export const handleGeneratePdf = async (pdfRef) => {
       throw new Error("Canvas generation failed");
     }
 
-    const imgData = canvas.toDataURL("image/png");
+    // const imgData = canvas.toDataURL("image/png");
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
     if (!imgData || imgData.length < 100) {
       // Simple check for valid data
       throw new Error("Invalid image data generated");
@@ -31,7 +32,8 @@ export const handleGeneratePdf = async (pdfRef) => {
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
     const pdf = new jsPDF("p", "pt", [imgWidth, imgHeight]);
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight, undefined, "FAST");
+    // pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight, undefined, "FAST");
+    pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight, undefined, "FAST");
 
     return pdf.output("blob");
   } catch (error) {
