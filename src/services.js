@@ -1,47 +1,44 @@
-
-import { openLink } from '@telegram-apps/sdk';
-import html2canvas from 'html2canvas-pro';
-import jsPDF from 'jspdf'
-
-
+import { openLink } from "@telegram-apps/sdk";
+import html2canvas from "html2canvas-pro";
+import jsPDF from "jspdf";
 
 export const handleGeneratePdf = async (pdfRef) => {
-    if (!pdfRef.current) {
-        throw new Error("PDF ref is not available");
+  if (!pdfRef.current) {
+    throw new Error("PDF ref is not available");
+  }
+
+  try {
+    // Convert to canvas
+    const canvas = await html2canvas(pdfRef.current, {
+      scale: 1,
+      useCORS: true,
+      logging: true, // Add logging to debug
+      allowTaint: true, // If you're using external images
+    });
+
+    if (!canvas) {
+      throw new Error("Canvas generation failed");
     }
 
-    try {
-        // Convert to canvas
-        const canvas = await html2canvas(pdfRef.current, {
-            scale: 2,
-            useCORS: true,
-            logging: true, // Add logging to debug
-            allowTaint: true // If you're using external images
-        });
-
-        if (!canvas) {
-            throw new Error("Canvas generation failed");
-        }
-
-        const imgData = canvas.toDataURL('image/png');
-        if (!imgData || imgData.length < 100) { // Simple check for valid data
-            throw new Error("Invalid image data generated");
-        }
-
-        // Calculate dimensions maintaining aspect ratio
-        const imgWidth = 430;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        const pdf = new jsPDF('p', 'pt', [imgWidth, imgHeight]);
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight, undefined, 'FAST');
-
-        return pdf.output('blob');
-    } catch (error) {
-        console.error("PDF generation error:", error);
-        throw error; // Re-throw to handle in the calling code
+    const imgData = canvas.toDataURL("image/png");
+    if (!imgData || imgData.length < 100) {
+      // Simple check for valid data
+      throw new Error("Invalid image data generated");
     }
+
+    // Calculate dimensions maintaining aspect ratio
+    const imgWidth = 430;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    const pdf = new jsPDF("p", "pt", [imgWidth, imgHeight]);
+    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight, undefined, "FAST");
+
+    return pdf.output("blob");
+  } catch (error) {
+    console.error("PDF generation error:", error);
+    throw error; // Re-throw to handle in the calling code
+  }
 };
-
 
 // import { PDFDocument, rgb } from 'pdf-lib';
 // import { toBlob } from 'html-to-image';
@@ -54,18 +51,18 @@ export const handleGeneratePdf = async (pdfRef) => {
 //   try {
 //     // 1. Create a new PDF document
 //     const pdfDoc = await PDFDocument.create();
-    
+
 //     // 2. Get HTML content dimensions
 //     const width = pdfRef.current.offsetWidth;
 //     const height = pdfRef.current.offsetHeight;
-    
+
 //     // 3. Add a page with matching dimensions
 //     const page = pdfDoc.addPage([width, height]);
-    
+
 //     // 4. Extract text and links from the HTML
 //     const textElements = pdfRef.current.querySelectorAll('p, span, h1, h2, h3, h4, h5, h6');
 //     const linkElements = pdfRef.current.querySelectorAll('a');
-    
+
 //     // 5. Add text content (selectable)
 //     textElements.forEach(el => {
 //       const rect = el.getBoundingClientRect();
@@ -76,7 +73,7 @@ export const handleGeneratePdf = async (pdfRef) => {
 //         color: rgb(0, 0, 0),
 //       });
 //     });
-    
+
 //     // 6. Add clickable links
 //     linkElements.forEach(el => {
 //       const rect = el.getBoundingClientRect();
@@ -88,19 +85,16 @@ export const handleGeneratePdf = async (pdfRef) => {
 //         link: el.href,
 //       });
 //     });
-    
+
 //     // 7. Convert to Blob
 //     const pdfBytes = await pdfDoc.save();
 //     return new Blob([pdfBytes], { type: 'application/pdf' });
-    
+
 //   } catch (error) {
 //     console.error("PDF generation error:", error);
 //     throw error;
 //   }
 // };
-
-
-
 
 // import { PDFDocument, rgb } from 'pdf-lib';
 // import html2canvas from 'html2canvas-pro';
@@ -122,7 +116,7 @@ export const handleGeneratePdf = async (pdfRef) => {
 //     // 2. Create PDF
 //     const pdfDoc = await PDFDocument.create();
 //     const imgData = canvas.toDataURL('image/png');
-    
+
 //     // 3. Calculate dimensions
 //     const imgWidth = canvas.width;
 //     const imgHeight = canvas.height;
@@ -143,7 +137,7 @@ export const handleGeneratePdf = async (pdfRef) => {
 //       const rect = el.getBoundingClientRect();
 //       const text = el.textContent;
 //       const fontSize = parseInt(window.getComputedStyle(el).fontSize) || 12;
-      
+
 //       page.drawText(text, {
 //         x: rect.left,
 //         y: imgHeight - rect.bottom,
@@ -175,9 +169,7 @@ export const handleGeneratePdf = async (pdfRef) => {
 //   }
 // };
 
-
 // import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-
 
 // export const handleGeneratePdf = async (pdfRef) => {
 //   if (!pdfRef.current) {
@@ -288,41 +280,22 @@ export const handleGeneratePdf = async (pdfRef) => {
 //   }
 // };
 
-
-
-
-
-
-
-
-
-
-
-
-
 export const isCurrentPage = (route, currentRoute) => {
   return route === currentRoute;
 };
 
-
-
 export const handleOpenExternalLink = (link) => {
-  if (openLink.isAvailable()){
+  if (openLink.isAvailable()) {
     openLink(link, {
-      tryBrowser: 'chrome', // or 'safari' on iOS
+      tryBrowser: "chrome", // or 'safari' on iOS
       tryInstantView: false,
     });
   } else {
     // Fallback if openLink isn't available
-    window.open(link, '_blank');
+    window.open(link, "_blank");
   }
 };
 
-
-export const getSheetId=(url)=> {
+export const getSheetId = (url) => {
   return url.split("/d/")[1].split("/")[0];
-}
-
-
-
-
+};
