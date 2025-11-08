@@ -10,7 +10,7 @@ export const handleGeneratePdf = async (pdfRef) => {
   try {
     // Convert to canvas
     const canvas = await html2canvas(pdfRef.current, {
-      scale: 1,
+      scale: 2,
       useCORS: true,
       logging: true, // Add logging to debug
       allowTaint: true, // If you're using external images
