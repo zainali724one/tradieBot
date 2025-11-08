@@ -189,7 +189,7 @@ function QuoteForm() {
           formData.append("customerName", responseData?.customerName);
           formData.append("customerPhone", responseData?.customerPhone);
           formData.append("amount", responseData?.amount);
-          // formData.append("paymentUrl", responseData?.paymentUrl);
+          formData.append("paymentUrl", responseData?.paymentUrl);
 
           await uploadPdf(formData);
         } catch (error) {
