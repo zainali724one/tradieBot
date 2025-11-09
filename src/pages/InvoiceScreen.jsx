@@ -210,7 +210,7 @@ function InvoiceScreen() {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-12 px-6 overflow-y-auto ">
+    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-9 px-6 overflow-y-auto ">
       <UserProfileHeader
         image={telegramUserData?.photo_url}
         name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
@@ -333,7 +333,7 @@ function InvoiceScreen() {
           onChange={handleChange("sheetId")}
         />
 
-        <div className="w-[100%]  flex mt-8">
+        <div className="w-[100%]  flex mt-5">
           <PrimaryButton
             children="Add Invoice"
             color="blue"

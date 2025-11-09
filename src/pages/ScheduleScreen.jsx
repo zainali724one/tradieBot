@@ -102,7 +102,7 @@ function ScheduleScreen() {
   const telegramUserData = tg.initDataUnsafe.user;
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-12 px-6 overflow-y-auto ">
+    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-8 px-6 overflow-y-auto ">
       <UserProfileHeader
         image={telegramUserData?.photo_url}
         name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
@@ -111,7 +111,7 @@ function ScheduleScreen() {
 
       <div className="mt-4 w-full max-h-[64dvh] overflow-y-auto ">
         <h2 className="text-lg text-[#5290C1] font-semibold font-poppins">
-          Quote
+          Scedule Job
         </h2>
         <LabeledInput
           label="Customer Name"
@@ -166,7 +166,7 @@ function ScheduleScreen() {
           onChange={handleChange("time")}
         />
       </div>
-      <div className="w-[90%]  flex mt-15">
+      <div className="w-[90%]  flex mt-5">
         <PrimaryButton
           children="Add Job"
           color="blue"
