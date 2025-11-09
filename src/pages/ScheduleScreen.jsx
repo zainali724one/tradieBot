@@ -102,7 +102,7 @@ function ScheduleScreen() {
   const telegramUserData = tg.initDataUnsafe.user;
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-5 px-6 overflow-y-auto ">
+    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-5 px-6 pb-20 overflow-y-auto ">
       <UserProfileHeader
         image={telegramUserData?.photo_url}
         name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
