@@ -161,9 +161,7 @@ const LabeledInput = ({
           } ${postfix ? "pr-10" : "pr-3"}`}
         />
         {postfix && (
-          <span className="absolute right-3 flex items-center pointer-events-none">
-            {postfix}
-          </span>
+          <span className="absolute right-3 flex items-center">{postfix}</span>
         )}
       </div>
       <p className="text-red-500 text-sm pl-1 h-5">{error}</p>
