@@ -98,14 +98,23 @@ export const Getuser = async (telegramId) => {
   return response.data;
 };
 
+export const uploadPdf = async (formData) => {
+  try {
+    const uploadRes = await axiosClient.post("/uploadpdf", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log("Upload Success:", uploadRes.data);
+  } catch (err) {
+    console.error("Upload Failed:", err);
+  }
+};
 
-export const uploadPdf = async(formData)=>{
-    try {
-      const uploadRes = await axiosClient.post('/uploadpdf', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      console.log('Upload Success:', uploadRes.data);
-    } catch (err) {
-      console.error('Upload Failed:', err);
-    }
-}
+export const deleteChase = async (id, type, telegramId) => {
+  const qs = new URLSearchParams({ type });
+  if (telegramId) qs.append("telegramId", telegramId);
+
+  const response = await axiosClient.delete(
+    `/invoice/chases/${id}?${qs.toString()}`
+  );
+  return response.data;
+};

@@ -18,6 +18,8 @@ import {
   userSendOtp,
   userSignup,
   userVerifyOtp,
+  deleteHistory as deleteHistoryApi,
+  deleteChase as deleteChaseApi,
 } from "../../api/auth/auth";
 
 export function useSignup() {
@@ -254,4 +256,55 @@ export function useAddJob() {
   });
 
   return { usAddJob, isLoading };
+}
+
+export function useDeleteChase() {
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteChase, isPending: isLoading } = useMutation({
+    mutationFn: ({ id, type, telegramId }) =>
+      deleteChaseApi(id, type, telegramId),
+    onSuccess: () => {
+      toast.success("Deleted successfully");
+      // Invalidate any cached lists related to chases
+      queryClient.invalidateQueries({
+        predicate: (q) =>
+          Array.isArray(q.queryKey) &&
+          q.queryKey.some((k) => {
+            if (typeof k !== "string") return false;
+            const s = k.toLowerCase();
+            return s.includes("chases") || s.includes("getchases");
+          }),
+      });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Delete failed");
+    },
+  });
+
+  return { deleteChase, isLoading };
+}
+
+export function useDeleteHistory() {
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteHistory, isPending: isLoading } = useMutation({
+    mutationFn: (id) => deleteHistoryApi(id),
+    onSuccess: () => {
+      toast.success("Deleted successfully");
+      // Invalidate any query key that contains "history" (works with unknown key names)
+      queryClient.invalidateQueries({
+        predicate: (q) =>
+          Array.isArray(q.queryKey) &&
+          q.queryKey.some(
+            (k) => typeof k === "string" && k.toLowerCase().includes("history")
+          ),
+      });
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Delete failed");
+    },
+  });
+
+  return { deleteHistory, isLoading };
 }

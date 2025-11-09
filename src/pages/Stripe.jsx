@@ -52,7 +52,7 @@ function CheckoutForm({ clientSecret, quoteAmount, customerName }) {
           Customer: <span className="font-medium">{customerName}</span>
         </p>
         <p className="text-gray-600">
-          Total: <span className="font-medium">${quoteAmount}</span>
+          Total: <span className="font-medium">£{quoteAmount}</span>
         </p>
       </div>
 
