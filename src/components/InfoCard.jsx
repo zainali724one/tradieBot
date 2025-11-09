@@ -52,7 +52,6 @@ export const InfoCard = ({
         {label3 && value3 && (
           <p className="text-xs text-gray-700">
             <span className="font-semibold">{label3}:</span> {value3}
-            ABC
           </p>
         )}
 

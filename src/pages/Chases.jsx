@@ -140,6 +140,7 @@ const Chases = () => {
       </p>
       {data?.data?.length > 0 ? (
         <div className="space-y-3 h-[65vh] overflow-y-scroll">
+          abc
           {data?.data?.map((quote, index) => (
             <div key={index} onClick={() => openModal(quote)}>
               <InfoCard
