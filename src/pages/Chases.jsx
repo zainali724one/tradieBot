@@ -127,7 +127,7 @@ const Chases = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="h-[100dvh] bg-[#D3DCE5] pt-12 px-5 font-sans">
+    <div className="h-[100dvh] bg-[#D3DCE5] pt-8 px-5 font-sans">
       <IoArrowBack
         size={24}
         className="text-[#5290C1] mb-4"

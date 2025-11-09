@@ -109,6 +109,11 @@ export const uploadPdf = async (formData) => {
   }
 };
 
+export const deleteHistory = async (id) => {
+  const response = await axiosClient.delete(`/history/${id}`);
+  return response.data;
+};
+
 export const deleteChase = async (id, type, telegramId) => {
   const qs = new URLSearchParams({ type });
   if (telegramId) qs.append("telegramId", telegramId);
