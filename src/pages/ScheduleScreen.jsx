@@ -78,6 +78,7 @@ function ScheduleScreen() {
       date: formData.date,
       time: formData.time,
       userId: userId._id,
+      quoteId: formData.quoteId,
     };
 
     usAddJob(addjob, {
