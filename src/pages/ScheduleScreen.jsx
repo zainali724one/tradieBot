@@ -140,7 +140,7 @@ function ScheduleScreen() {
           id="quoteId"
           type="text"
           error={formErrors.quoteId}
-          placeholder="Google spread sheet id"
+          placeholder="Quote ID"
           value={formData.quoteId}
           onChange={handleChange("quoteId")}
           helpText="Navigate to the Chase application page, Select the 'Quote' option and click 'Continue', On the following page, select the quote you wish to attach to the job, A pop-up window will appear, Copy the 'Quote ID' from this window."
