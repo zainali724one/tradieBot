@@ -140,7 +140,6 @@ const Chases = () => {
       </p>
       {data?.data?.length > 0 ? (
         <div className="space-y-3 h-[65vh] overflow-y-scroll">
-          abc
           {data?.data?.map((quote, index) => (
             <div key={index} onClick={() => openModal(quote)}>
               <InfoCard
@@ -154,7 +153,7 @@ const Chases = () => {
                 label1="Customer Name"
                 value1={quote?.customerName}
                 label2="Quote Amount"
-                showStatus={true}
+                showStatus={id === "quote" ? true : false}
                 status={quote?.isPaid ? "Paid" : "Awaiting Payment"}
                 value2={quote?.invoiceAmount}
               />
