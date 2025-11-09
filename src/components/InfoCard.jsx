@@ -26,11 +26,7 @@ export const InfoCard = ({
       style={{ boxShadow: "inset 0 0 10px rgba(82, 144, 193, 0.2)" }}
     >
       {image && (
-        <img
-          src={image}
-          alt="Avatar"
-          className="w-12 h-12  object-contain"
-        />
+        <img src={image} alt="Avatar" className="w-12 h-12  object-contain" />
         // <Avatar src={image} alt="Avatar" size="large" />
       )}
 
@@ -56,6 +52,7 @@ export const InfoCard = ({
         {label3 && value3 && (
           <p className="text-xs text-gray-700">
             <span className="font-semibold">{label3}:</span> {value3}
+            ABC
           </p>
         )}
 
