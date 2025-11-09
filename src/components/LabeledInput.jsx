@@ -149,9 +149,7 @@ const LabeledInput = ({
         style={{ boxShadow: "1px 1px 4px 4px #5290C11A inset" }}
       >
         {prefix && (
-          <span className="absolute left-3 flex items-center pointer-events-none">
-            {prefix}
-          </span>
+          <span className="absolute left-3 flex items-center">{prefix}</span>
         )}
         <CustomInput
           type={type}

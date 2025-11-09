@@ -105,10 +105,6 @@ const Login = () => {
             }
             postfix={
               showPass ? (
-                // <div
-                //   onClick={() => setShowPass(!showPass)}
-                //   className="cursor-pointer"
-                // >
                 <FaRegEye
                   className="text-[#5290C1]  text-xl cursor-pointer"
                   onClick={() => {
@@ -116,16 +112,10 @@ const Login = () => {
                   }}
                 />
               ) : (
-                // </div>
-                // <div
-                //   onClick={() => setShowPass(!showPass)}
-                //   className="cursor-pointer"
-                // >
                 <FaRegEyeSlash
                   className="text-[#5290C1] text-xl cursor-pointer"
                   onClick={() => setShowPass(!showPass)}
                 />
-                // </div>
               )
             }
             // postfixOnClick={() => setShowPass(!showPass)}
