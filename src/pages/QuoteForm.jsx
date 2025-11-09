@@ -211,7 +211,7 @@ function QuoteForm() {
     setIsAddressModalOpen(false); // Close the modal
   };
   return (
-    <div className="flex flex-col items-center min-h-[100vh] h-[100%] bg-[#D3DCE5] pt-8 px-6 pb-20 overflow-y-scroll">
+    <div className="flex flex-col items-center min-h-[100vh] h-[100%] bg-[#D3DCE5] pt-6 px-6 pb-20 overflow-y-scroll">
       <UserProfileHeader
         image={telegramUserData?.photo_url}
         name={telegramUserData?.first_name + " " + telegramUserData?.last_name}

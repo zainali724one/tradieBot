@@ -102,7 +102,7 @@ function ScheduleScreen() {
   const telegramUserData = tg.initDataUnsafe.user;
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-8 px-6 overflow-y-auto ">
+    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-5 px-6 overflow-y-auto ">
       <UserProfileHeader
         image={telegramUserData?.photo_url}
         name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
@@ -166,7 +166,7 @@ function ScheduleScreen() {
           onChange={handleChange("time")}
         />
       </div>
-      <div className="w-[90%]  flex mt-5">
+      <div className="w-[90%]  flex">
         <PrimaryButton
           children="Add Job"
           color="blue"
