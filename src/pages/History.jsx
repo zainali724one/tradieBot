@@ -154,10 +154,7 @@ const History = () => {
         {data?.history?.map((quote, index) => (
           <div key={index} onClick={() => openModal(quote)}>
             <InfoCard
-              image={
-                quote?.image ||
-                "https://c.animaapp.com/maz6qvpnPrz5RU/img/ellipse-8.png"
-              }
+              image={quote?.image || "https://img.icons8.com/ios/50/work.png"}
               index={index + 1}
               label1="Customer"
               value1={quote?.customerName}
