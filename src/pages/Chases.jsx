@@ -108,6 +108,7 @@ const Chases = () => {
   const { deleteChase, isLoading: isDeleting } = useDeleteChase();
 
   const openModal = (item) => {
+    console.log(item, "selected item");
     setSelected(item);
     setOpen(true);
   };
