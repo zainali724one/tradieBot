@@ -20,6 +20,7 @@ function ScheduleScreen() {
     jobDescription: "",
     date: "",
     time: "",
+    quoteId: "",
   });
 
   const validateForm = () => {
@@ -87,10 +88,11 @@ function ScheduleScreen() {
           jobDescription: "",
           date: "",
           time: "",
+          quoteId: "",
         });
 
         // Optionally show a success message
-        toast.success("Job added successfully!");
+        toast.success("Job scheduled successfully!");
       },
     });
   };
@@ -132,6 +134,17 @@ function ScheduleScreen() {
             style={{ boxShadow: "1px 1px 4px 4px #5290C11A inset" }}
           />
         </div>
+
+        <LabeledInput
+          label="Quote ID"
+          id="quoteId"
+          type="text"
+          error={formErrors.quoteId}
+          placeholder="Google spread sheet id"
+          value={formData.quoteId}
+          onChange={handleChange("quoteId")}
+          helpText="Navigate to the Chase application page, Select the 'Quote' option and click 'Continue', On the following page, select the quote you wish to attach to the job, A pop-up window will appear, Copy the 'Quote ID' from this window."
+        />
 
         <LabeledInput
           label="Date"
