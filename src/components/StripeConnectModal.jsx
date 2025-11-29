@@ -13,13 +13,13 @@ const StripeConnectModal = ({
   // isXeroConnected,
 }) => {
   if (!isOpen) return null;
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
   const returnUserData = async (telegramId) => {
     // 8141119319
 
     Getuser(telegramId)
       .then((res) => {
-        setUserData(res?.user);
+        // setUserData(res?.user);
 
         console.log(res, "data is added");
       })
@@ -60,30 +60,30 @@ const StripeConnectModal = ({
           {/* Stripe Section */}
           <div className="flex items-center justify-between">
             <span className="font-medium">Stripe</span>
-            {userData?.stripeAccountId ? (
+            {/* {userData?.stripeAccountId ? (
               <span className="text-green-600 font-semibold">✅ Connected</span>
-            ) : (
-              <ConnectStripeButton userId={userId} onClose={onClose} />
-            )}
+            ) : ( */}
+            <ConnectStripeButton userId={userId} onClose={onClose} />
+            {/* // )} */}
           </div>
 
           {/* Google Section */}
           <div className="flex items-center justify-between">
             <span className="font-medium">Google</span>
-            {userData?.googleAccessToken && userData?.googleRefreshToken ? (
+            {/* {userData?.googleAccessToken && userData?.googleRefreshToken ? (
               <span className="text-green-600 font-semibold">✅ Connected</span>
-            ) : (
-              <ConnectGoogleButton userId={userId} onClose={onClose} />
-            )}
+            ) : ( */}
+            <ConnectGoogleButton userId={userId} onClose={onClose} />
+            {/* // )} */}
           </div>
 
           <div className="flex items-center justify-between">
             <span className="font-medium">Xero</span>
-            {userData?.xeroToken && userData?.tenantId ? (
+            {/* {userData?.xeroToken && userData?.tenantId ? (
               <span className="text-green-600 font-semibold">✅ Connected</span>
-            ) : (
-              <ConnectXeroButton userId={userId} onClose={onClose} />
-            )}
+            ) : ( */}
+            <ConnectXeroButton userId={userId} onClose={onClose} />
+            {/* // )} */}
           </div>
         </div>
       </div>

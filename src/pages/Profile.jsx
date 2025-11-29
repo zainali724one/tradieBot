@@ -186,7 +186,7 @@ const Profile = () => {
         <SettingTab
           onClick={() => setModalOpen(true)}
           title="Connect Tools"
-          icon={<FaTools />}
+          icon={<FaTools className="text-[#5290C1]" />}
         />
 
         <SettingTab
