@@ -27,7 +27,7 @@ function QuoteForm() {
   const nevigate = useNavigate();
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
-  const [modalOpen, setModalOpen] = useState(false);
+  // const [modalOpen, setModalOpen] = useState(false);
 
   const userId = useSelector((state) => state.session.userId);
 
@@ -125,16 +125,16 @@ function QuoteForm() {
       return;
     }
 
-    if (
-      !crntUser?.stripeAccountId ||
-      !crntUser?.googleRefreshToken ||
-      !crntUser?.googleAccessToken ||
-      !crntUser?.xeroToken ||
-      !crntUser?.tenantId
-    ) {
-      setModalOpen(true);
-      return;
-    }
+    // if (
+    //   !crntUser?.stripeAccountId ||
+    //   !crntUser?.googleRefreshToken ||
+    //   !crntUser?.googleAccessToken ||
+    //   !crntUser?.xeroToken ||
+    //   !crntUser?.tenantId
+    // ) {
+    //   setModalOpen(true);
+    //   return;
+    // }
 
     console.log("formData", formData);
     const addquot = {
@@ -146,7 +146,7 @@ function QuoteForm() {
       customerEmail: formData?.customerEmail,
       customerPhone: formData?.customerPhone,
       address: formData?.address,
-      sheetId: formData?.sheetId,
+      sheetId: formData?.sheetId || "",
     };
 
     localStorage.setItem("addquot", JSON.stringify(addquot));
@@ -321,7 +321,7 @@ function QuoteForm() {
           />
         </div>
 
-        <StripeConnectModal
+        {/* <StripeConnectModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           userId={userId?._id}
@@ -330,7 +330,7 @@ function QuoteForm() {
             crntUser?.googleRefreshToken && crntUser?.googleAccessToken
           }
           isXeroConnected={crntUser?.xeroToken && crntUser?.tenantId}
-        />
+        /> */}
         <AddressFinderModal
           isOpen={isAddressModalOpen}
           onClose={() => setIsAddressModalOpen(false)}

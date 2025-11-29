@@ -10,7 +10,7 @@ import { MdImage } from "react-icons/md";
 const EditProfile = () => {
   const navigate = useNavigate();
   const tg = window?.Telegram?.WebApp;
-    const telegramUserData = tg.initDataUnsafe.user;
+  const telegramUserData = tg.initDataUnsafe.user;
   return (
     <div className="p-4 h-[100dvh] relative bg-[#D3DCE5]  pt-12 px-5  max-w-[430px]">
       <header className="flex items-center">
@@ -71,7 +71,7 @@ const EditProfile = () => {
             //   alt="Edit Profile Icon"
             //   style={{ width: 18, height: 18 }}
             // />
-            <MdImage className="text-[17px] text-[#5290C1]"/>
+            <MdImage className="text-[17px] text-[#5290C1]" />
           }
         />
       </div>

@@ -25,7 +25,7 @@ function InvoiceScreen() {
   const [telegramUserData, setTelegramUserData] = useState({});
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
-  const [modalOpen, setModalOpen] = useState(false);
+  // const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     customerName: "",
     jobDescription: "",
@@ -123,14 +123,14 @@ function InvoiceScreen() {
       toast.error("All fields are required");
       return;
     }
-    if (
-      !crntUser?.stripeAccountId ||
-      !crntUser?.googleRefreshToken ||
-      !crntUser?.googleAccessToken
-    ) {
-      setModalOpen(true);
-      return;
-    }
+    // if (
+    //   !crntUser?.stripeAccountId ||
+    //   !crntUser?.googleRefreshToken ||
+    //   !crntUser?.googleAccessToken
+    // ) {
+    //   setModalOpen(true);
+    //   return;
+    // }
     const Addinvoice = {
       userId: userId._id,
       telegramId: userId?.telegramId,
@@ -344,7 +344,7 @@ function InvoiceScreen() {
           />
         </div>
       </div>
-      <StripeConnectModal
+      {/* <StripeConnectModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         userId={userId?._id}
@@ -353,7 +353,7 @@ function InvoiceScreen() {
           crntUser?.googleRefreshToken && crntUser?.googleAccessToken
         }
         isXeroConnected={crntUser?.xeroToken && crntUser?.tenantId}
-      />
+      /> */}
 
       <AddressFinderModal
         isOpen={isAddressModalOpen}

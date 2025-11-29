@@ -14,20 +14,24 @@ import trash from "../assets/icons/trash.png";
 import i1 from "../assets/icons/i1.png";
 import i5 from "../assets/icons/i5.png";
 import { toast } from "react-toastify";
+import { FaTools } from "react-icons/fa";
+import StripeConnectModal from "../components/StripeConnectModal";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
   const navigate = useNavigate();
   // useDelete
   const { deleteUser, isLoading } = useDelete();
-  const [userData, setUserData] = useState("1234455");
+  const [userData, setUserData] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenforDelete, setIsModalOpenforDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLogout, setLogout] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [isCancellingforDelete, setIsCancellingforDelete] = useState(false);
-
+  const userId = useSelector((state) => state.session.userId);
   const handleDeleteAccount = async () => {
     setIsDeleting(true);
 
@@ -101,11 +105,9 @@ const Profile = () => {
     setIsCancellingforDelete(false);
     setIsModalOpenforDelete(false);
   };
-      const tg = window?.Telegram?.WebApp;
+  const tg = window?.Telegram?.WebApp;
   useEffect(() => {
     const authenticatingUser = async () => {
-  
-
       tg?.ready();
       if (tg?.initDataUnsafe?.user?.id) {
         const userId = tg.initDataUnsafe.user.id;
@@ -120,8 +122,8 @@ const Profile = () => {
           isPremium: tg?.initDataUnsafe?.user?.is_premium,
         };
 
-        // setUserData(telegramData);
-        setUserData("1234455");
+        setUserData(userIdString);
+        // setUserData("1234455");
       }
     };
 
@@ -137,7 +139,7 @@ const Profile = () => {
         </h1>
       </header>
 
-      <div className="flex flex-col items-center gap-4  mt-4 mb-6">
+      <div className="flex flex-col items-center gap-4  mt-3 mb-3">
         <img
           src={telegramUserData?.photo_url}
           alt="Profile"
@@ -179,6 +181,12 @@ const Profile = () => {
               style={{ width: 20, height: 20 }}
             />
           }
+        />
+
+        <SettingTab
+          onClick={() => setModalOpen(true)}
+          title="Connect Tools"
+          icon={<FaTools />}
         />
 
         <SettingTab
@@ -254,6 +262,12 @@ const Profile = () => {
         confirmButtonLoadingText="Logout..."
         cancelButtonLoading={isCancelling}
         cancelButtonLoadingText="Closing..."
+      />
+
+      <StripeConnectModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        userId={userId?._id}
       />
     </div>
   );
