@@ -49,7 +49,7 @@ export default function OnboardingWizard() {
         const res = await axios.post(
           `https://tradie-bot-backend-three.vercel.app/api/xero/consentUrl`,
           {
-            userId: userId,
+            userId: userId?._id,
           }
         );
         setAuthUrl(res.data.url);
@@ -80,7 +80,7 @@ export default function OnboardingWizard() {
   };
 
   const handleConnectGoogle = () => {
-    const redirectUrl = `https://tradie-bot-backend-three.vercel.app/api/user/connect/${userId}`;
+    const redirectUrl = `https://tradie-bot-backend-three.vercel.app/api/user/connect/${userId?._id}`;
     handleOpenExternalLink(redirectUrl);
     // window.open(redirectUrl, "_blank");
   };
