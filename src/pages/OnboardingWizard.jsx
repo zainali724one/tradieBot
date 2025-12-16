@@ -9,10 +9,6 @@ import { storage } from "../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-// --- Main Onboarding Component ---
-// This component manages the current step.
-// In your main app, you will render this component if `user.has_completed_onboarding === false`.
-// =======================================================================================
 
 const GoogleIcon = () => (
   <svg
@@ -68,7 +64,6 @@ export default function OnboardingWizard() {
     );
 
     const stripeConnectUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${clientId}&scope=read_write&redirect_uri=${redirectUri}&state=${userId?._id}`;
-    // handleOpenExternalLink(stripeConnectUrl)
 
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.openLink(stripeConnectUrl, {
@@ -89,7 +84,6 @@ export default function OnboardingWizard() {
   const [selectedLogo, setSelectedLogo] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState("template1"); // 'template1' or 'template2'
 
-  // --- Handlers ---
   // const handleLogoUpload = (event) => {
   //   if (event.target.files && event.target.files[0]) {
   //     setSelectedLogo(event.target.files[0]);
@@ -101,24 +95,22 @@ export default function OnboardingWizard() {
     setStep(2);
   };
 
-  // TODO: Implement your API calls here
   const handleConnect = (service) => {
-    // This is where you would trigger your OAuth flow for Stripe, Google, or Xero
     console.log(`Connecting to ${service}...`);
     if (service === "stripe") {
       handleConnectStripe();
     } else if (service === "google") {
       handleConnectGoogle();
-    } else if (service === "xero") {
+    } else if (service === "xero" && authUrl) {
       handleOpenExternalLink(authUrl);
     }
   };
 
   const { editProfile, isLoading: isEditingProfile } = useEditProfile();
-  // const userId = useSelector((state) => state.session.userId);
+
   const [isUploading, setIsUploading] = useState(false);
 
-  // --- Your Firebase Upload Function ---
+  // --- Firebase Upload Function ---
   const uploadLogoToFirebase = async (file) => {
     if (!file || !userId?.telegramId) return null;
 
@@ -140,7 +132,6 @@ export default function OnboardingWizard() {
     }
   };
 
-  // --- Updated Logo Upload Handler ---
   const handleLogoUpload = (event) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
@@ -149,36 +140,24 @@ export default function OnboardingWizard() {
     }
   };
 
-  // --- NEW: Updated handleFinish Function ---
   const handleFinish = async () => {
     let logoUrl = null;
 
     // 1. Upload Logo if it exists
     if (selectedLogo) {
       logoUrl = await uploadLogoToFirebase(selectedLogo);
-      if (!logoUrl) return; // Upload failed, toast already shown
+      if (!logoUrl) return; 
     }
-
-    // 2. Prepare combined data
-    // We use a new 'onboarding' type.
-    // Your backend API for 'editProfile' should be updated to:
-    // - Check for type: "onboarding"
-    // - Save the companyLogo (if provided)
-    // - Save the pdfTemplateId
-    // - Set user.has_completed_onboarding = true
     const onboardingData = {
-      type: "onboarding", // Use one type for this entire operation
+      type: "onboarding",
       id: userId?.telegramId,
-      companyLogo: logoUrl, // Will be null if no logo was uploaded
+      companyLogo: logoUrl, 
       pdfTemplateId: selectedTemplate,
     };
 
     // 3. Call the mutation
     editProfile(onboardingData, {
       onSuccess: () => {
-        // toast.success("Setup Complete! Redirecting...");
-        // On success, redirect to the main app
-        // window.location.href = '/quote'; // Example redirect
         setStep(2);
       },
       onError: (error) => {
@@ -191,7 +170,7 @@ export default function OnboardingWizard() {
   const handleSkip = () => {
     console.log("Skipping for now...");
     navigate("/quoteform");
-    // window.location.href = '/quote'; // Example redirect
+   
   };
 
   // Combine loading states
@@ -222,9 +201,6 @@ export default function OnboardingWizard() {
   );
 }
 
-// =======================================================================================
-// --- Step 1: Welcome & Branding ---
-// =======================================================================================
 function Step1({
   selectedLogo,
   // selectedTemplate,
@@ -372,9 +348,6 @@ function Step1({
   );
 }
 
-// =======================================================================================
-// --- Step 2: Connect Accounts ---
-// =======================================================================================
 function Step2({ onConnect, onFinish, onSkip }) {
   return (
     <div className="flex flex-col flex-grow h-full">
@@ -431,10 +404,6 @@ function Step2({ onConnect, onFinish, onSkip }) {
     </div>
   );
 }
-
-// =======================================================================================
-// --- Reusable Helper Components ---
-// =======================================================================================
 
 // A card for selecting a template
 function TemplateCard({ name, isSelected, onClick }) {

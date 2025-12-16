@@ -5,3 +5,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+html {
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+  touch-action: manipulation; /* Disables double-tap to zoom */
+}
+
+/* Prevent iOS zoom on inputs */
+@media screen and (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
