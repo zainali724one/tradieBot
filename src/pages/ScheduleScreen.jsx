@@ -134,9 +134,9 @@ function ScheduleScreen() {
   };
 
   const tg = window?.Telegram?.WebApp;
-  console.log(tg.initDataUnsafe.user, "here is user");
-  const telegramUserData = tg.initDataUnsafe.user;
-// const telegramUserData = {}
+  // console.log(tg.initDataUnsafe.user, "here is user");
+  // const telegramUserData = tg.initDataUnsafe.user;
+const telegramUserData = {}
 
 
   useEffect(() => {
@@ -153,7 +153,7 @@ function ScheduleScreen() {
     }
   }, [tg]);
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-5 px-6 pb-10 overflow-y-auto ">
+    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-5 px-6 pb-15 overflow-y-auto ">
       <UserProfileHeader
         image={telegramUserData?.photo_url}
         name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
