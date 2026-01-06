@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import UserProfileHeader from "../components/UserProfileHeader";
 import PrimaryButton from "../components/PrimaryButton";
@@ -8,11 +8,14 @@ import TextArea from "../components/ui/TextArea";
 import { useAddJob } from "../reactQuery/mutations/auth";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { Getuser } from "../api/auth/auth";
+import { useNavigate } from "react-router-dom";
 
 function ScheduleScreen() {
   const { usAddJob, isLoading } = useAddJob();
   const userId = useSelector((state) => state.session.userId);
   const [formErrors, setFormErrors] = useState({});
+  const navigate =useNavigate();
 
   // useAddJob
   const [formData, setFormData] = useState({
@@ -67,6 +70,47 @@ function ScheduleScreen() {
   //   usAddJob(addjob);
   // };
 
+
+
+  const returnUserData = async (telegramId) => {
+    // 8141119319
+
+    Getuser(telegramId)
+      .then((res) => {
+        // setCrntUser(res?.user);
+
+        setFormData((prevData) => ({
+          ...prevData,
+          sheetId: res?.user?.sheetId || "",
+        }));
+        console.log(res, "data is added");
+      })
+      .catch((err) => {
+        localStorage.removeItem("telegramid");
+        navigate("/signin");
+        console.log(err, "here is the error");
+      });
+    // return theUser;
+  };
+
+
+  useEffect(() => {
+    if (tg) {
+      tg.ready();
+
+      if (tg.initDataUnsafe?.user) {
+        // setTelegramUserData(tg.initDataUnsafe?.user);
+        if (tg?.initDataUnsafe?.user?.id) {
+          const userId = tg.initDataUnsafe.user.id;
+          returnUserData(userId);
+        }
+      }
+    }
+  }, [tg]);
+
+
+
+
   const handleSubmit = () => {
     if (!validateForm()) {
       toast.error("All fields are required");
@@ -106,7 +150,7 @@ function ScheduleScreen() {
   const telegramUserData = tg.initDataUnsafe.user;
 // const telegramUserData = {}
   return (
-    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-5 px-6 pb-20 overflow-y-auto ">
+    <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-5 px-6 pb-10 overflow-y-auto ">
       <UserProfileHeader
         image={telegramUserData?.photo_url}
         name={telegramUserData?.first_name + " " + telegramUserData?.last_name}
