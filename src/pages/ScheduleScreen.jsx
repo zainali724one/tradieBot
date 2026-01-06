@@ -94,19 +94,7 @@ function ScheduleScreen() {
   };
 
 
-  useEffect(() => {
-    if (tg) {
-      tg.ready();
 
-      if (tg.initDataUnsafe?.user) {
-        // setTelegramUserData(tg.initDataUnsafe?.user);
-        if (tg?.initDataUnsafe?.user?.id) {
-          const userId = tg.initDataUnsafe.user.id;
-          returnUserData(userId);
-        }
-      }
-    }
-  }, [tg]);
 
 
 
@@ -149,6 +137,21 @@ function ScheduleScreen() {
   console.log(tg.initDataUnsafe.user, "here is user");
   const telegramUserData = tg.initDataUnsafe.user;
 // const telegramUserData = {}
+
+
+  useEffect(() => {
+    if (tg) {
+      tg.ready();
+
+      if (tg.initDataUnsafe?.user) {
+        // setTelegramUserData(tg.initDataUnsafe?.user);
+        if (tg?.initDataUnsafe?.user?.id) {
+          const userId = tg.initDataUnsafe.user.id;
+          returnUserData(userId);
+        }
+      }
+    }
+  }, [tg]);
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-5 px-6 pb-10 overflow-y-auto ">
       <UserProfileHeader
