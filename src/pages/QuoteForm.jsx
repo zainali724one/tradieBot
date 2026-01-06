@@ -297,7 +297,7 @@ function QuoteForm() {
           id="sheetId"
           type="text"
           error={formErrors.sheetId}
-          placeholder="Google spread sheet id"
+          placeholder="Google spread sheet Url"
           value={formData.sheetId}
           onChange={handleChange("sheetId")}
         />

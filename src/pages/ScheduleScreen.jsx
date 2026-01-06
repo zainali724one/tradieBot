@@ -16,11 +16,12 @@ function ScheduleScreen() {
 
   // useAddJob
   const [formData, setFormData] = useState({
-    customerName: "",
-    jobDescription: "",
-    date: "",
-    time: "",
-    quoteId: "",
+    customerName:"",
+    jobDescription:"",
+    date:"",
+    time:"",
+    quoteId:"",
+    sheetId:""
   });
 
   const validateForm = () => {
@@ -79,9 +80,11 @@ function ScheduleScreen() {
       time: formData.time,
       userId: userId._id,
       quoteId: formData.quoteId,
+      sheetId: formData.sheetId,
     };
 
     usAddJob(addjob, {
+
       onSuccess: () => {
         // Reset form data on successful job addition
         setFormData({
@@ -101,7 +104,7 @@ function ScheduleScreen() {
   const tg = window?.Telegram?.WebApp;
   console.log(tg.initDataUnsafe.user, "here is user");
   const telegramUserData = tg.initDataUnsafe.user;
-
+// const telegramUserData = {}
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-5 px-6 pb-20 overflow-y-auto ">
       <UserProfileHeader
@@ -166,6 +169,17 @@ function ScheduleScreen() {
           placeholder="04:00 PM"
           onChange={handleChange("time")}
         />
+
+
+                <LabeledInput
+                  label="Google sheet Url"
+                  id="sheetId"
+                  type="text"
+                  error={formErrors.sheetId}
+                  placeholder="Google spread sheet Url"
+                  value={formData.sheetId}
+                  onChange={handleChange("sheetId")}
+                />
       </div>
       <div className="w-[90%]  flex">
         <PrimaryButton
