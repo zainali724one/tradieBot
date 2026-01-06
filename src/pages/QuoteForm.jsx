@@ -293,7 +293,7 @@ function QuoteForm() {
         />
 
         <LabeledInput
-          label="Google sheet id"
+          label="Google sheet Url"
           id="sheetId"
           type="text"
           error={formErrors.sheetId}
