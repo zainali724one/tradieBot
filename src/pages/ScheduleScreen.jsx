@@ -134,9 +134,9 @@ function ScheduleScreen() {
   };
 
   const tg = window?.Telegram?.WebApp;
-  // console.log(tg.initDataUnsafe.user, "here is user");
-  // const telegramUserData = tg.initDataUnsafe.user;
-const telegramUserData = {}
+  console.log(tg.initDataUnsafe.user, "here is user");
+  const telegramUserData = tg.initDataUnsafe.user;
+// const telegramUserData = {}
 
 
   useEffect(() => {
@@ -160,7 +160,7 @@ const telegramUserData = {}
         subtitle="Welcome"
       />
 
-      <div className="mt-4 w-full max-h-[64dvh] overflow-y-auto ">
+      <div className="mt-4 w-full max-h-[65dvh] overflow-y-auto ">
         <h2 className="text-lg text-[#5290C1] font-semibold font-poppins">
           Scedule Job
         </h2>
