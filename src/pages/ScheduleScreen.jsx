@@ -160,7 +160,7 @@ function ScheduleScreen() {
         subtitle="Welcome"
       />
 
-      <div className="mt-4 w-full max-h-[68dvh] overflow-y-auto ">
+      <div className="mt-4 w-full max-h-[69dvh] overflow-y-auto ">
         <h2 className="text-lg text-[#5290C1] font-semibold font-poppins">
           Scedule Job
         </h2>

@@ -212,7 +212,12 @@ export function useAddQuote() {
       queryClient.invalidateQueries({ queryKey: ["Addquote"] });
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message);
+      // toast.error(error?.response?.data?.message);
+        if(error?.response?.data?.message==="invalid_grant"){
+toast.error("please connect your google account again from profile section");
+      }else{
+        toast.error(error?.response?.data?.message);
+      }
     },
   });
 
@@ -232,7 +237,13 @@ export function useAddInvoice() {
       queryClient.invalidateQueries({ queryKey: ["AddInvoice"] });
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message);
+      // toast.error(error?.response?.data?.message);
+
+        if(error?.response?.data?.message==="invalid_grant"){
+toast.error("please connect your google account again from profile section");
+      }else{
+        toast.error(error?.response?.data?.message);
+      }
     },
   });
 
@@ -246,12 +257,17 @@ export function useAddJob() {
   const { mutate: usAddJob, isPending: isLoading } = useMutation({
     mutationFn: (formData) => addJob(formData),
     onSuccess: () => {
-      toast.success("Data added successfully!");
+      // toast.success("Data added successfully!");
 
       queryClient.invalidateQueries({ queryKey: ["usAddJob"] });
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message);
+      if(error?.response?.data?.message==="invalid_grant"){
+toast.error("please connect your google account again from profile section");
+      }else{
+        toast.error(error?.response?.data?.message);
+      }
+      
     },
   });
 
