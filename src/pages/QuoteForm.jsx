@@ -9,7 +9,7 @@ import { setAddQuote } from "../store/sessionSlice"; // Import the action
 import { useDispatch } from "react-redux";
 // import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import StripeConnectModal from "../components/StripeConnectModal";
+// import StripeConnectModal from "../components/StripeConnectModal";
 import { Getuser, uploadPdf } from "../api/auth/auth";
 import { useNavigate } from "react-router-dom";
 import TemplateTwo from "./TemplateTwo";
@@ -189,7 +189,6 @@ function QuoteForm() {
           formData.append("customerName", responseData?.customerName);
           formData.append("customerPhone", responseData?.customerPhone);
           formData.append("amount", responseData?.amount);
-          formData.append("paymentUrl", responseData?.paymentUrl);
 
           await uploadPdf(formData);
         } catch (error) {

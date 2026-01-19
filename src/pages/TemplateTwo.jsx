@@ -17,7 +17,7 @@ const TemplateTwo = ({data}) => {
         <h3 className="text-lg font-semibold text-blue-700">{data?.type === 'quote' ? 'Quote Summary' : 'Invoice Summary'}</h3>
         <p><span className="font-medium">Customer Name:</span> {data?.customerName}</p>
         <p><span className="font-medium">Job Description:</span> {data?.jobDescription}</p>
-        <p><span className="font-medium">Amount:</span> ${data?.amount}</p>
+        <p><span className="font-medium">Amount:</span> £{data?.amount}</p>
         {data?.address && <p><span className="font-medium">Address:</span> {data?.address}</p>}
         <p><span className="font-medium">Email:</span> {data?.customerEmail}</p>
         <p><span className="font-medium">Phone:</span> {data?.customerPhone}</p>
