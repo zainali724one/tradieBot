@@ -47,7 +47,7 @@ function CheckoutForm({ clientSecret, quoteAmount, customerName }) {
       className="max-w-[430px] w-[90%] mx-auto p-6 bg-white rounded-2xl shadow-lg space-y-5"
     >
       <div>
-        <h2 className="text-xl font-semibold text-gray-800">Pay for Quote</h2>
+        <h2 className="text-xl font-semibold text-gray-800">Pay for Invoice</h2>
         <p className="text-gray-600 mt-1">
           Customer: <span className="font-medium">{customerName}</span>
         </p>
