@@ -255,7 +255,7 @@ const Chases = () => {
                 label1="Customer Name"
                 value1={quote?.customerName}
                 label2="Quote Amount"
-                showStatus={id === "quote" ? true : false}
+                showStatus={id === "quote" ? false : true}
                 status={quote?.isPaid ? "Paid" : "Awaiting Payment"}
                 value2={quote?.invoiceAmount}
               />

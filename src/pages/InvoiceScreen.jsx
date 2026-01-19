@@ -99,7 +99,7 @@ function InvoiceScreen() {
     }
 
     if (!formData.includeCost.trim()) {
-      errors.includeCost = "Include Cos is required";
+      errors.includeCost = "Include Cost is required";
     }
 
     if (!formData.includeReceipt.trim()) {
@@ -112,6 +112,11 @@ function InvoiceScreen() {
 
     if (!formData.customerPhone.trim()) {
       errors.includeReceipt = "Phone number is required";
+    }
+
+
+     if (!formData.jobId.trim()) {
+      errors.jobId = "Job ID is required";
     }
 
     setFormErrors(errors);
@@ -143,6 +148,7 @@ function InvoiceScreen() {
       includeReceipt: formData.includeReceipt,
       customerPhone: formData.customerPhone,
       sheetId: formData.sheetId,
+      jobId: formData.jobId,
     };
 
     AddInvoice(Addinvoice, {
@@ -157,6 +163,7 @@ function InvoiceScreen() {
           includeReceipt: "",
           customerPhone: "",
           address: "",
+          jobId: "",
         });
       },
       onError: (error) => {
@@ -322,6 +329,17 @@ function InvoiceScreen() {
           placeholder="+44 20 7123 4567"
           value={formData.customerPhone}
           onChange={handleChange("customerPhone")}
+        />
+
+          <LabeledInput
+          label="Job ID"
+          id="jobId"
+          type="text"
+          error={formErrors.quoteId}
+          placeholder="Job ID"
+          value={formData.quoteId}
+          onChange={handleChange("jobId")}
+          helpText="Navigate to the Jobs page, select the Job you wish to attach to the invoice, A pop-up window will appear, Copy the 'Job ID' from this window."
         />
 
         <LabeledInput

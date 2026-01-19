@@ -46,7 +46,9 @@ const Footer = () => {
         </span>
       </div>
       {/* Invoice */}
-      <div className="flex flex-col items-center text-gray-500">
+      <div className="flex flex-col items-center text-gray-500"
+           onClick={() => navigate("/invoice")}
+      >
         {/* <FiFileText size={20} /> */}
         <Image
           src={isCurrentPage("/invoice", currentRoute) ? i11 : i7}
@@ -58,7 +60,7 @@ const Footer = () => {
               ? "text-[#5290C1]"
               : "text-[#1E1E1E80]"
           }`}
-          onClick={() => navigate("/invoice")}
+     
         >
           Invoice
         </span>
@@ -112,7 +114,7 @@ const Footer = () => {
               : "text-[#1E1E1E80]"
           }`}
         >
-          History
+      Jobs
         </span>
       </div>
     </div>
