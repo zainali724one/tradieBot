@@ -80,7 +80,8 @@ const TemplateOne = ({data}) => {
         className="mt-6 border-t pt-4 text-xs text-center"
         style={{ color: '#9ca3af' }} // Replaces text-gray-400
       >
-        Thank you for choosing our service.
+        {data?.type === 'quote' ? 'We hope to hear from you soon' : 'Thank you for choosing our service.'}
+       
       </div>
     </div>
   );
