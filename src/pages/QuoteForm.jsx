@@ -49,7 +49,12 @@ function QuoteForm() {
 
     Getuser(telegramId)
       .then((res) => {
+        if (res?.user.isApproved !== "Accepted") {
+                localStorage.removeItem("telegramid");
+                nevigate("/signin");
+        }
         setCrntUser(res?.user);
+
 
         setFormData((prevData) => ({
           ...prevData,

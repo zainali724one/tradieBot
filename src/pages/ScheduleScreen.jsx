@@ -77,8 +77,15 @@ function ScheduleScreen() {
 
     Getuser(telegramId)
       .then((res) => {
+         if (res?.user.isApproved !== "Accepted") {
+                localStorage.removeItem("telegramid");
+                navigate("/signin");
+        }
         // setCrntUser(res?.user);
-
+ if (res?.user.isApproved !== "Accepted") {
+                localStorage.removeItem("telegramid");
+                navigate("/signin");
+        }
         setFormData((prevData) => ({
           ...prevData,
           sheetId: res?.user?.sheetId || "",
@@ -111,7 +118,7 @@ function ScheduleScreen() {
       date: formData.date,
       time: formData.time,
       userId: userId._id,
-      quoteId: formData.quoteId,
+      // quoteId: formData.quoteId,
       sheetId: formData.sheetId,
     };
 
@@ -124,7 +131,7 @@ function ScheduleScreen() {
           jobDescription: "",
           date: "",
           time: "",
-          quoteId: "",
+          // quoteId: "", 
         });
 
         // Optionally show a success message
@@ -186,16 +193,7 @@ function ScheduleScreen() {
           />
         </div>
 
-        <LabeledInput
-          label="Quote ID"
-          id="quoteId"
-          type="text"
-          error={formErrors.quoteId}
-          placeholder="Quote ID"
-          value={formData.quoteId}
-          onChange={handleChange("quoteId")}
-          helpText="Navigate to the Chase application page, Select the 'Quote' option and click 'Continue', On the following page, select the quote you wish to attach to the job, A pop-up window will appear, Copy the 'Quote ID' from this window."
-        />
+      
 
         <LabeledInput
           label="Date"
