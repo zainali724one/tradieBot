@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 
 const UserProfileHeader = ({ image, name, subtitle }) => {
   const navigate = useNavigate();
@@ -8,9 +9,11 @@ const UserProfileHeader = ({ image, name, subtitle }) => {
   };
   return (
     <div
-      className="flex items-center gap-3 w-full cursor-pointer"
+      className="flex items-center justify-between gap-3 w-full cursor-pointer"
       onClick={handelchange}
     >
+
+      <div>
       <div className="w-11 h-11 rounded-full overflow-hidden">
         <img className="w-full h-full object-cover" src={image} alt={name} />
       </div>
@@ -21,7 +24,10 @@ const UserProfileHeader = ({ image, name, subtitle }) => {
         <div className="text-sm font-medium text-[#1B1C1E] opacity-60 font-poppins">
           {subtitle}
         </div>
+
       </div>
+      </div>
+<HiOutlineDotsVertical/>
     </div>
   );
 };
