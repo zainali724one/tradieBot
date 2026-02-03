@@ -10,10 +10,10 @@ const UserProfileHeader = ({ image, name, subtitle }) => {
   return (
     <div
       className="flex items-center justify-between gap-3 w-full cursor-pointer"
-      onClick={handelchange}
+      
     >
 
-      <div>
+      <div className="flex items-center">
       <div className="w-11 h-11 rounded-full overflow-hidden">
         <img className="w-full h-full object-cover" src={image} alt={name} />
       </div>
@@ -27,7 +27,7 @@ const UserProfileHeader = ({ image, name, subtitle }) => {
 
       </div>
       </div>
-<HiOutlineDotsVertical/>
+<HiOutlineDotsVertical onClick={handelchange} className="text-xl"/>
     </div>
   );
 };
