@@ -15,7 +15,7 @@ export function useGetChases(telegramId,type) {
 
 
 export function useGethistory(telegramId) {
-
+console.log("Fetching history for telegramId000000000000000000:", telegramId); // Debug log
 
     const { isLoading, error, data } = useQuery({
       queryKey: ["Gethistory"],
