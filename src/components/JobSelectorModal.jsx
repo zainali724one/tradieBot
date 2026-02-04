@@ -4,9 +4,11 @@ import PrimaryButton from "./PrimaryButton";
 import Input from "./ui/Input";
 import Text from "./ui/Text";
 import Loading from "./Loading"; // Assuming you have a loading component
+import { useSelector } from "react-redux";
 
 const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
 //   const { data, isLoading, isError } = useGetChases();
+  const userId = useSelector((state) => state.session.userId);
  const { data, isLoading ,isError} = useGethistory(userId?.telegramId);
   const [searchTerm, setSearchTerm] = useState("");
 
