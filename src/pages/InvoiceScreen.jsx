@@ -385,7 +385,7 @@ function InvoiceScreen() {
             loadingText="Loading..."
           />
           </div>
-          {errors.jobId && <p className="text-red-500 text-xs mt-1">{errors.jobId}</p>}
+          {formErrors.jobId && <p className="text-red-500 text-xs mt-1">{formErrors.jobId}</p>}
        </div>
 
         <LabeledInput
