@@ -25,7 +25,8 @@ const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
     return (
       job.chaseId?.toLowerCase().includes(term) ||
       job.customerName?.toLowerCase().includes(term) ||
-      job.description?.toLowerCase().includes(term)
+      job.jobDescription?.toLowerCase().includes(term) &&
+      job.status==="scheduled"
     );
   });
 
@@ -67,11 +68,11 @@ const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-0.5 rounded">
-                        {job.chaseId}
+                        {job._id}
                       </span>
                       <span className="font-semibold text-gray-800">{job.customerName || "Unknown Customer"}</span>
                     </div>
-                    <p className="text-sm text-gray-600 truncate max-w-md">{job.description || "No description"}</p>
+                    <p className="text-sm text-gray-600 truncate max-w-md">{job.jobDescription || "No description"}</p>
                     {job.address && <p className="text-xs text-gray-500 mt-1">{job.address}</p>}
                   </div>
                   
