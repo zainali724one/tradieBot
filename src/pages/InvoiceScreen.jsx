@@ -355,8 +355,8 @@ function InvoiceScreen() {
         <div className="md:col-span-1 flex flex-col gap-[6px]">
           {/* <Text variant="h4" className="text-[#344054]">Job ID</Text> */}
           {/* <p className="text-[#344054]">Job ID</p> */}
-          <div className="flex gap-2 items-end">
-            <div className="w-[100%] relative">
+          <div className="flex gap-2 items-end relative">
+            <div className="w-[100%] ">
                {/* <input
                  placeholder="Enter Job ID"
                  value={formData.jobId}
