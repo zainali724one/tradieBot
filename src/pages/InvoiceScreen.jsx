@@ -357,15 +357,24 @@ function InvoiceScreen() {
           <p className="text-[#344054]">Job ID</p>
           <div className="flex gap-2">
             <div className="flex-1">
-               <input
+               {/* <input
                  placeholder="Enter Job ID"
                  value={formData.jobId}
                  onChange={(e) =>
                    setFormData({ ...formData, jobId: e.target.value })
                  }
-                 // Pass error styling if needed, or handle errors below
                  className={formErrors.jobId ? "border-red-500" : ""}
-               />
+               /> */}
+
+          <LabeledInput
+          label="Enter Job ID"
+          id="jobId"
+          type="text"
+          error={formErrors.jobId}
+         placeholder="Enter Job ID"
+         value={formData.jobId}
+         onChange={handleChange("jobId")}
+        />
             </div>
             {/* <PrimaryButton
               type="button"
