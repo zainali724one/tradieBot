@@ -367,13 +367,23 @@ function InvoiceScreen() {
                  className={errors.jobId ? "border-red-500" : ""}
                />
             </div>
-            <PrimaryButton
-              type="button" // Important: prevent form submission
+            {/* <PrimaryButton
+              type="button"
               onClick={() => setIsJobModalOpen(true)}
               className="px-4 whitespace-nowrap"
             >
               Find Job
-            </PrimaryButton>
+            </PrimaryButton> */}
+
+
+             <PrimaryButton
+            children="Find Job"
+            color="blue"
+            onClick={() => setIsJobModalOpen(true)}
+            disabled={isLoading}
+            loading={isLoading}
+            loadingText="Loading..."
+          />
           </div>
           {errors.jobId && <p className="text-red-500 text-xs mt-1">{errors.jobId}</p>}
        </div>
