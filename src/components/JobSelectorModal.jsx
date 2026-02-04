@@ -76,8 +76,9 @@ const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
                   </div>
                   
                   <PrimaryButton 
-                    className="ml-4 shrink-0 w-[60px]"
+                    className="ml-4 shrink-0"
                     onClick={() => onSelect(job)}
+                    style={{width:"60px"}}
                   >
                     Select
                   </PrimaryButton>
