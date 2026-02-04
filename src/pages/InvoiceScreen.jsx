@@ -396,7 +396,7 @@ function InvoiceScreen() {
             // style={{marginTop:"10px"}}
           />
           </div>
-          {formErrors.jobId && <p className="text-red-500 text-xs mt-1">{formErrors.jobId}</p>}
+          {formErrors.jobId && <p className="text-red-500 text-xs">{formErrors.jobId}</p>}
        </div>
 
         <LabeledInput
