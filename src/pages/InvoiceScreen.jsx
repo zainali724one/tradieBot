@@ -230,7 +230,7 @@ function InvoiceScreen() {
   const handleJobSelect = (job) => {
     setFormData({
       ...formData,
-      jobId: job.chaseId, // Set the Job ID
+      jobId: job._id, // Set the Job ID
       // Optional: Auto-fill other fields if they are empty
       customerName: formData.customerName || job.customerName || "",
       jobDescription: formData.jobDescription || job.description || "",
