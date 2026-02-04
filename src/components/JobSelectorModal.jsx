@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { useGetChases } from "../reactQuery/queries/queries"; // Using your existing query
+import { useGetChases, useGethistory } from "../reactQuery/queries/queries"; // Using your existing query
 import PrimaryButton from "./PrimaryButton";
 import Input from "./ui/Input";
 import Text from "./ui/Text";
 import Loading from "./Loading"; // Assuming you have a loading component
 
 const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
-  const { data, isLoading, isError } = useGetChases();
+//   const { data, isLoading, isError } = useGetChases();
+ const { data, isLoading ,isError} = useGethistory(userId?.telegramId);
   const [searchTerm, setSearchTerm] = useState("");
 
   if (!isOpen) return null;
