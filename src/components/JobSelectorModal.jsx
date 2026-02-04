@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useGetChases, useGethistory } from "../reactQuery/queries/queries"; // Using your existing query
+import { useGetChases, useGethistory } from "../reactQuery/queries/queries"; 
 import PrimaryButton from "./PrimaryButton";
 import Input from "./ui/Input";
 import Text from "./ui/Text";
-import Loading from "./Loading"; // Assuming you have a loading component
+import Loading from "./Loading"; 
 import { useSelector } from "react-redux";
 
 const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
@@ -25,8 +25,7 @@ const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
     return (
       job.chaseId?.toLowerCase().includes(term) ||
       job.customerName?.toLowerCase().includes(term) ||
-      job.jobDescription?.toLowerCase().includes(term) &&
-      job.status==="scheduled"
+      job.jobDescription?.toLowerCase().includes(term) 
     );
   });
 

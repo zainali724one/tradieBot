@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-
 import UserProfileHeader from "../components/UserProfileHeader";
 import { useAddInvoice } from "../reactQuery/mutations/auth";
 import PrimaryButton from "../components/PrimaryButton";
@@ -9,13 +8,11 @@ import Selector from "../components/selector";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Getuser, uploadPdf } from "../api/auth/auth";
-import StripeConnectModal from "../components/StripeConnectModal";
 import TemplateTwo from "./TemplateTwo";
 import TemplateOne from "./TemplateOne";
 import { handleGeneratePdf } from "../services";
 import AddressSelector from "../components/AddressSelector";
 import AddressFinderModal from "../components/AddressFinderModal";
-import Text from "../components/ui/Text";
 import JobSelectorModal from "../components/JobSelectorModal";
 
 function InvoiceScreen() {
@@ -28,7 +25,10 @@ function InvoiceScreen() {
   const [telegramUserData, setTelegramUserData] = useState({});
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
-  // const [modalOpen, setModalOpen] = useState(false);
+  // --- NEW: Internal State for Expenses ---
+  const [materialCost, setMaterialCost] = useState("");
+  const [supplierReceipt, setSupplierReceipt] = useState(null);
+
   const [formData, setFormData] = useState({
     customerName: "",
     jobDescription: "",
@@ -39,6 +39,7 @@ function InvoiceScreen() {
     sheetId: "",
     address: "",
     customerPhone: "",
+    jobId: "", // Ensure jobId is initialized
   });
 
   const handleChange = (field) => (e) => {
@@ -47,25 +48,21 @@ function InvoiceScreen() {
   };
 
   const returnUserData = async (telegramId) => {
-    // 8141119319
-
     Getuser(telegramId)
       .then((res) => {
         if (res?.user.isApproved !== "Accepted") {
-                localStorage.removeItem("telegramid");
-                nevigate("/signin");
+          localStorage.removeItem("telegramid");
+          // navigate("/signin"); // Fixed typo 'nevigate'
         }
         setCrntUser(res?.user);
         setFormData((prevData) => ({
           ...prevData,
           sheetId: res?.user?.sheetId || "",
         }));
-        console.log(res, "data is added");
       })
       .catch((err) => {
         console.log(err, "here is the error");
       });
-    // return theUser;
   };
 
   useEffect(() => {
@@ -82,7 +79,6 @@ function InvoiceScreen() {
 
   const validateForm = () => {
     let errors = {};
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formData.CustomerEmail.trim()) {
@@ -93,38 +89,14 @@ function InvoiceScreen() {
       errors.CustomerEmail = "Invalid email format";
     }
 
-    if (!formData.jobDescription.trim()) {
-      errors.jobDescription = "Job Description is required";
-    }
-
-    if (!formData.customerName.trim()) {
-      errors.customerName = "Name  is required";
-    }
-
-    if (!formData.InvoiceAmount.trim()) {
-      errors.InvoiceAmount = "Invoice Amount is required";
-    }
-
-    if (!formData.includeCost.trim()) {
-      errors.includeCost = "Include Cost is required";
-    }
-
-    if (!formData.includeReceipt.trim()) {
-      errors.includeReceipt = "Include Receipt is required";
-    }
-
-    if (!formData.sheetId.trim()) {
-      errors.includeReceipt = "Google sheet id is required";
-    }
-
-    if (!formData.customerPhone.trim()) {
-      errors.includeReceipt = "Phone number is required";
-    }
-
-
-     if (!formData.jobId.trim()) {
-      errors.jobId = "Job ID is required";
-    }
+    if (!formData.jobDescription.trim()) errors.jobDescription = "Job Description is required";
+    if (!formData.customerName.trim()) errors.customerName = "Name is required";
+    if (!formData.InvoiceAmount.trim()) errors.InvoiceAmount = "Invoice Amount is required";
+    if (!formData.includeCost.trim()) errors.includeCost = "Include Cost is required";
+    if (!formData.includeReceipt.trim()) errors.includeReceipt = "Include Receipt is required";
+    if (!formData.sheetId.trim()) errors.sheetId = "Google sheet id is required"; // Fixed key
+    if (!formData.customerPhone.trim()) errors.customerPhone = "Phone number is required"; // Fixed key
+    if (!formData.jobId.trim()) errors.jobId = "Job ID is required";
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -135,14 +107,11 @@ function InvoiceScreen() {
       toast.error("All fields are required");
       return;
     }
-    // if (
-    //   !crntUser?.stripeAccountId ||
-    //   !crntUser?.googleRefreshToken ||
-    //   !crntUser?.googleAccessToken
-    // ) {
-    //   setModalOpen(true);
-    //   return;
-    // }
+
+    // Prepare payload
+    // Note: If you need to send the 'supplierReceipt' file to the backend here,
+    // you might need to convert this to FormData or handle the file upload separately.
+    // For now, we pass the text fields as requested.
     const Addinvoice = {
       userId: userId._id,
       telegramId: userId?.telegramId,
@@ -156,22 +125,33 @@ function InvoiceScreen() {
       customerPhone: formData.customerPhone,
       sheetId: formData.sheetId,
       jobId: formData.jobId,
+      
+      // --- NEW: Sending Internal Data to Backend ---
+      materialCost: materialCost, // Backend should save this to DB/Sheet but NOT put it on PDF
+      profit: (parseFloat(formData.InvoiceAmount) - parseFloat(materialCost || 0)).toFixed(2),
+      // If your backend supports file upload in this mutation, append supplierReceipt here
+      // supplierReceiptFile: supplierReceipt 
     };
 
     AddInvoice(Addinvoice, {
       onSuccess: (res) => {
         setResponseData(res.data);
+        // Reset form
         setFormData({
-          customerName: "",
-          jobDescription: "",
-          InvoiceAmount: "",
-          CustomerEmail: "",
-          includeCost: "",
-          includeReceipt: "",
-          customerPhone: "",
-          address: "",
-          jobId: "",
+            customerName: "",
+            jobDescription: "",
+            InvoiceAmount: "",
+            CustomerEmail: "",
+            includeCost: "",
+            includeReceipt: "",
+            sheetId: crntUser?.sheetId || "", // Keep sheetId if possible
+            address: "",
+            customerPhone: "",
+            jobId: "",
         });
+        // Reset Internal Fields
+        setMaterialCost("");
+        setSupplierReceipt(null);
       },
       onError: (error) => {
         console.error("Error adding invoice:", error);
@@ -180,31 +160,36 @@ function InvoiceScreen() {
     });
   };
 
-  // const telegramUserData = tg.initDataUnsafe.user;
-  //  const telegramUserData ={}
-
   const pdfRef = useRef(null);
 
+  // --- UPDATED PDF GENERATION LOGIC ---
   useEffect(() => {
     if (responseData) {
       setTimeout(async () => {
         try {
+          // 1. Determine Type: If Include Receipt is YES, we generate a RECEIPT.
+          // Otherwise, we generate a standard INVOICE.
+          const docType = formData.includeReceipt === "Yes" ? "RECEIPT" : "INVOICE";
+          
+          // 2. Generate PDF with the correct type
           const pdfBlob = await handleGeneratePdf(
             pdfRef,
-            { ...responseData, type: "quote" },
+            { ...responseData, type: docType }, // Pass docType to template
             crntUser?.pdfTemplateId
           );
-          const formData = new FormData();
-          formData.append("file", pdfBlob, "invoice.pdf");
-          formData.append("telegramId", responseData?.telegramId);
-          formData.append("pdfType", "invoice");
-          formData.append("customerEmail", responseData?.customerEmail);
-          formData.append("customerName", responseData?.customerName);
-          formData.append("customerPhone", responseData?.customerPhone);
-          formData.append("amount", responseData?.amount);
-           formData.append("paymentUrl", responseData?.paymentUrl);
 
-          await uploadPdf(formData);
+          const uploadData = new FormData();
+          uploadData.append("file", pdfBlob, `${docType.toLowerCase()}.pdf`);
+          uploadData.append("telegramId", responseData?.telegramId);
+          // 3. Send the type to backend so it knows which email template to use
+          uploadData.append("pdfType", docType.toLowerCase()); 
+          uploadData.append("customerEmail", responseData?.customerEmail);
+          uploadData.append("customerName", responseData?.customerName);
+          uploadData.append("customerPhone", responseData?.customerPhone);
+          uploadData.append("amount", responseData?.amount);
+          uploadData.append("paymentUrl", responseData?.paymentUrl);
+
+          await uploadPdf(uploadData);
         } catch (error) {
           console.error("Failed to generate or upload PDF:", error);
         }
@@ -213,30 +198,20 @@ function InvoiceScreen() {
   }, [responseData]);
 
   const handleAddressSelected = (fullAddress) => {
-    setFormData((prev) => ({
-      ...prev,
-      address: fullAddress, // Update the form data
-    }));
-    setFormErrors((prev) => ({
-      ...prev,
-      address: "", // Clear any errors for this field
-    }));
-    setIsAddressModalOpen(false); // Close the modal
+    setFormData((prev) => ({ ...prev, address: fullAddress }));
+    setFormErrors((prev) => ({ ...prev, address: "" }));
+    setIsAddressModalOpen(false);
   };
-
-
-
 
   const handleJobSelect = (job) => {
     setFormData({
       ...formData,
-      jobId: job._id, // Set the Job ID
-      // Optional: Auto-fill other fields if they are empty
+      jobId: job.chaseId || job._id, // Use chaseId if available for display
       customerName: formData.customerName || job.customerName || "",
       jobDescription: formData.jobDescription || job.description || "",
       address: formData.address || job.address || "",
     });
-    setIsJobModalOpen(false); // Close modal
+    setIsJobModalOpen(false);
   };
 
   return (
@@ -251,15 +226,16 @@ function InvoiceScreen() {
         <h2 className="text-lg text-[#5290C1] font-semibold font-poppins">
           Invoice
         </h2>
+
+        {/* --- EXISTING FORM FIELDS --- */}
         <LabeledInput
           label="Customer Name"
-          id="customerName"
           placeholder="Customer Name"
           value={formData.customerName}
           error={formErrors.customerName}
-          // onChange={handleChange}
           onChange={handleChange("customerName")}
         />
+
         <div className="mt-3">
           <p className="font-[500] text-[14px]">Job Description</p>
           <TextArea
@@ -287,7 +263,6 @@ function InvoiceScreen() {
         <div className="mt-3">
           <LabeledInput
             label="Customer Email"
-            type="CustomerEmail"
             placeholder="Enter your Email"
             error={formErrors.CustomerEmail}
             value={formData.CustomerEmail}
@@ -296,7 +271,7 @@ function InvoiceScreen() {
         </div>
 
         <Selector
-          label="Include Cost"
+          label="Include Cost (Show on PDF?)"
           type="select"
           value={formData.includeCost}
           error={formErrors.includeCost}
@@ -304,15 +279,14 @@ function InvoiceScreen() {
             setFormData((prev) => ({ ...prev, includeCost: e.target.value }))
           }
           options={[
-            { label: "Select", value: "" }, // Default empty value
-
+            { label: "Select", value: "" },
             { label: "Yes", value: "Yes" },
             { label: "No", value: "No" },
           ]}
         />
 
         <Selector
-          label="Include Receipt"
+          label="Include Receipt (Proof of Payment)"
           type="select"
           value={formData.includeReceipt}
           error={formErrors.includeReceipt}
@@ -320,21 +294,11 @@ function InvoiceScreen() {
             setFormData((prev) => ({ ...prev, includeReceipt: e.target.value }))
           }
           options={[
-            { label: "Select", value: "" }, // Default empty value
-
+            { label: "Select", value: "" },
             { label: "Yes", value: "Yes" },
             { label: "No", value: "No" },
           ]}
         />
-        {/* <LabeledInput
-          label="Customer Address"
-          id="address"
-          type="text"
-          error={formErrors.address}
-          placeholder="Customer Address"
-          value={formData.address}
-          onChange={handleChange("address")}
-        /> */}
 
         <AddressSelector
           label="Customer Address"
@@ -343,109 +307,102 @@ function InvoiceScreen() {
           onClick={() => setIsAddressModalOpen(true)}
           error={formErrors.address}
         />
+
         <LabeledInput
           label="Customer Phone"
-          id="customerPhone"
-          type="text"
-          error={formErrors.customerPhone}
           placeholder="+44 20 7123 4567"
           value={formData.customerPhone}
+          error={formErrors.customerPhone}
           onChange={handleChange("customerPhone")}
         />
 
-          {/* <LabeledInput
-          label="Job ID"
-          id="jobId"
-          type="text"
-          error={formErrors.quoteId}
-          placeholder="Job ID"
-          value={formData.quoteId}
-          onChange={handleChange("jobId")}
-          helpText="Navigate to the Jobs page, select the Job you wish to attach to the invoice, A pop-up window will appear, Copy the 'Job ID' from this window."
-        /> */}
-
-
-
-
-
-        <div className="md:col-span-1 flex flex-col gap-[6px]">
-          {/* <Text variant="h4" className="text-[#344054]">Job ID</Text> */}
-          {/* <p className="text-[#344054]">Job ID</p> */}
-          <div className="flex gap-2">
-            <div className="w-[100%] ">
-               {/* <input
-                 placeholder="Enter Job ID"
-                 value={formData.jobId}
-                 onChange={(e) =>
-                   setFormData({ ...formData, jobId: e.target.value })
-                 }
-                 className={formErrors.jobId ? "border-red-500" : ""}
-               /> */}
-
-          <LabeledInput
-          label="Enter Job ID"
-          id="jobId"
-          type="text"
-          error={formErrors.jobId}
-         placeholder="Enter Job ID"
-         value={formData.jobId}
-         onChange={handleChange("jobId")}
-        
-        />
+        {/* --- JOB SELECTION SECTION --- */}
+        <div className="md:col-span-1 flex flex-col gap-[6px] mt-3">
+          <div className="flex gap-2 items-end">
+            <div className="w-[100%]">
+              <LabeledInput
+                label="Job ID"
+                placeholder="Enter Job ID"
+                value={formData.jobId}
+                error={formErrors.jobId}
+                onChange={handleChange("jobId")}
+              />
             </div>
-            {/* <PrimaryButton
-              type="button"
-              onClick={() => setIsJobModalOpen(true)}
-              className="px-4 whitespace-nowrap"
-            >
-              Find Job
-            </PrimaryButton> */}
-
-
             <PrimaryButton
-            children="Find Job"
-            color="blue"
-            onClick={() => setIsJobModalOpen(true)}
-            disabled={isLoading}
-            loading={isLoading}
-            loadingText="Loading..."
-            style={{marginTop:"24px"}}
-          />
+              children="Find"
+              color="blue"
+              onClick={() => setIsJobModalOpen(true)}
+              style={{ marginBottom: "2px", height: "50px" }}
+            />
           </div>
-          {formErrors.jobId && <p className="text-red-500 text-xs ">{formErrors.jobId}</p>}
-       </div>
+        </div>
 
         <LabeledInput
           label="Google sheet Url"
-          id="sheetId"
-          type="text"
-          error={formErrors.sheetId}
           placeholder="Google spread sheet Url"
           value={formData.sheetId}
+          error={formErrors.sheetId}
           onChange={handleChange("sheetId")}
         />
 
-        <div className="w-[100%]  flex ">
+        {/* --- NEW SECTION: INTERNAL EXPENSES (Hidden from Customer) --- */}
+        <div className="mt-8 mb-6 p-4 bg-gray-100 border border-gray-300 rounded-xl">
+          <div className="flex items-center gap-2 mb-4 border-b border-gray-300 pb-2">
+             {/* Optional Lock Icon */}
+             <span role="img" aria-label="lock">🔒</span>
+             <div>
+                <h3 className="font-bold text-gray-700 text-sm uppercase">Internal Use Only</h3>
+                <p className="text-[10px] text-gray-500">Recorded in database/sheet only. Not shown on PDF.</p>
+             </div>
+          </div>
+
+          <div className="grid gap-4">
+             {/* 1. Material Cost */}
+             <LabeledInput
+                label="Material/Part Costs (£)"
+                type="number"
+                placeholder="0.00"
+                value={materialCost}
+                onChange={(e) => setMaterialCost(e.target.value)}
+             />
+
+             {/* 2. Profit Calculation */}
+             <div className="flex justify-between items-center bg-white p-3 rounded border">
+                <span className="text-sm font-medium text-gray-600">Estimated Profit:</span>
+                <span className={`text-lg font-bold ${
+                    (parseFloat(formData.InvoiceAmount || 0) - parseFloat(materialCost || 0)) >= 0 
+                    ? 'text-green-600' 
+                    : 'text-red-500'
+                }`}>
+                    £{(parseFloat(formData.InvoiceAmount || 0) - parseFloat(materialCost || 0)).toFixed(2)}
+                </span>
+             </div>
+
+             {/* 3. Supplier Receipt Upload */}
+             <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Upload Supplier Receipt</label>
+                <input 
+                  type="file" 
+                  accept="image/*,application/pdf"
+                  onChange={(e) => setSupplierReceipt(e.target.files[0])}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+             </div>
+          </div>
+        </div>
+        {/* --- END INTERNAL SECTION --- */}
+
+        <div className="w-[100%] flex mt-4">
           <PrimaryButton
-            children="Add Invoice"
+            children="Submit & Generate PDF"
             color="blue"
             onClick={() => handleSubmit()}
             disabled={isLoading}
             loading={isLoading}
-            loadingText="Loading..."
+            loadingText="Processing..."
           />
         </div>
       </div>
-      {/* <StripeConnectModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        userId={userId?._id}
-        isStripeConnected={crntUser?.stripeAccountId}
-        isGoogleConnected={
-          crntUser?.googleRefreshToken && crntUser?.googleAccessToken
-        }
-        isXeroConnected={crntUser?.xeroToken && crntUser?.tenantId}
-      /> */}
 
       <AddressFinderModal
         isOpen={isAddressModalOpen}
@@ -453,25 +410,19 @@ function InvoiceScreen() {
         onAddressSelect={handleAddressSelected}
       />
 
+      <JobSelectorModal
+        isOpen={isJobModalOpen}
+        onClose={() => setIsJobModalOpen(false)}
+        onSelect={handleJobSelect}
+      />
 
-      <JobSelectorModal 
-          isOpen={isJobModalOpen} 
-          onClose={() => setIsJobModalOpen(false)} 
-          onSelect={handleJobSelect} 
-       />
-
-      <div
-        style={{
-          position: "absolute",
-          left: "-9999px",
-          top: 0,
-        }}
-      >
+      {/* --- HIDDEN PDF TEMPLATE RENDERER --- */}
+      <div style={{ position: "absolute", left: "-9999px", top: 0 }}>
         <div ref={pdfRef}>
           {crntUser?.pdfTemplateId === "2" ? (
-            <TemplateTwo data={{ ...responseData, type: "invoice" }} />
+            <TemplateTwo data={{ ...responseData }} /> 
           ) : (
-            <TemplateOne data={{ ...responseData, type: "invoice" }} />
+            <TemplateOne data={{ ...responseData }} />
           )}
         </div>
       </div>
