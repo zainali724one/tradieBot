@@ -45,7 +45,7 @@ const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
             placeholder="Search by Job ID, Customer, or Description..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
+            className="w-full outline-none border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -76,7 +76,7 @@ const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
                   </div>
                   
                   <PrimaryButton 
-                    className="ml-4 shrink-0"
+                    className="ml-4 shrink-0 w-[60px]"
                     onClick={() => onSelect(job)}
                   >
                     Select
