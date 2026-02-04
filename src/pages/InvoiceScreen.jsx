@@ -357,7 +357,7 @@ function InvoiceScreen() {
           <p className="text-[#344054]">Job ID</p>
           <div className="flex gap-2">
             <div className="flex-1">
-               <Input
+               <input
                  placeholder="Enter Job ID"
                  value={formData.jobId}
                  onChange={(e) =>
@@ -376,7 +376,7 @@ function InvoiceScreen() {
             </PrimaryButton> */}
 
 
-             <PrimaryButton
+            <PrimaryButton
             children="Find Job"
             color="blue"
             onClick={() => setIsJobModalOpen(true)}
