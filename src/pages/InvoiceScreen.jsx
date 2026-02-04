@@ -15,9 +15,11 @@ import TemplateOne from "./TemplateOne";
 import { handleGeneratePdf } from "../services";
 import AddressSelector from "../components/AddressSelector";
 import AddressFinderModal from "../components/AddressFinderModal";
+import Text from "../components/ui/Text";
 
 function InvoiceScreen() {
   const { AddInvoice, isLoading } = useAddInvoice();
+  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const userId = useSelector((state) => state.session.userId);
   const [formErrors, setFormErrors] = useState({});
   const [crntUser, setCrntUser] = useState({});
@@ -335,7 +337,7 @@ function InvoiceScreen() {
           onChange={handleChange("customerPhone")}
         />
 
-          <LabeledInput
+          {/* <LabeledInput
           label="Job ID"
           id="jobId"
           type="text"
@@ -344,7 +346,37 @@ function InvoiceScreen() {
           value={formData.quoteId}
           onChange={handleChange("jobId")}
           helpText="Navigate to the Jobs page, select the Job you wish to attach to the invoice, A pop-up window will appear, Copy the 'Job ID' from this window."
-        />
+        /> */}
+
+
+
+
+
+        <div className="md:col-span-1 flex flex-col gap-[6px]">
+          {/* <Text variant="h4" className="text-[#344054]">Job ID</Text> */}
+          <p className="text-[#344054]">Job ID</p>
+          <div className="flex gap-2">
+            <div className="flex-1">
+               <Input
+                 placeholder="Enter Job ID"
+                 value={formData.jobId}
+                 onChange={(e) =>
+                   setFormData({ ...formData, jobId: e.target.value })
+                 }
+                 // Pass error styling if needed, or handle errors below
+                 className={errors.jobId ? "border-red-500" : ""}
+               />
+            </div>
+            <PrimaryButton
+              type="button" // Important: prevent form submission
+              onClick={() => setIsJobModalOpen(true)}
+              className="px-4 whitespace-nowrap"
+            >
+              Find Job
+            </PrimaryButton>
+          </div>
+          {errors.jobId && <p className="text-red-500 text-xs mt-1">{errors.jobId}</p>}
+       </div>
 
         <LabeledInput
           label="Google sheet Url"
