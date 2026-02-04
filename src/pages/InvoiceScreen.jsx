@@ -16,6 +16,7 @@ import { handleGeneratePdf } from "../services";
 import AddressSelector from "../components/AddressSelector";
 import AddressFinderModal from "../components/AddressFinderModal";
 import Text from "../components/ui/Text";
+import JobSelectorModal from "../components/JobSelectorModal";
 
 function InvoiceScreen() {
   const { AddInvoice, isLoading } = useAddInvoice();
@@ -221,6 +222,21 @@ function InvoiceScreen() {
       address: "", // Clear any errors for this field
     }));
     setIsAddressModalOpen(false); // Close the modal
+  };
+
+
+
+
+  const handleJobSelect = (job) => {
+    setFormData({
+      ...formData,
+      jobId: job.chaseId, // Set the Job ID
+      // Optional: Auto-fill other fields if they are empty
+      customerName: formData.customerName || job.customerName || "",
+      jobDescription: formData.jobDescription || job.description || "",
+      address: formData.address || job.address || "",
+    });
+    setIsJobModalOpen(false); // Close modal
   };
 
   return (
@@ -436,6 +452,13 @@ function InvoiceScreen() {
         onClose={() => setIsAddressModalOpen(false)}
         onAddressSelect={handleAddressSelected}
       />
+
+
+      <JobSelectorModal 
+          isOpen={isJobModalOpen} 
+          onClose={() => setIsJobModalOpen(false)} 
+          onSelect={handleJobSelect} 
+       />
 
       <div
         style={{
