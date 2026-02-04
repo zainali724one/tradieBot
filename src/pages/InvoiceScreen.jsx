@@ -355,7 +355,7 @@ function InvoiceScreen() {
         <div className="md:col-span-1 flex flex-col gap-[6px]">
           {/* <Text variant="h4" className="text-[#344054]">Job ID</Text> */}
           {/* <p className="text-[#344054]">Job ID</p> */}
-          <div className="flex gap-2 items-end relative">
+          <div className="flex gap-2 items-end">
             <div className="w-[100%] ">
                {/* <input
                  placeholder="Enter Job ID"
@@ -393,7 +393,7 @@ function InvoiceScreen() {
             disabled={isLoading}
             loading={isLoading}
             loadingText="Loading..."
-            style={{position:"absolute", bottom:"0px"}}
+            style={{marginTop:"30px"}}
           />
           </div>
           {formErrors.jobId && <p className="text-red-500 text-xs mt-1">{formErrors.jobId}</p>}
