@@ -364,7 +364,7 @@ function InvoiceScreen() {
                    setFormData({ ...formData, jobId: e.target.value })
                  }
                  // Pass error styling if needed, or handle errors below
-                 className={errors.jobId ? "border-red-500" : ""}
+                 className={formErrors.jobId ? "border-red-500" : ""}
                />
             </div>
             {/* <PrimaryButton
