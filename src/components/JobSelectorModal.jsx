@@ -15,7 +15,7 @@ const JobSelectorModal = ({ isOpen, onClose, onSelect }) => {
   if (!isOpen) return null;
 
   // Handle data structure (safety check if data is an array or an object with a 'chases' property)
-  const jobs = Array.isArray(data) ? data : data?.chases || [];
+  const jobs = Array.isArray(data) ? data : data?.history || [];
 
   // Filter jobs based on search term
   const filteredJobs = jobs.filter((job) => {
