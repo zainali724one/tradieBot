@@ -259,7 +259,7 @@ function InvoiceScreen() {
       await createPdf("INVOICE");
 
       // 2. Check if user wants RECEIPT
-      if (formData.includeReceipt === "Yes") {
+      if (responseData?.includeReceipt === "Yes") {
         // Wait a bit to ensure clean state transition
 
         console.log("Generating receipt as well...");
