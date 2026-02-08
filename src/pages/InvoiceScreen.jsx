@@ -261,6 +261,8 @@ function InvoiceScreen() {
       // 2. Check if user wants RECEIPT
       if (formData.includeReceipt === "Yes") {
         // Wait a bit to ensure clean state transition
+
+        console.log("Generating receipt as well...");
         await new Promise((resolve) => setTimeout(resolve, 200));
         await createPdf("RECEIPT");
       }
@@ -345,7 +347,7 @@ function InvoiceScreen() {
         </div>
 
         <Selector
-          label="Include Cost"
+          label="Include Cost (Show on PDF?)"
           type="select"
           value={formData.includeCost}
           error={formErrors.includeCost}
