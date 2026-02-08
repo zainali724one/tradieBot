@@ -16,7 +16,12 @@ import AddressFinderModal from "../components/AddressFinderModal";
 import JobSelectorModal from "../components/JobSelectorModal";
 
 function InvoiceScreen() {
-  const { AddInvoice, isLoading } = useAddInvoice();
+  // const { AddInvoice, isLoading } = useAddInvoice();
+  const { AddInvoice, isLoading: isBackendLoading } = useAddInvoice();
+  
+  // 1. NEW STATE: specific for PDF generation
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const isBusy = isBackendLoading || isGeneratingPdf
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const userId = useSelector((state) => state.session.userId);
   const [formErrors, setFormErrors] = useState({});
@@ -24,6 +29,7 @@ function InvoiceScreen() {
   const [responseData, setResponseData] = useState(null);
   const [telegramUserData, setTelegramUserData] = useState({});
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [pdfDocType, setPdfDocType] = useState("invoice");
 
   // --- NEW: Internal State for Expenses ---
   const [materialCost, setMaterialCost] = useState("");
@@ -97,6 +103,7 @@ function InvoiceScreen() {
     if (!formData.sheetId.trim()) errors.sheetId = "Google sheet id is required"; // Fixed key
     if (!formData.customerPhone.trim()) errors.customerPhone = "Phone number is required"; // Fixed key
     if (!formData.jobId.trim()) errors.jobId = "Job ID is required";
+    if(formData.includeReceipt === "Yes" && !materialCost.trim()) errors.materialCost = "Material cost is required when including receipt"; 
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -107,6 +114,7 @@ function InvoiceScreen() {
       toast.error("All fields are required");
       return;
     }
+    setIsGeneratingPdf(true)
 
     // Prepare payload
     // Note: If you need to send the 'supplierReceipt' file to the backend here,
@@ -125,7 +133,6 @@ function InvoiceScreen() {
       customerPhone: formData.customerPhone,
       sheetId: formData.sheetId,
       jobId: formData.jobId,
-      
       // --- NEW: Sending Internal Data to Backend ---
       materialCost: materialCost, // Backend should save this to DB/Sheet but NOT put it on PDF
       profit: (parseFloat(formData.InvoiceAmount) - parseFloat(materialCost || 0)).toFixed(2),
@@ -151,9 +158,11 @@ function InvoiceScreen() {
         });
         // Reset Internal Fields
         setMaterialCost("");
+        setIsGeneratingPdf(false)
         setSupplierReceipt(null);
       },
       onError: (error) => {
+        setIsGeneratingPdf(false)
         console.error("Error adding invoice:", error);
         toast.error("Failed to add invoice. Please try again.");
       },
@@ -163,39 +172,104 @@ function InvoiceScreen() {
   const pdfRef = useRef(null);
 
   // --- UPDATED PDF GENERATION LOGIC ---
-  useEffect(() => {
-    if (responseData) {
-      setTimeout(async () => {
-        try {
-          // 1. Determine Type: If Include Receipt is YES, we generate a RECEIPT.
-          // Otherwise, we generate a standard INVOICE.
-          const docType = formData.includeReceipt === "Yes" ? "RECEIPT" : "INVOICE";
+  // useEffect(() => {
+  //   if (responseData) {
+  //     setTimeout(async () => {
+  //       try {
+  //         // 1. Determine Type: If Include Receipt is YES, we generate a RECEIPT.
+  //         // Otherwise, we generate a standard INVOICE.
+  //         const docType = formData.includeReceipt === "Yes" ? "RECEIPT" : "INVOICE";
           
-          // 2. Generate PDF with the correct type
+  //         // 2. Generate PDF with the correct type
+  //         const pdfBlob = await handleGeneratePdf(
+  //           pdfRef,
+  //           { ...responseData, type: docType }, // Pass docType to template
+  //           crntUser?.pdfTemplateId
+  //         );
+
+  //         const uploadData = new FormData();
+  //         uploadData.append("file", pdfBlob, `${docType.toLowerCase()}.pdf`);
+  //         uploadData.append("telegramId", responseData?.telegramId);
+  //         // 3. Send the type to backend so it knows which email template to use
+  //         uploadData.append("pdfType", docType.toLowerCase()); 
+  //         uploadData.append("customerEmail", responseData?.customerEmail);
+  //         uploadData.append("customerName", responseData?.customerName);
+  //         uploadData.append("customerPhone", responseData?.customerPhone);
+  //         uploadData.append("amount", responseData?.amount);
+  //         uploadData.append("paymentUrl", responseData?.paymentUrl);
+
+  //         await uploadPdf(uploadData);
+  //       } catch (error) {
+  //         console.error("Failed to generate or upload PDF:", error);
+  //       }
+  //     }, 500);
+  //   }
+  // }, [responseData]);
+
+
+
+  useEffect(() => {
+  if (responseData) {
+    const generateAndSend = async () => {
+      // --- HELPER FUNCTION ---
+      const createPdf = async (type) => {
+        try {
+          // 1. Update State to change Template Text (Invoice -> Receipt)
+          setPdfDocType(type); 
+          
+          // 2. Wait for React to re-render the DOM (CRITICAL STEP)
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          // 3. Generate PDF Blob
           const pdfBlob = await handleGeneratePdf(
             pdfRef,
-            { ...responseData, type: docType }, // Pass docType to template
+            { ...responseData, type: type },
             crntUser?.pdfTemplateId
           );
 
+          // 4. Prepare Upload
           const uploadData = new FormData();
-          uploadData.append("file", pdfBlob, `${docType.toLowerCase()}.pdf`);
+          uploadData.append("file", pdfBlob, `${type.toLowerCase()}.pdf`);
           uploadData.append("telegramId", responseData?.telegramId);
-          // 3. Send the type to backend so it knows which email template to use
-          uploadData.append("pdfType", docType.toLowerCase()); 
+          uploadData.append("telegramId", responseData?._id);
+          uploadData.append("pdfType", type.toLowerCase()); // 'invoice' or 'receipt'
           uploadData.append("customerEmail", responseData?.customerEmail);
           uploadData.append("customerName", responseData?.customerName);
           uploadData.append("customerPhone", responseData?.customerPhone);
           uploadData.append("amount", responseData?.amount);
           uploadData.append("paymentUrl", responseData?.paymentUrl);
+          if(responseData.includeReceipt === "Yes") {
+            uploadData.append("materialCost", responseData?.materialCost || "0.00");
+             uploadData.append("profit", responseData?.profit || "0.00");
+          }
 
+          // 5. Send to Backend
           await uploadPdf(uploadData);
+          console.log(`${type} uploaded successfully`);
+
         } catch (error) {
-          console.error("Failed to generate or upload PDF:", error);
+          console.error(`Failed to process ${type}:`, error);
+          toast.error(`Failed to send ${type}`);
         }
-      }, 500);
-    }
-  }, [responseData]);
+      };
+
+      // --- EXECUTION FLOW ---
+      
+      // 1. Always generate and send INVOICE
+      await createPdf("INVOICE");
+
+      // 2. Check if user wants RECEIPT
+      if (formData.includeReceipt === "Yes") {
+        // Wait a bit to ensure clean state transition
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        await createPdf("RECEIPT");
+      }
+      setIsGeneratingPdf(false);
+    };
+
+    generateAndSend();
+  }
+}, [responseData]);
 
   const handleAddressSelected = (fullAddress) => {
     setFormData((prev) => ({ ...prev, address: fullAddress }));
@@ -271,7 +345,7 @@ function InvoiceScreen() {
         </div>
 
         <Selector
-          label="Include Cost (Show on PDF?)"
+          label="Include Cost"
           type="select"
           value={formData.includeCost}
           error={formErrors.includeCost}
@@ -286,7 +360,7 @@ function InvoiceScreen() {
         />
 
         <Selector
-          label="Include Receipt (Proof of Payment)"
+          label="Include Receipt"
           type="select"
           value={formData.includeReceipt}
           error={formErrors.includeReceipt}
@@ -379,7 +453,7 @@ function InvoiceScreen() {
              </div>
 
              {/* 3. Supplier Receipt Upload */}
-             <div>
+             {/* <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Upload Supplier Receipt</label>
                 <input 
                   type="file" 
@@ -387,7 +461,7 @@ function InvoiceScreen() {
                   onChange={(e) => setSupplierReceipt(e.target.files[0])}
                   className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                 />
-             </div>
+             </div> */}
           </div>
         </div>
         {/* --- END INTERNAL SECTION --- */}
@@ -397,9 +471,9 @@ function InvoiceScreen() {
             children="Submit & Generate PDF"
             color="blue"
             onClick={() => handleSubmit()}
-            disabled={isLoading}
-            loading={isLoading}
-            loadingText="Processing..."
+            disabled={isBusy}
+            loading={isBusy}
+            loadingText={isGeneratingPdf ? "Generating PDFs..." : "Saving..."}
           />
         </div>
       </div>
