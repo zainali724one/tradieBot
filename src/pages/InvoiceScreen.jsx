@@ -496,9 +496,9 @@ function InvoiceScreen() {
       <div style={{ position: "absolute", left: "-9999px", top: 0 }}>
         <div ref={pdfRef}>
           {crntUser?.pdfTemplateId === "2" ? (
-            <TemplateTwo data={{ ...responseData }} /> 
+            <TemplateTwo data={{ ...responseData,type: pdfDocType }} /> 
           ) : (
-            <TemplateOne data={{ ...responseData }} />
+            <TemplateOne data={{ ...responseData ,type:pdfDocType}} />
           )}
         </div>
       </div>
