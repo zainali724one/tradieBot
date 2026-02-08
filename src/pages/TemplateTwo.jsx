@@ -41,7 +41,7 @@
 
 
 const TemplateTwo = ({data}) => {
-  const isReceipt = data?.includeReceipt?.toLowerCase() === 'receipt';
+  const isReceipt = data?.type?.toLowerCase() === 'receipt';
   const isQuote = data?.type?.toLowerCase() === 'quote';
   const title = isQuote ? 'Quote' : (isReceipt ? 'Receipt' : 'Invoice');
 
