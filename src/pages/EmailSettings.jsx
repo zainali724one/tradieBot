@@ -13,9 +13,10 @@ const SMTP_PRESETS = {
 
 const EmailSettings = () => {
   const [loading, setLoading] = useState(false);
+ const user = useSelector((state) => state.session.userId);
   const [provider, setProvider] = useState(user?.emailProvider || "gmail");
   const [modalOpen, setModalOpen] = useState(false);
-    const user = useSelector((state) => state.session.userId);
+ 
   // SMTP Form State
   const [formData, setFormData] = useState({
     businessName: user?.businessName || "",
