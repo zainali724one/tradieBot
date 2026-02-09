@@ -46,13 +46,13 @@ const EmailSettings = () => {
         ...formData,
       });
       
-      if (response.data.success) {
+      if(response.data.success){
         alert("Settings Saved Successfully!");
         // onUpdateUser(response.data.user); 
       }
-    } catch (error) {
+    }catch(error){
       alert("Failed to save settings");
-    } finally {
+    } finally{
       setLoading(false);
     }
   };
@@ -60,7 +60,7 @@ const EmailSettings = () => {
   const isGoogleConnected = !!user?.googleAccessToken;
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100" style={{paddingBottom:"70px"}}>
+    <div className="max-w-2xl mx-auto bg-[#D3DCE5] p-8 rounded-xl shadow-lg " style={{paddingBottom:"70px"}}>
       
       {/* Header */}
       <div className="mb-8">
@@ -228,7 +228,7 @@ const EmailSettings = () => {
           className={`px-8 py-3 rounded-lg font-bold text-white shadow-md transition-all ${
             loading || (provider === 'gmail' && !isGoogleConnected)
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-black hover:bg-gray-800"
+              : "bg-[#5290C1] hover:bg-[#1980d4]"
           }`}
         >
           {loading ? "Saving..." : "Save Configuration"}
