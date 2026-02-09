@@ -60,7 +60,7 @@ const EmailSettings = () => {
   const isGoogleConnected = !!user?.googleAccessToken;
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+    <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100" style={{paddingBottom:"70px"}}>
       
       {/* Header */}
       <div className="mb-8">
