@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Mail, Lock, Server, CheckCircle, AlertCircle } from "lucide-react";
+import { Mail, Lock, Server, CheckCircle, ShieldCheck } from "lucide-react";
 import axiosClient from "../api/auth/axiosClient";
-import StripeConnectModal from "../components/StripeConnectModal";
+// Removed StripeConnectModal if it is no longer needed for this specific email flow
 import { useSelector } from "react-redux";
 
 // Pre-defined settings for common providers
@@ -12,11 +12,17 @@ const SMTP_PRESETS = {
 };
 
 const EmailSettings = () => {
+  // Move useSelector to the top level
+  const user = useSelector((state) => state.session.userId);
+  
   const [loading, setLoading] = useState(false);
- const user = useSelector((state) => state.session.userId);
-  const [provider, setProvider] = useState(user?.emailProvider || "gmail");
-  const [modalOpen, setModalOpen] = useState(false);
- 
+  
+  // Default to "platform" if no provider is set
+  // Note: If user previously had 'gmail', this will default to 'platform' unless you map it
+  const [provider, setProvider] = useState(
+    user?.emailProvider === "smtp" ? "smtp" : "platform"
+  );
+
   // SMTP Form State
   const [formData, setFormData] = useState({
     businessName: user?.businessName || "",
@@ -46,21 +52,18 @@ const EmailSettings = () => {
         ...formData,
       });
       
-      if(response.data.success){
+      if (response.data.success) {
         alert("Settings Saved Successfully!");
-        // onUpdateUser(response.data.user); 
       }
-    }catch(error){
+    } catch (error) {
       alert("Failed to save settings");
-    } finally{
+    } finally {
       setLoading(false);
     }
   };
 
-  const isGoogleConnected = !!user?.googleAccessToken;
-
   return (
-    <div className="max-w-2xl mx-auto bg-[#D3DCE5] p-8 rounded-xl shadow-lg " style={{paddingBottom:"70px"}}>
+    <div className="max-w-2xl mx-auto bg-[#D3DCE5] p-8 rounded-xl shadow-lg" style={{ paddingBottom: "70px" }}>
       
       {/* Header */}
       <div className="mb-8">
@@ -84,18 +87,21 @@ const EmailSettings = () => {
 
       {/* Provider Selection Tabs */}
       <div className="grid grid-cols-2 gap-4 mb-8">
+        {/* Option 1: Platform Email */}
         <button
-          onClick={() => setProvider("gmail")}
+          onClick={() => setProvider("platform")}
           className={`p-4 rounded-xl border-2 flex flex-col items-center justify-center transition-all ${
-            provider === "gmail"
+            provider === "platform"
               ? "border-blue-500 bg-blue-50 text-blue-700"
               : "border-gray-200 hover:border-gray-300 text-gray-600"
           }`}
         >
-          <Mail className="w-6 h-6 mb-2" />
-          <span className="font-semibold">Gmail / Google Workspace</span>
+          {/* Changed Icon to ShieldCheck to represent trusted platform */}
+          <ShieldCheck className="w-6 h-6 mb-2" />
+          <span className="font-semibold">Default Platform Email</span>
         </button>
 
+        {/* Option 2: Custom SMTP */}
         <button
           onClick={() => setProvider("smtp")}
           className={`p-4 rounded-xl border-2 flex flex-col items-center justify-center transition-all ${
@@ -112,43 +118,24 @@ const EmailSettings = () => {
       {/* --- CONTENT AREA --- */}
       <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
         
-        {/* OPTION 1: GMAIL VIEW */}
-        {provider === "gmail" && (
-          <div className="text-center py-4">
-            {isGoogleConnected ? (
-              <div className="flex flex-col items-center animate-fade-in">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-800">Account Connected</h3>
-                <p className="text-gray-500 text-sm mt-1 mb-4">
-                  Emails will be sent securely via your Google Account.
-                </p>
-                <div className="bg-white px-4 py-2 rounded-full border border-gray-200 text-sm text-gray-600">
-                  {user.email}
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
-                  <AlertCircle className="w-8 h-8 text-yellow-600" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-800">Action Required</h3>
-                <p className="text-gray-500 text-sm mt-1 mb-6 max-w-xs">
-                  To send emails via Gmail, you must connect your Google Account.
-                </p>
-                <button
-                  onClick={openGoogleModal} // <--- Opens your existing modal
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md transition-colors"
-                >
-                  Connect Google Account
-                </button>
-              </div>
-            )}
+        {/* OPTION 1: PLATFORM VIEW (Replaces Gmail View) */}
+        {provider === "platform" && (
+          <div className="text-center py-6 animate-fade-in">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4 mx-auto">
+              <Mail className="w-8 h-8 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-800">You are all set!</h3>
+            <p className="text-gray-500 text-sm mt-2 max-w-sm mx-auto">
+              Emails will be sent using the default UK Tradie Bot mail server. No account connection or extra configuration is required.
+            </p>
+            <div className="mt-4 inline-flex items-center gap-2 text-xs font-medium text-green-700 bg-green-50 px-3 py-1 rounded-full border border-green-200">
+              <CheckCircle className="w-3 h-3" />
+              Service Active
+            </div>
           </div>
         )}
 
-        {/* OPTION 2: SMTP FORM */}
+        {/* OPTION 2: SMTP FORM (Unchanged) */}
         {provider === "smtp" && (
           <div className="animate-fade-in">
             {/* Quick Fill Buttons */}
@@ -224,9 +211,9 @@ const EmailSettings = () => {
       <div className="mt-8 flex justify-end">
         <button
           onClick={handleSave}
-          disabled={loading || (provider === 'gmail' && !isGoogleConnected)}
+          disabled={loading} // Removed the googleConnected check
           className={`px-8 py-3 rounded-lg font-bold text-white shadow-md transition-all ${
-            loading || (provider === 'gmail' && !isGoogleConnected)
+            loading
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-[#5290C1] hover:bg-[#1980d4]"
           }`}
@@ -234,12 +221,6 @@ const EmailSettings = () => {
           {loading ? "Saving..." : "Save Configuration"}
         </button>
       </div>
-
-       <StripeConnectModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        userId={user?._id}
-      />
     </div>
   );
 };
