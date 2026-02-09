@@ -75,6 +75,17 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+
+       {
+        path: "/emailsettings",
+
+        // element: <LazyComponent path="/editemail" />,
+        element: (
+          <PrivateRoute>
+            <LazyComponent path="/emailsettings" />
+          </PrivateRoute>
+        ),
+      },
       {
         path: "/editphonenumber",
 

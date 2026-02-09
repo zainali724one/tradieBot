@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { useDelete } from "../reactQuery/mutations/auth";
-
 import clipboardtext from "../assets/icons/clipboard-text.png";
 import CustomConfirmationModal from "../components/ui/CustomConfirmationModal";
 import Logouticon from "../assets/icons/Featuredicon.svg";
@@ -17,6 +16,7 @@ import { toast } from "react-toastify";
 import { FaTools } from "react-icons/fa";
 import StripeConnectModal from "../components/StripeConnectModal";
 import { useSelector } from "react-redux";
+import { MdMarkEmailUnread } from "react-icons/md";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -187,6 +187,12 @@ const Profile = () => {
           onClick={() => setModalOpen(true)}
           title="Connect Tools"
           icon={<FaTools className="text-[#5290C1]" />}
+        />
+
+        <SettingTab
+          onClick={() => navigate("/emailsettings")}
+          title="Email Settings"
+          icon={<MdMarkEmailUnread className="text-[#5290C1]" />}
         />
 
         <SettingTab
