@@ -40,7 +40,7 @@ const EmailSettings = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const response = await axiosClient.put("/api/user/emailSettings", {
+      const response = await axiosClient.put("/user/emailSettings", {
         userId: user._id,
         emailProvider: provider,
         ...formData,
