@@ -474,8 +474,8 @@ function InvoiceScreen() {
             children="Submit & Generate PDF"
             color="blue"
             onClick={() => handleSubmit()}
-            disabled={isBusy}
-            loading={isBusy}
+            disabled={isGeneratingPdf || isBusy}
+            loading={isGeneratingPdf || isBusy}
             loadingText={isGeneratingPdf ? "Generating PDFs..." : "Saving..."}
           />
         </div>
