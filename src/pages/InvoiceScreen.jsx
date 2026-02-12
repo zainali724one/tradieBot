@@ -231,7 +231,8 @@ function InvoiceScreen() {
           const uploadData = new FormData();
           uploadData.append("file", pdfBlob, `${type.toLowerCase()}.pdf`);
           uploadData.append("telegramId", responseData?.telegramId);
-          uploadData.append("telegramId", responseData?._id);
+          uploadData.append("_id", responseData?._id);
+          uploadData.append("jobDescription", responseData?.jobDescription || "");
           uploadData.append("pdfType", type.toLowerCase()); // 'invoice' or 'receipt'
           uploadData.append("customerEmail", responseData?.customerEmail);
           uploadData.append("customerName", responseData?.customerName);
@@ -259,7 +260,7 @@ function InvoiceScreen() {
       await createPdf("INVOICE");
 
       // 2. Check if user wants RECEIPT
-      if (responseData?.includeReceipt === "Yes") {
+      if (responseData?.includeReceipt === "Yes"){
         // Wait a bit to ensure clean state transition
 
         console.log("Generating receipt as well...");
@@ -408,7 +409,7 @@ function InvoiceScreen() {
               children="Find"
               color="blue"
               onClick={() => setIsJobModalOpen(true)}
-              style={{ marginBottom: "15px", height: "50px" }}
+              style={{ marginBottom: "20px", height: "50px" }}
             />
           </div>
         </div>
