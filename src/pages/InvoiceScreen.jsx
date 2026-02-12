@@ -408,7 +408,7 @@ function InvoiceScreen() {
               children="Find"
               color="blue"
               onClick={() => setIsJobModalOpen(true)}
-              style={{ marginBottom: "2px", height: "50px" }}
+              style={{ marginBottom: "10px", height: "50px" }}
             />
           </div>
         </div>
