@@ -97,7 +97,19 @@ const TemplateTwo = ({data}) => {
             )}
         </div>
       </div>
+    <div className="mt-8 border-t border-blue-100 pt-6 text-center">
+         {isQuote && (
+          <p className="font-bold text-blue-800 mb-2">
+            To proceed with this quote please contact:
+          </p>
+        )}
 
+        <div className="text-sm text-gray-600 space-y-1">
+          {data?.businessName && <p className="font-bold text-gray-800">{data.businessName}</p>}
+          {data?.businessEmail && <p>{data.businessEmail}</p>}
+          {data?.businessPhone && <p>{data.businessPhone}</p>}
+        </div>
+           </div>
       <div className="mt-6 text-center text-xs text-gray-500">
        {isQuote ? 'We hope to hear from you soon' : (isReceipt ? '' : 'Thank you for choosing our service.')}
       </div>

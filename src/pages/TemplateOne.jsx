@@ -142,6 +142,23 @@ const TemplateOne = ({data}) => {
         </div>
       </div>
 
+
+  <div className="mt-8 border-t pt-6 text-center">
+        {/* Only show this specific text for Quotes */}
+        {isQuote && (
+          <p className="font-bold text-gray-700 mb-2">
+            To proceed with this quote please contact:
+          </p>
+        )}
+        
+        {/* Always show business details if available */}
+        <div className="text-sm text-gray-600 space-y-1">
+          {data?.businessName && <p className="font-bold text-gray-800">{data.businessName}</p>}
+          {data?.businessEmail && <p>{data.businessEmail}</p>}
+          {data?.businessPhone && <p>{data.businessPhone}</p>}
+        </div>
+           </div>
+
       <div 
         className="mt-6 border-t pt-4 text-xs text-center"
         style={{ color: '#9ca3af' }} 
