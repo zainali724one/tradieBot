@@ -72,7 +72,7 @@ const Footer = () => {
                   onClick={() => navigate("/schedule")}
 
         
-        className="w-16 h-16 rounded-full bg-[#1980d4] border-[8px] border-[#D3DCE5] flex items-center justify-center flex-col shadow-md">
+        className="w-17 h-17 rounded-full bg-[#1980d4] border-[8px] border-[#D3DCE5] flex items-center justify-center flex-col shadow-md">
           <FiCalendar size={15} className="text-white" />
           {/* <Image src={i8} /> */}
          <p className="text-white text-[7px] mt-1">Schedule Job</p>
