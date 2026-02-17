@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Mail, Lock, Server, CheckCircle, ShieldCheck } from "lucide-react";
 import axiosClient from "../api/auth/axiosClient";
 // Removed StripeConnectModal if it is no longer needed for this specific email flow
@@ -45,6 +45,15 @@ const EmailSettings = () => {
 
   const handleSave = async () => {
     setLoading(true);
+    if (provider === "smtp") {
+      // Basic validation for SMTP fields
+      if (!formData.smtpHost || !formData.smtpPort || !formData.smtpUser || !formData.smtpPass) {
+        alert("Please fill in all SMTP fields.");
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       const response = await axiosClient.put("/user/emailSettings", {
         userId: user._id,
