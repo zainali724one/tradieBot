@@ -75,7 +75,7 @@ const Footer = () => {
         className="w-16 h-16 rounded-full bg-[#1980d4] border-[8px] border-[#D3DCE5] flex items-center justify-center shadow-md">
           <FiCalendar size={22} className="text-white" />
           {/* <Image src={i8} /> */}
-          <p className="text-white text-xs mt-1">Schedule Job</p>
+          <p className="text-white text-[5px] mt-1">Schedule Job</p>
         </div>
       </div>
       {/* Chase */}
