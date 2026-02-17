@@ -93,7 +93,7 @@ const Footer = () => {
         
         {/* Text is now OUTSIDE the blue button */}
         <span className="text-xs mt-2 text-[#5290C1] font-medium">
-          Schedule
+          Schedule Job
         </span>
       </div>
       {/* Chase */}
