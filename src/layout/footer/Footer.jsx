@@ -86,7 +86,7 @@ const Footer = () => {
           /* 1. Text removed from inside here. 
              2. Icon size increased. 
              3. border-white used to blend with footer (optional) */
-          className="w-16 h-16 rounded-full bg-[#1980d4]  flex items-center justify-center shadow-lg"
+          className="w-16 h-16 rounded-full bg-[#1980d4] border-[6px] border-[#D3DCE5]  flex items-center justify-center shadow-lg"
         >
           <FiCalendar size={24} className="text-white" />
         </div>
