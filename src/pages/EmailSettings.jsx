@@ -65,6 +65,7 @@ const EmailSettings = () => {
         alert("Settings Saved Successfully!");
       }
     } catch (error) {
+      console.error("Error saving settings:", error);
       alert("Failed to save settings");
     } finally {
       setLoading(false);

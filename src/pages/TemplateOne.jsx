@@ -61,8 +61,10 @@ import React from 'react';
 const TemplateOne = ({data}) => {
   // Helper to determine if this is a receipt
   const isReceipt = data?.type?.toLowerCase() === 'receipt';
-  const isInvoice = data?.type?.toLowerCase() === 'invoice';
+  // const isInvoice = data?.type?.toLowerCase() === 'invoice';
   const isQuote = data?.type?.toLowerCase() === 'quote';
+
+  
 
   // Determine Title
   const title = isQuote ? 'Quote' : (isReceipt ? 'Receipt' : 'Invoice');

@@ -114,7 +114,7 @@ function InvoiceScreen() {
       toast.error("All fields are required");
       return;
     }
-    setIsGeneratingPdf(true)
+    // setIsGeneratingPdf(true)
 
     // Prepare payload
     // Note: If you need to send the 'supplierReceipt' file to the backend here,
@@ -211,6 +211,7 @@ function InvoiceScreen() {
   useEffect(() => {
   if (responseData) {
     const generateAndSend = async () => {
+      setIsGeneratingPdf(true);
       // --- HELPER FUNCTION ---
       const createPdf = async (type) => {
         try {
