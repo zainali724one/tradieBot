@@ -112,31 +112,83 @@ function InvoiceScreen() {
     return Object.keys(errors).length === 0;
   };
 
-  const uploadMaterialInvoicesToFirebase = async () => {
-    if (!materialInvoiceFiles.length) return [];
-    const basePath = `materialInvoices/${userId?.telegramId || userId?._id}`;
-    const urls = [];
-    for (let i = 0; i < materialInvoiceFiles.length; i++) {
-      const file = materialInvoiceFiles[i];
-      const safeName = `${Date.now()}_${i}_${file.name.replace(/\s+/g, "_")}`;
-      const storageRef = ref(storage, `${basePath}/${safeName}`);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
-      urls.push(downloadURL);
-    }
-    return urls;
-  };
+  // const uploadMaterialInvoicesToFirebase = async () => {
+  //   if (!materialInvoiceFiles.length) return [];
+  //   const basePath = `materialInvoices/${userId?.telegramId || userId?._id}`;
+  //   const urls = [];
+  //   for (let i = 0; i < materialInvoiceFiles.length; i++) {
+  //     const file = materialInvoiceFiles[i];
+  //     const safeName = `${Date.now()}_${i}_${file.name.replace(/\s+/g, "_")}`;
+  //     const storageRef = ref(storage, `${basePath}/${safeName}`);
+  //     await uploadBytes(storageRef, file);
+  //     const downloadURL = await getDownloadURL(storageRef);
+  //     urls.push(downloadURL);
+  //   }
+  //   return urls;
+  // };
 
-  const handleMaterialInvoicesChange = (e) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
-    const imageFiles = files.filter((f) => f.type.startsWith("image/"));
-    setMaterialInvoiceFiles((prev) => [...prev, ...imageFiles]);
-    e.target.value = "";
-  };
+
+
+
+
+  const uploadMaterialInvoicesToFirebase = async () => {
+  if (!materialInvoiceFiles.length) return [];
+  const basePath = `materialInvoices/${userId?.telegramId || userId?._id}`;
+  const urls = [];
+  
+  for (let i = 0; i < materialInvoiceFiles.length; i++) {
+    // Extract the actual File object from our new state structure
+    const file = materialInvoiceFiles[i].file; 
+    
+    const safeName = `${Date.now()}_${i}_${file.name.replace(/\s+/g, "_")}`;
+    const storageRef = ref(storage, `${basePath}/${safeName}`);
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+    urls.push(downloadURL);
+  }
+  return urls;
+};
+
+
+
+
+ const handleMaterialInvoicesChange = (e) => {
+  const files = e.target.files ? Array.from(e.target.files) : [];
+  const imageFiles = files.filter((f) => f.type.startsWith("image/"));
+
+  setMaterialInvoiceFiles((prev) => {
+    // 1. Filter out duplicates by name and size
+    const newFiles = imageFiles.filter(newFile => !prev.some(existingFile => 
+        existingFile.file.name === newFile.name && existingFile.file.size === newFile.size
+      )
+    );
+
+    // 2. Map to an object containing BOTH the file and the stable preview URL
+    const filesWithPreviews = newFiles.map(file => ({
+      file: file,
+      previewUrl: URL.createObjectURL(file) 
+    }));
+
+    return [...prev, ...filesWithPreviews];
+  });
+
+  e.target.value = ""; // Reset input
+};
+
+  // const removeMaterialInvoice = (index) => {
+  //   setMaterialInvoiceFiles((prev) => prev.filter((_, i) => i !== index));
+  // };
 
   const removeMaterialInvoice = (index) => {
-    setMaterialInvoiceFiles((prev) => prev.filter((_, i) => i !== index));
-  };
+  setMaterialInvoiceFiles((prev) => {
+    const fileToRemove = prev[index];
+    // Free up browser memory!
+    if (fileToRemove?.previewUrl) {
+      URL.revokeObjectURL(fileToRemove.previewUrl); 
+    }
+    return prev.filter((_, i) => i !== index);
+  });
+};
 
   const handleSubmit = async () => {
     if (!validateForm()) {
@@ -144,16 +196,21 @@ function InvoiceScreen() {
       return;
     }
 
-    let materialInvoices = [];
-    if (materialInvoiceFiles.length > 0) {
-      try {
-        materialInvoices = await uploadMaterialInvoicesToFirebase();
-      } catch (err) {
-        console.error("Error uploading material invoices:", err);
-        toast.error("Failed to upload material invoices. Please try again.");
-        return;
-      }
+ setIsGeneratingPdf(true); 
+
+  let materialInvoices = [];
+  if (materialInvoiceFiles.length > 0) {
+    try {
+      materialInvoices = await uploadMaterialInvoicesToFirebase();
+    } catch (err) {
+      console.error("Error uploading material invoices:", err);
+      toast.error("Failed to upload material invoices. Please try again.");
+      
+      // FIX: Unlock UI so the user can try again!
+      setIsGeneratingPdf(false); 
+      return;
     }
+  }
 
     const Addinvoice = {
       userId: userId._id,
