@@ -8,6 +8,8 @@ import Selector from "../components/selector";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Getuser, uploadPdf } from "../api/auth/auth";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebase";
 import TemplateTwo from "./TemplateTwo";
 import TemplateOne from "./TemplateOne";
 import { handleGeneratePdf } from "../services";
@@ -34,6 +36,7 @@ function InvoiceScreen() {
   // --- NEW: Internal State for Expenses ---
   const [materialCost, setMaterialCost] = useState("");
   const [supplierReceipt, setSupplierReceipt] = useState(null);
+  const [materialInvoiceFiles, setMaterialInvoiceFiles] = useState([]);
 
   const [formData, setFormData] = useState({
     customerName: "",
@@ -109,17 +112,49 @@ function InvoiceScreen() {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const uploadMaterialInvoicesToFirebase = async () => {
+    if (!materialInvoiceFiles.length) return [];
+    const basePath = `materialInvoices/${userId?.telegramId || userId?._id}`;
+    const urls = [];
+    for (let i = 0; i < materialInvoiceFiles.length; i++) {
+      const file = materialInvoiceFiles[i];
+      const safeName = `${Date.now()}_${i}_${file.name.replace(/\s+/g, "_")}`;
+      const storageRef = ref(storage, `${basePath}/${safeName}`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      urls.push(downloadURL);
+    }
+    return urls;
+  };
+
+  const handleMaterialInvoicesChange = (e) => {
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    const imageFiles = files.filter((f) => f.type.startsWith("image/"));
+    setMaterialInvoiceFiles((prev) => [...prev, ...imageFiles]);
+    e.target.value = "";
+  };
+
+  const removeMaterialInvoice = (index) => {
+    setMaterialInvoiceFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async () => {
     if (!validateForm()) {
       toast.error("All fields are required");
       return;
     }
-    // setIsGeneratingPdf(true)
 
-    // Prepare payload
-    // Note: If you need to send the 'supplierReceipt' file to the backend here,
-    // you might need to convert this to FormData or handle the file upload separately.
-    // For now, we pass the text fields as requested.
+    let materialInvoices = [];
+    if (materialInvoiceFiles.length > 0) {
+      try {
+        materialInvoices = await uploadMaterialInvoicesToFirebase();
+      } catch (err) {
+        console.error("Error uploading material invoices:", err);
+        toast.error("Failed to upload material invoices. Please try again.");
+        return;
+      }
+    }
+
     const Addinvoice = {
       userId: userId._id,
       telegramId: userId?.telegramId,
@@ -133,36 +168,33 @@ function InvoiceScreen() {
       customerPhone: formData.customerPhone,
       sheetId: formData.sheetId,
       jobId: formData.jobId,
-      // --- NEW: Sending Internal Data to Backend ---
-      materialCost: materialCost, // Backend should save this to DB/Sheet but NOT put it on PDF
+      materialCost: materialCost,
       profit: (parseFloat(formData.InvoiceAmount) - parseFloat(materialCost || 0)).toFixed(2),
-      // If your backend supports file upload in this mutation, append supplierReceipt here
-      // supplierReceiptFile: supplierReceipt 
+      materialInvoices,
     };
 
     AddInvoice(Addinvoice, {
       onSuccess: (res) => {
         setResponseData(res.data);
-        // Reset form
         setFormData({
-            customerName: "",
-            jobDescription: "",
-            InvoiceAmount: "",
-            CustomerEmail: "",
-            includeCost: "",
-            includeReceipt: "",
-            sheetId: crntUser?.sheetId || "", // Keep sheetId if possible
-            address: "",
-            customerPhone: "",
-            jobId: "",
+          customerName: "",
+          jobDescription: "",
+          InvoiceAmount: "",
+          CustomerEmail: "",
+          includeCost: "",
+          includeReceipt: "",
+          sheetId: crntUser?.sheetId || "",
+          address: "",
+          customerPhone: "",
+          jobId: "",
         });
-        // Reset Internal Fields
         setMaterialCost("");
-        setIsGeneratingPdf(false)
+        setIsGeneratingPdf(false);
         setSupplierReceipt(null);
+        setMaterialInvoiceFiles([]);
       },
       onError: (error) => {
-        setIsGeneratingPdf(false)
+        setIsGeneratingPdf(false);
         console.error("Error adding invoice:", error);
         toast.error("Failed to add invoice. Please try again.");
       },
@@ -422,6 +454,67 @@ function InvoiceScreen() {
           error={formErrors.sheetId}
           onChange={handleChange("sheetId")}
         />
+
+        {/* --- Material Invoices (multiple images) --- */}
+        <div className="mt-3">
+          <p className="font-[500] text-[14px] text-gray-700 mb-1">Material invoices</p>
+          <p className="text-[12px] text-gray-500 mb-2">Select multiple images (receipts, invoices)</p>
+          <div
+            className="rounded-[10px] border-2 border-dashed border-[#5290C1]/40 bg-white/50 p-4 transition-colors hover:border-[#5290C1]/70 hover:bg-[#5290C1]/5"
+            style={{ boxShadow: "1px 1px 4px 4px #5290C11A inset" }}
+          >
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleMaterialInvoicesChange}
+              className="hidden"
+              id="material-invoices-input"
+            />
+            <label
+              htmlFor="material-invoices-input"
+              className="flex flex-col items-center justify-center py-4 px-3 cursor-pointer rounded-lg"
+            >
+              <span className="w-10 h-10 rounded-full bg-[#5290C1]/15 flex items-center justify-center mb-2">
+                <svg className="w-5 h-5 text-[#5290C1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </span>
+              <span className="text-sm font-medium text-[#5290C1]">Tap to add images</span>
+              <span className="text-xs text-gray-500 mt-0.5">
+                {materialInvoiceFiles.length
+                  ? `${materialInvoiceFiles.length} file${materialInvoiceFiles.length !== 1 ? "s" : ""} selected`
+                  : "PNG, JPG, WebP"}
+              </span>
+            </label>
+            {materialInvoiceFiles.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-gray-200/80 flex flex-wrap gap-2">
+                {materialInvoiceFiles.map((file, index) => (
+                  <div
+                    key={`${file.name}-${index}`}
+                    className="relative group w-16 h-16 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 shrink-0"
+                  >
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeMaterialInvoice(index)}
+                      className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                      aria-label="Remove image"
+                    >
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* --- NEW SECTION: INTERNAL EXPENSES (Hidden from Customer) --- */}
         <div className="mt-8 mb-6 p-4 bg-gray-100 border border-gray-300 rounded-xl">
