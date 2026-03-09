@@ -544,32 +544,36 @@ function InvoiceScreen() {
                   : "PNG, JPG, WebP"}
               </span>
             </label>
-            {materialInvoiceFiles.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-gray-200/80 flex flex-wrap gap-2">
-                {materialInvoiceFiles.map((file, index) => (
-                  <div
-                    key={`${file.name}-${index}`}
-                    className="relative group w-16 h-16 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 shrink-0"
-                  >
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={file.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeMaterialInvoice(index)}
-                      className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
-                      aria-label="Remove image"
-                    >
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+       {materialInvoiceFiles.length > 0 && (
+  <div className="mt-3 pt-3 border-t border-gray-200/80 flex flex-wrap gap-2">
+    {/* Map over the objects */}
+    {materialInvoiceFiles.map((item, index) => (
+      <div
+        // Better key
+        key={`${item.file.name}-${index}`}
+        className="relative group w-16 h-16 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 shrink-0"
+      >
+        <img
+          // FIX: Use the stable URL stored in state
+          src={item.previewUrl} 
+          alt={item.file.name}
+          className="w-full h-full object-cover"
+        />
+        <button
+          type="button"
+          onClick={() => removeMaterialInvoice(index)}
+          className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+          aria-label="Remove image"
+        >
+          {/* SVG Icon */}
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    ))}
+  </div>
+)}
           </div>
         </div>
 
