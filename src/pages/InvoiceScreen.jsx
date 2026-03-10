@@ -116,50 +116,71 @@ function InvoiceScreen() {
   };
 
   // --- SEPARATE UPLOAD FUNCTION ---
+
+
+
   // const handleUploadImagesToFirebase = async () => {
   //   const pendingFiles = materialInvoiceFiles.filter(f => f.status === 'pending');
   //   if (pendingFiles.length === 0) return;
 
   //   setIsUploadingImages(true);
+    
+  //   // 1. Mark ALL pending files as 'uploading' at once so the UI updates immediately
+  //   setMaterialInvoiceFiles(prev => 
+  //     prev.map(f => f.status === 'pending' ? { ...f, status: 'uploading' } : f)
+  //   );
+
   //   const basePath = `materialInvoices/${userId?.telegramId || userId?._id}`;
 
   //   try {
-  //     // Create an array of upload promises
-  //     const uploadPromises = pendingFiles.map(async (item) => {
-  //       // Mark as uploading in UI
-  //       setMaterialInvoiceFiles(prev => 
-  //         prev.map(f => f.id === item.id ? { ...f, status: 'uploading' } : f)
-  //       );
+  //     // 2. Use a sequential for...of loop instead of Promise.all
+  //     // This uploads Image 1, THEN Image 2, etc. It stops Firebase from hanging/choking.
+  //     for (const item of pendingFiles) {
+  //       try {
+  //         // 3. Make the filename 100% unique by including the item.id
+  //         const safeName = `${Date.now()}_${item.id}_${item.file.name.replace(/\s+/g, "_")}`;
+  //         const storageRef = ref(storage, `${basePath}/${safeName}`);
+          
+  //         await uploadBytes(storageRef, item.file);
+  //         const downloadURL = await getDownloadURL(storageRef);
 
-  //       const safeName = `${Date.now()}_${item.file.name.replace(/\s+/g, "_")}`;
-  //       const storageRef = ref(storage, `${basePath}/${safeName}`);
-        
-  //       await uploadBytes(storageRef, item.file);
-  //       const downloadURL = await getDownloadURL(storageRef);
+  //         // Update state for THIS specific file to 'uploaded'
+  //         setMaterialInvoiceFiles(prev => 
+  //           prev.map(f => f.id === item.id ? { ...f, status: 'uploaded', firebaseURL: downloadURL } : f)
+  //         );
+          
+  //       } catch (fileError) {
+  //         console.error(`Error uploading file ${item.file.name}:`, fileError);
+  //         // If ONE file fails, revert just that file back to pending so the user can retry
+  //         // It won't break the rest of the uploads!
+  //         setMaterialInvoiceFiles(prev => 
+  //           prev.map(f => f.id === item.id ? { ...f, status: 'pending' } : f)
+  //         );
+  //         // toast.error(`Failed to upload ${item.file.name}`);
+  //           toast.success("Image uploading finished!");
+  //       }
+  //     }
 
-  //       // Update state with the final URL
-  //       setMaterialInvoiceFiles(prev => 
-  //         prev.map(f => f.id === item.id ? { ...f, status: 'uploaded', firebaseURL: downloadURL } : f)
-  //       );
-  //       return downloadURL;
-  //     });
+  //     toast.success("Image uploading finished!");
 
-  //     await Promise.all(uploadPromises);
-  //     toast.success("Images uploaded successfully!");
   //   } catch (error) {
-  //     console.error("Error uploading images:", error);
-  //     toast.error("Failed to upload some images. Please try again.");
-  //     // Revert uploading status back to pending on failure
+  //     console.error("Fatal error in image upload process:", error);
+  //   } finally {
+  //     setIsUploadingImages(false);
+      
+  //     // Safety net: If anything is STILL stuck on 'uploading' (due to a rare crash),
+  //     // revert it back to 'pending' so the user isn't stuck forever.
   //     setMaterialInvoiceFiles(prev => 
   //       prev.map(f => f.status === 'uploading' ? { ...f, status: 'pending' } : f)
   //     );
-  //   } finally {
-  //     setIsUploadingImages(false);
   //   }
   // };
 
 
-  const handleUploadImagesToFirebase = async () => {
+
+
+
+const handleUploadImagesToFirebase = async () => {
     const pendingFiles = materialInvoiceFiles.filter(f => f.status === 'pending');
     if (pendingFiles.length === 0) return;
 
@@ -171,49 +192,79 @@ function InvoiceScreen() {
     );
 
     const basePath = `materialInvoices/${userId?.telegramId || userId?._id}`;
+    let successCount = 0;
+    let failCount = 0;
 
     try {
-      // 2. Use a sequential for...of loop instead of Promise.all
-      // This uploads Image 1, THEN Image 2, etc. It stops Firebase from hanging/choking.
+      // 2. Sequential loop to prevent network choking
       for (const item of pendingFiles) {
-        try {
-          // 3. Make the filename 100% unique by including the item.id
-          const safeName = `${Date.now()}_${item.id}_${item.file.name.replace(/\s+/g, "_")}`;
-          const storageRef = ref(storage, `${basePath}/${safeName}`);
-          
-          await uploadBytes(storageRef, item.file);
-          const downloadURL = await getDownloadURL(storageRef);
+        
+        let attempt = 0;
+        const maxRetries = 3; // Try up to 3 times per image
+        let isUploaded = false;
 
-          // Update state for THIS specific file to 'uploaded'
-          setMaterialInvoiceFiles(prev => 
-            prev.map(f => f.id === item.id ? { ...f, status: 'uploaded', firebaseURL: downloadURL } : f)
-          );
-          
-        } catch (fileError) {
-          console.error(`Error uploading file ${item.file.name}:`, fileError);
-          // If ONE file fails, revert just that file back to pending so the user can retry
-          // It won't break the rest of the uploads!
-          setMaterialInvoiceFiles(prev => 
-            prev.map(f => f.id === item.id ? { ...f, status: 'pending' } : f)
-          );
-          toast.error(`Failed to upload ${item.file.name}`);
+        // --- RETRY LOOP ---
+        while (attempt < maxRetries && !isUploaded) {
+          try {
+            const safeName = `${Date.now()}_${item.id}_${item.file.name.replace(/\s+/g, "_")}`;
+            const storageRef = ref(storage, `${basePath}/${safeName}`);
+            
+            // Upload the file
+            await uploadBytes(storageRef, item.file);
+            const downloadURL = await getDownloadURL(storageRef);
+
+            // Update state to 'uploaded'
+            setMaterialInvoiceFiles(prev => 
+              prev.map(f => f.id === item.id ? { ...f, status: 'uploaded', firebaseURL: downloadURL } : f)
+            );
+            
+            isUploaded = true;
+            successCount++;
+
+          } catch (fileError) {
+            attempt++;
+            console.warn(`Attempt ${attempt} failed for ${item.file.name}. Retrying...`);
+            
+            if (attempt >= maxRetries) {
+              console.error(`Final failure for ${item.file.name}:`, fileError);
+              
+              // Revert this specific file back to 'pending'
+              setMaterialInvoiceFiles(prev => 
+                prev.map(f => f.id === item.id ? { ...f, status: 'pending' } : f)
+              );
+              failCount++;
+            } else {
+              // Wait 1 second before retrying (Exponential backoff)
+              await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+            }
+          }
         }
+        // --- END RETRY LOOP ---
       }
 
-      toast.success("Image uploading finished!");
+      // Show final feedback to the user
+      if (failCount === 0) {
+        toast.success(`Successfully uploaded all ${successCount} images!`);
+      } else if (successCount > 0) {
+        toast.warning(`Uploaded ${successCount} images, but ${failCount} failed. Try again.`);
+      } else {
+        toast.error("Failed to upload images. Check your connection.");
+      }
 
     } catch (error) {
       console.error("Fatal error in image upload process:", error);
     } finally {
       setIsUploadingImages(false);
       
-      // Safety net: If anything is STILL stuck on 'uploading' (due to a rare crash),
-      // revert it back to 'pending' so the user isn't stuck forever.
+      // Safety net: Revert any stuck 'uploading' files back to 'pending'
       setMaterialInvoiceFiles(prev => 
         prev.map(f => f.status === 'uploading' ? { ...f, status: 'pending' } : f)
       );
     }
   };
+
+
+
 
   const handleMaterialInvoicesChange = (e) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
