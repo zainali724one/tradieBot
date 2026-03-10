@@ -123,9 +123,9 @@ const TemplateOne = ({data}) => {
                 <span>£{data?.materialCost}</span>
             </p>
 }
-            <p className="flex justify-between text-base">
+            <p className="flex flex-col  text-base">
                 <span className="font-medium">Total Amount:</span> 
-                <span>£{data?.amount}</span>
+                <span className='mt-3 font-bold text-2xl'>£{data?.amount}</span>
             </p>
             
             {/* Show Paid/Balance logic only for Receipt */}

@@ -200,7 +200,7 @@ const handleUploadImagesToFirebase = async () => {
       for (const item of pendingFiles) {
         
         let attempt = 0;
-        const maxRetries = 3; // Try up to 3 times per image
+        const maxRetries = 3; 
         let isUploaded = false;
 
         // --- RETRY LOOP ---

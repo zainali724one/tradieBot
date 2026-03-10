@@ -79,9 +79,9 @@ const TemplateTwo = ({data}) => {
                 <span>£{data?.materialCost}</span>
             </p>
 }
-            <p className="flex justify-between font-bold">
+            <p className="flex flex-col font-bold">
                 <span>Total:</span> 
-                <span>£{data?.amount}</span>
+                <span className='mt-1 text-2xl'>£{data?.amount}</span>
             </p>
             {isReceipt && (
                 <>
