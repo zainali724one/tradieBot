@@ -305,7 +305,7 @@ const handleUploadImagesToFirebase = async () => {
       return; // Error toast is handled inside validateForm now
     }
 
-    setIsGeneratingPdf(true); 
+    
 
     // Extract the ALREADY UPLOADED urls
     const materialInvoices = materialInvoiceFiles
@@ -347,6 +347,7 @@ const handleUploadImagesToFirebase = async () => {
 
   useEffect(() => {
     if (responseData) {
+      setIsGeneratingPdf(true); 
       const generateAndSend = async () => {
         const createPdf = async (type) => {
           try {
@@ -551,7 +552,7 @@ const handleUploadImagesToFirebase = async () => {
             onClick={() => handleSubmit()}
             disabled={isGeneratingPdf || isBusy || isUploadingImages || pendingUploadsCount > 0} // Disable if images need uploading
             loading={isGeneratingPdf || isBusy}
-            loadingText={isGeneratingPdf ? "Generating PDFs..." : "Saving..."}
+            loadingText={isBackendLoading ? "Saving..." : isGeneratingPdf ? "Generating PDFs..." : ""}
           />
         </div>
       </div>
