@@ -70,24 +70,21 @@ function QuoteForm() {
     // return theUser;
   };
 
-  // const tg = window?.Telegram?.WebApp;
+  const tg = window?.Telegram?.WebApp;
   useEffect(() => {
-    // if (tg) {
-    //   tg.ready();
+    if (tg) {
+      tg.ready();
 
-    //   if (tg.initDataUnsafe?.user) {
-    //     setTelegramUserData(tg.initDataUnsafe?.user);
-    //     if (tg?.initDataUnsafe?.user?.id) {
-    //       const userId = tg.initDataUnsafe.user.id;
-    //       returnUserData(userId);
-    //     }
-    //   }
-    // }
-    returnUserData("993616324");
-  }, [
-    // tg
-
-  ]);
+      if (tg.initDataUnsafe?.user) {
+        setTelegramUserData(tg.initDataUnsafe?.user);
+        if (tg?.initDataUnsafe?.user?.id) {
+          const userId = tg.initDataUnsafe.user.id;
+          returnUserData(userId);
+        }
+      }
+    }
+    // returnUserData("993616324");
+  }, [tg]);
 
   //   useEffect(()=>{
   //  returnUserData("8141119319");
