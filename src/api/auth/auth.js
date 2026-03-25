@@ -63,13 +63,20 @@ export const addQuote = async (formData) => {
   return response.data;
 };
 
+// export const addInvoice = async (formData) => {
+//   const response = await axiosClient.post("/invoice/addInvoice", {
+//     ...formData,
+//   });
+//   return response.data;
+// };
+
+
+
 export const addInvoice = async (formData) => {
-  const response = await axiosClient.post("/invoice/addInvoice", {
-    ...formData,
-  });
+  // Pass formData directly! Do NOT wrap it in an object {}.
+  const response = await axiosClient.post("/invoice/addInvoice", formData);
   return response.data;
 };
-
 export const Getchases = async (telegramId, type) => {
   const response = await axiosClient.get(
     `/invoice/getChases?telegramId=${telegramId}&type=${type}`
