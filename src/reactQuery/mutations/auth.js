@@ -238,12 +238,12 @@ export function useAddInvoice() {
     },
     onError: (error) => {
       // toast.error(error?.response?.data?.message);
-
-        if(error?.response?.data?.message==="invalid_grant"){
-toast.error("please connect your google account again from profile section");
-      }else{
-        toast.error(error?.response?.data?.message);
-      }
+console.log(error,"error in add invoice mutation");
+//         if(error?.response?.data?.message==="invalid_grant"){
+// toast.error("please connect your google account again from profile section");
+//       }else{
+//         toast.error(error?.response?.data?.message);
+//       }
     },
   });
 

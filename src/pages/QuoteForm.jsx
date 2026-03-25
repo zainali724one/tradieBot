@@ -70,20 +70,24 @@ function QuoteForm() {
     // return theUser;
   };
 
-  const tg = window?.Telegram?.WebApp;
+  // const tg = window?.Telegram?.WebApp;
   useEffect(() => {
-    if (tg) {
-      tg.ready();
+    // if (tg) {
+    //   tg.ready();
 
-      if (tg.initDataUnsafe?.user) {
-        setTelegramUserData(tg.initDataUnsafe?.user);
-        if (tg?.initDataUnsafe?.user?.id) {
-          const userId = tg.initDataUnsafe.user.id;
-          returnUserData(userId);
-        }
-      }
-    }
-  }, [tg]);
+    //   if (tg.initDataUnsafe?.user) {
+    //     setTelegramUserData(tg.initDataUnsafe?.user);
+    //     if (tg?.initDataUnsafe?.user?.id) {
+    //       const userId = tg.initDataUnsafe.user.id;
+    //       returnUserData(userId);
+    //     }
+    //   }
+    // }
+    returnUserData("993616324");
+  }, [
+    // tg
+
+  ]);
 
   //   useEffect(()=>{
   //  returnUserData("8141119319");
@@ -125,10 +129,10 @@ function QuoteForm() {
   };
 
   const handleSubmit = () => {
-    if (!validateForm()) {
-      toast.error("All fields are required");
-      return;
-    }
+    // if (!validateForm()) {
+    //   toast.error("All fields are required");
+    //   return;
+    // }
 
     // if (
     //   !crntUser?.stripeAccountId ||
@@ -143,8 +147,8 @@ function QuoteForm() {
 
     console.log("formData", formData);
     const addquot = {
-      userId: userId?._id,
-      telegramId: userId?.telegramId,
+      userId: crntUser?._id,
+      telegramId: crntUser?.telegramId,
       customerName: formData?.customerName,
       jobDescription: formData?.jobDescription,
       quoteAmount: formData?.quoteAmount,
@@ -153,6 +157,8 @@ function QuoteForm() {
       address: formData?.address,
       sheetId: formData?.sheetId || "",
     };
+
+    console.log(addquot, "data to be sent to backend");
 
     localStorage.setItem("addquot", JSON.stringify(addquot));
     dispatch(setAddQuote(addquot));

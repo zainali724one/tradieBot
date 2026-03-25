@@ -8,8 +8,7 @@ import Selector from "../components/selector";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Getuser, uploadPdf } from "../api/auth/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../firebase";
+// ❌ REMOVED FIREBASE IMPORTS
 import TemplateTwo from "./TemplateTwo";
 import TemplateOne from "./TemplateOne";
 import { handleGeneratePdf } from "../services";
@@ -22,6 +21,7 @@ function InvoiceScreen() {
   
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const isBusy = isBackendLoading || isGeneratingPdf;
+  
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const userId = useSelector((state) => state.session.userId);
   const [formErrors, setFormErrors] = useState({});
@@ -31,13 +31,8 @@ function InvoiceScreen() {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [pdfDocType, setPdfDocType] = useState("invoice");
 
-  // --- Internal State for Expenses ---
   const [materialCost, setMaterialCost] = useState("");
-  // const [supplierReceipt, setSupplierReceipt] = useState(null);
-  
-  // NEW: State for tracking file upload status
   const [materialInvoiceFiles, setMaterialInvoiceFiles] = useState([]);
-  const [isUploadingImages, setIsUploadingImages] = useState(false);
 
   const [formData, setFormData] = useState({
     customerName: "",
@@ -104,167 +99,9 @@ function InvoiceScreen() {
     if (!formData.jobId.trim()) errors.jobId = "Job ID is required";
     if(formData.includeReceipt === "Yes" && !materialCost.trim()) errors.materialCost = "Material cost is required when including receipt"; 
 
-    // NEW: Ensure all selected images are actually uploaded before submitting
-    const hasPendingUploads = materialInvoiceFiles.some(f => f.status === 'pending');
-    if (hasPendingUploads) {
-      toast.error("Please click 'Upload Images' before submitting.");
-      return false; // Stop validation
-    }
-
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
-  // --- SEPARATE UPLOAD FUNCTION ---
-
-
-
-  // const handleUploadImagesToFirebase = async () => {
-  //   const pendingFiles = materialInvoiceFiles.filter(f => f.status === 'pending');
-  //   if (pendingFiles.length === 0) return;
-
-  //   setIsUploadingImages(true);
-    
-  //   // 1. Mark ALL pending files as 'uploading' at once so the UI updates immediately
-  //   setMaterialInvoiceFiles(prev => 
-  //     prev.map(f => f.status === 'pending' ? { ...f, status: 'uploading' } : f)
-  //   );
-
-  //   const basePath = `materialInvoices/${userId?.telegramId || userId?._id}`;
-
-  //   try {
-  //     // 2. Use a sequential for...of loop instead of Promise.all
-  //     // This uploads Image 1, THEN Image 2, etc. It stops Firebase from hanging/choking.
-  //     for (const item of pendingFiles) {
-  //       try {
-  //         // 3. Make the filename 100% unique by including the item.id
-  //         const safeName = `${Date.now()}_${item.id}_${item.file.name.replace(/\s+/g, "_")}`;
-  //         const storageRef = ref(storage, `${basePath}/${safeName}`);
-          
-  //         await uploadBytes(storageRef, item.file);
-  //         const downloadURL = await getDownloadURL(storageRef);
-
-  //         // Update state for THIS specific file to 'uploaded'
-  //         setMaterialInvoiceFiles(prev => 
-  //           prev.map(f => f.id === item.id ? { ...f, status: 'uploaded', firebaseURL: downloadURL } : f)
-  //         );
-          
-  //       } catch (fileError) {
-  //         console.error(`Error uploading file ${item.file.name}:`, fileError);
-  //         // If ONE file fails, revert just that file back to pending so the user can retry
-  //         // It won't break the rest of the uploads!
-  //         setMaterialInvoiceFiles(prev => 
-  //           prev.map(f => f.id === item.id ? { ...f, status: 'pending' } : f)
-  //         );
-  //         // toast.error(`Failed to upload ${item.file.name}`);
-  //           toast.success("Image uploading finished!");
-  //       }
-  //     }
-
-  //     toast.success("Image uploading finished!");
-
-  //   } catch (error) {
-  //     console.error("Fatal error in image upload process:", error);
-  //   } finally {
-  //     setIsUploadingImages(false);
-      
-  //     // Safety net: If anything is STILL stuck on 'uploading' (due to a rare crash),
-  //     // revert it back to 'pending' so the user isn't stuck forever.
-  //     setMaterialInvoiceFiles(prev => 
-  //       prev.map(f => f.status === 'uploading' ? { ...f, status: 'pending' } : f)
-  //     );
-  //   }
-  // };
-
-
-
-
-
-const handleUploadImagesToFirebase = async () => {
-    const pendingFiles = materialInvoiceFiles.filter(f => f.status === 'pending');
-    if (pendingFiles.length === 0) return;
-
-    setIsUploadingImages(true);
-    
-    // 1. Mark ALL pending files as 'uploading' at once so the UI updates immediately
-    setMaterialInvoiceFiles(prev => 
-      prev.map(f => f.status === 'pending' ? { ...f, status: 'uploading' } : f)
-    );
-
-    const basePath = `materialInvoices/${userId?.telegramId || userId?._id}`;
-    let successCount = 0;
-    let failCount = 0;
-
-    try {
-      // 2. Sequential loop to prevent network choking
-      for (const item of pendingFiles) {
-        
-        let attempt = 0;
-        const maxRetries = 3; 
-        let isUploaded = false;
-
-        // --- RETRY LOOP ---
-        while (attempt < maxRetries && !isUploaded) {
-          try {
-            const safeName = `${Date.now()}_${item.id}_${item.file.name.replace(/\s+/g, "_")}`;
-            const storageRef = ref(storage, `${basePath}/${safeName}`);
-            
-            // Upload the file
-            await uploadBytes(storageRef, item.file);
-            const downloadURL = await getDownloadURL(storageRef);
-
-            // Update state to 'uploaded'
-            setMaterialInvoiceFiles(prev => 
-              prev.map(f => f.id === item.id ? { ...f, status: 'uploaded', firebaseURL: downloadURL } : f)
-            );
-            
-            isUploaded = true;
-            successCount++;
-
-          } catch (fileError) {
-            attempt++;
-            console.warn(`Attempt ${attempt} failed for ${item.file.name}. Retrying...`);
-            
-            if (attempt >= maxRetries) {
-              console.error(`Final failure for ${item.file.name}:`, fileError);
-              
-              // Revert this specific file back to 'pending'
-              setMaterialInvoiceFiles(prev => 
-                prev.map(f => f.id === item.id ? { ...f, status: 'pending' } : f)
-              );
-              failCount++;
-            } else {
-              // Wait 1 second before retrying (Exponential backoff)
-              await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
-            }
-          }
-        }
-        // --- END RETRY LOOP ---
-      }
-
-      // Show final feedback to the user
-      if (failCount === 0) {
-        toast.success(`Successfully uploaded all ${successCount} images!`);
-      } else if (successCount > 0) {
-        toast.warning(`Uploaded ${successCount} images, but ${failCount} failed. Try again.`);
-      } else {
-        toast.error("Failed to upload images. Check your connection.");
-      }
-
-    } catch (error) {
-      console.error("Fatal error in image upload process:", error);
-    } finally {
-      setIsUploadingImages(false);
-      
-      // Safety net: Revert any stuck 'uploading' files back to 'pending'
-      setMaterialInvoiceFiles(prev => 
-        prev.map(f => f.status === 'uploading' ? { ...f, status: 'pending' } : f)
-      );
-    }
-  };
-
-
-
 
   const handleMaterialInvoicesChange = (e) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
@@ -277,11 +114,9 @@ const handleUploadImagesToFirebase = async () => {
       );
 
       const filesWithPreviews = newFiles.map(file => ({
-        id: Math.random().toString(36).substring(7), // Unique ID for tracking
-        file: file,
+        id: Math.random().toString(36).substring(7), 
+        file: file, // THIS IS THE ACTUAL FILE OBJECT
         previewUrl: URL.createObjectURL(file),
-        status: 'pending', // NEW: 'pending', 'uploading', 'uploaded'
-        firebaseURL: null
       }));
 
       return [...prev, ...filesWithPreviews];
@@ -300,37 +135,42 @@ const handleUploadImagesToFirebase = async () => {
     });
   };
 
+  // --- UPDATED SUBMIT FUNCTION ---
   const handleSubmit = async () => {
     if (!validateForm()) {
-      return; // Error toast is handled inside validateForm now
+      toast.error("Please fill all required fields.");
+      return; 
     }
 
+    setIsGeneratingPdf(true); // Lock screen
+
+    // 1. Create FormData to hold text and files
+    const submissionData = new FormData();
     
+    // Append Text Fields
+    submissionData.append("userId", userId._id);
+    submissionData.append("telegramId", userId?.telegramId || "");
+    submissionData.append("customerName", formData.customerName);
+    submissionData.append("invoiceAmount", formData.InvoiceAmount);
+    submissionData.append("address", formData.address);
+    submissionData.append("jobDescription", formData.jobDescription);
+    submissionData.append("customerEmail", formData.CustomerEmail);
+    submissionData.append("includeCost", formData.includeCost);
+    submissionData.append("includeReceipt", formData.includeReceipt);
+    submissionData.append("customerPhone", formData.customerPhone);
+    submissionData.append("sheetId", formData.sheetId);
+    submissionData.append("jobId", formData.jobId);
+    submissionData.append("materialCost", materialCost);
+    submissionData.append("profit", (parseFloat(formData.InvoiceAmount || 0) - parseFloat(materialCost || 0)).toFixed(2));
 
-    // Extract the ALREADY UPLOADED urls
-    const materialInvoices = materialInvoiceFiles
-        .filter(f => f.status === 'uploaded')
-        .map(f => f.firebaseURL);
+    // Append Image Files
+    // By using the same key "materialInvoices", the backend will receive an array of files
+    materialInvoiceFiles.forEach((item) => {
+      submissionData.append("materialInvoices", item.file);
+    });
 
-    const Addinvoice = {
-      userId: userId._id,
-      telegramId: userId?.telegramId,
-      customerName: formData?.customerName,
-      invoiceAmount: formData?.InvoiceAmount,
-      address: formData?.address,
-      jobDescription: formData?.jobDescription,
-      customerEmail: formData?.CustomerEmail,
-      includeCost: formData.includeCost,
-      includeReceipt: formData.includeReceipt,
-      customerPhone: formData.customerPhone,
-      sheetId: formData.sheetId,
-      jobId: formData.jobId,
-      materialCost: materialCost,
-      profit: (parseFloat(formData.InvoiceAmount) - parseFloat(materialCost || 0)).toFixed(2),
-      materialInvoices: materialInvoices, // Send the array of URLs
-    };
-
-    AddInvoice(Addinvoice, {
+    // 2. Send FormData to Backend
+    AddInvoice(submissionData, {
       onSuccess: (res) => {
         // ONLY trigger PDF generation. Don't clear form yet.
         setResponseData(res.data);
@@ -338,7 +178,7 @@ const handleUploadImagesToFirebase = async () => {
       onError: (error) => {
         setIsGeneratingPdf(false);
         console.error("Error adding invoice:", error);
-        toast.error("Failed to add invoice. Please try again.");
+        toast.error("Failed to add invoice to database.");
       },
     });
   };
@@ -390,7 +230,6 @@ const handleUploadImagesToFirebase = async () => {
         await createPdf("INVOICE");
 
         if (responseData?.includeReceipt === "Yes"){
-          console.log("Generating receipt as well...");
           await new Promise((resolve) => setTimeout(resolve, 200));
           await createPdf("RECEIPT");
         }
@@ -404,13 +243,21 @@ const handleUploadImagesToFirebase = async () => {
             address: "", customerPhone: "", jobId: "",
         });
         setMaterialCost("");
+        
+        // Cleanup object URLs to prevent memory leaks
+        materialInvoiceFiles.forEach(f => {
+          if (f.previewUrl) URL.revokeObjectURL(f.previewUrl);
+        });
         setMaterialInvoiceFiles([]);
+        
+        toast.success("Invoice created successfully!");
       };
 
       generateAndSend();
     }
   }, [responseData]);
 
+  // ... (Address, Job selections remain the same)
   const handleAddressSelected = (fullAddress) => {
     setFormData((prev) => ({ ...prev, address: fullAddress }));
     setFormErrors((prev) => ({ ...prev, address: "" }));
@@ -427,8 +274,6 @@ const handleUploadImagesToFirebase = async () => {
     });
     setIsJobModalOpen(false);
   };
-
-  const pendingUploadsCount = materialInvoiceFiles.filter(f => f.status === 'pending').length;
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#D3DCE5] pt-9 px-6 pb-20 overflow-y-auto ">
@@ -485,7 +330,7 @@ const handleUploadImagesToFirebase = async () => {
 
              {/* IMAGE UPLOAD UI */}
              <div className="mt-2">
-                <p className="font-[500] text-[14px] text-gray-700 mb-1">Hardware Receipts</p>
+                <p className="font-[500] text-[14px] text-gray-700 mb-1">Material Receipts</p>
                 <div className="rounded-[10px] border-2 border-dashed border-[#5290C1]/40 bg-white/50 p-4" style={{ boxShadow: "1px 1px 4px 4px #5290C11A inset" }}>
                   <input type="file" accept="image/*" multiple onChange={handleMaterialInvoicesChange} className="hidden" id="material-invoices-input" />
                   <label htmlFor="material-invoices-input" className="flex flex-col items-center justify-center py-4 px-3 cursor-pointer rounded-lg">
@@ -494,49 +339,16 @@ const handleUploadImagesToFirebase = async () => {
                   
                   {materialInvoiceFiles.length > 0 && (
                     <div className="mt-3 pt-3 border-t border-gray-200/80 flex flex-col gap-3">
-                      
-                      {/* Grid of Images with Status Overlays */}
                       <div className="flex flex-wrap gap-2">
                         {materialInvoiceFiles.map((item) => (
                           <div key={item.id} className="relative group w-16 h-16 rounded-lg overflow-hidden bg-gray-100 border border-gray-200 shrink-0">
-                            <img src={item.previewUrl} alt="receipt" className={`w-full h-full object-cover ${item.status === 'uploading' ? 'opacity-50 grayscale' : ''}`} />
-                            
-                            {/* Status Indicators */}
-                            {item.status === 'uploaded' && (
-                              <div className="absolute top-1 right-1 bg-green-500 rounded-full w-4 h-4 flex items-center justify-center">
-                                <span className="text-white text-[10px]">✓</span>
-                              </div>
-                            )}
-                            {item.status === 'uploading' && (
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                              </div>
-                            )}
-
-                            {/* Delete Button (Only if not currently uploading) */}
-                            {item.status !== 'uploading' && (
-                              <button type="button" onClick={() => removeMaterialInvoice(item.id)} className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                <span className="text-white font-bold">X</span>
-                              </button>
-                            )}
+                            <img src={item.previewUrl} alt="receipt" className={`w-full h-full object-cover`} />
+                            <button type="button" onClick={() => removeMaterialInvoice(item.id)} className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                              <span className="text-white font-bold">X</span>
+                            </button>
                           </div>
                         ))}
                       </div>
-
-                      {/* Manual Upload Action Button */}
-                      {pendingUploadsCount > 0 && (
-                        <div className="flex justify-end border-t pt-2">
-                           <button 
-                             type="button" 
-                             onClick={handleUploadImagesToFirebase}
-                             disabled={isUploadingImages}
-                             className="bg-blue-600 text-white text-xs px-4 py-2 rounded shadow hover:bg-blue-700 disabled:bg-gray-400 flex items-center gap-2"
-                           >
-                              {isUploadingImages ? 'Uploading...' : `Upload ${pendingUploadsCount} New Image(s)`}
-                           </button>
-                        </div>
-                      )}
-
                     </div>
                   )}
                 </div>
@@ -550,9 +362,9 @@ const handleUploadImagesToFirebase = async () => {
             children="Submit & Generate PDF"
             color="blue"
             onClick={() => handleSubmit()}
-            disabled={isGeneratingPdf || isBusy || isUploadingImages || pendingUploadsCount > 0} // Disable if images need uploading
-            loading={isGeneratingPdf || isBusy}
-            loadingText={isBackendLoading ? "Saving..." : isGeneratingPdf ? "Generating PDFs..." : ""}
+            disabled={isBusy} 
+            loading={isBusy}
+            loadingText={isBackendLoading ? "Saving to Database..." : isGeneratingPdf ? "Generating PDFs..." : "Processing..."}
           />
         </div>
       </div>
